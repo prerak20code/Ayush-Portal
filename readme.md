@@ -51,25 +51,25 @@ Before you begin, ensure you have the following software installed:
 
 
 ### Step 1: Fork the Repository (using GitHub UI)
-1. Visit the repository on my account.
-2. Fork it.
-3. You will get the repository on your account.
+- Visit the repository on my account.
+- Fork it.
+- You will get the repository on your account.
 
 ### Step 2: Clone the Repository on VSCode (using VSCode UI)
-1. Click on "Clone Git Repository" 
-2. Clone from GitHub
-3. Select the Forked Repository.
+- Click on "Clone Git Repository" 
+- Clone from GitHub
+- Select the Forked Repository.
 
 ### Step 3: Run following Command
-- ***Run In Root Directory***
-- ***Use Command Prompt not powershell***
+- *Run In Root Directory*
+- *Use Command Prompt not powershell*
 
 ``` 
     npm i && cd frontend && npm i && cd .. && cd backend && npm i && cd ..
 ```
 
 ### Step 4: Run the Server now 
-- ***Use all commands in root diectory***
+- *Use all commands in root diectory*
 
 #### To run both Frontend & Backend
 ```
