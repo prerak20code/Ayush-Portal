@@ -64,9 +64,9 @@ Before you begin, ensure you have the following software installed:
 - Run In Root Directory 
 - use Command Prompt not powershell
 
-` 
+``` 
     npm i && cd frontend && npm i && cd .. && cd backend && npm i && cd ..
-`
+```
 
 ### Step 4: Run the Server now 
 - Use all commands in root diectory
