@@ -8,7 +8,7 @@
         "format": "prettier --write ."
     },
     "keywords": [],
-    "author": "Linksters",
+    "author": "Kode Crafts",
     "license": "ISC",
     "description": "This is the Backend for AYUSH-Registration Portal",
     "dependencies": {

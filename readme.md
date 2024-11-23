@@ -38,3 +38,44 @@ The **AYUSH Startup Registration Portal** is a digital platform designed to supp
 - **JWT (JSON Web Tokens)**: For secure user authentication and session management.
 - **DDoS Protection**: To safeguard the platform from denial-of-service attacks and ensure availability.
 - **Role-Based Access Control (RBAC)**: To ensure users access only the data and features they are authorized to use, based on their role (e.g., startup, investor, government official).
+
+## Installation
+
+### Prerequisites
+
+Before you begin, ensure you have the following software installed:
+
+- **Node.js** (version 14 or later) - for running the backend and managing dependencies.
+- **npm** (Node Package Manager) - comes with Node.js and is used to manage project dependencies.
+- **Git** - for cloning the repository.
+
+
+### Step 1: Fork the Repository (use UI on GitHub)
+You will get the repo on your account.
+
+### Step 2: Clone the Repository on VSCode 
+Use clone new git repo option on VSCode and select the forked repository on your account.
+
+### Step 3: Run Following Commands
+``` 
+    npm i
+```
+``` 
+    npm i -d
+```
+
+### Step 4: Run the Server now
+To run both Frontend & Backend
+```
+    npm run dev
+```
+
+To run Frontend
+```
+    npm run frontend
+```
+
+To run Backend
+```
+    npm run backend
+```
