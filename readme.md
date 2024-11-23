@@ -69,7 +69,7 @@ Before you begin, ensure you have the following software installed:
 ```
 
 ### Step 4: Run the Server now 
-- *Use all commands in root diectory*
+- *Use all commands in root directory*
 
 #### To run both Frontend & Backend
 ```
