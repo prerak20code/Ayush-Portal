@@ -4,8 +4,8 @@
   "description": "The **AYUSH Startup Registration Portal** is a digital platform designed to support and facilitate the growth of startups in the AYUSH (Ayurveda, Yoga, Naturopathy, Unani, Siddha, and Homeopathy) sector. The portal provides a streamlined process for startup registration, access to funding opportunities, mentorship, networking, and more. With the goal of promoting innovation in traditional medicine and wellness, this platform empowers startups to contribute to the growth of the AYUSH ecosystem and enhance the healthcare landscape in India.",
   "main": "index.js",
   "scripts": {
-    "frontend": "cd frontend && npm run format && npm run dev",
-    "backend": "cd backend && npm run format && nodemon src/server.js",
+    "frontend": "cd frontend && npm run dev",
+    "backend": "cd backend && npm run dev",
     "dev": "concurrently \"npm run frontend\" \"npm run backend\""
   },
   "keywords": [],
