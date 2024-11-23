@@ -60,23 +60,28 @@ Before you begin, ensure you have the following software installed:
 2. Clone from GitHub
 3. Select the Forked Repository.
 
-### Step 3: Run following Command in Root Directory (⭐use Command Prompt not powershell)
+### Step 3: Run following Command
+⭐ Run In Root Directory 
+⭐ use Command Prompt not powershell
+
 ``` 
     npm i && cd frontend && npm i && cd .. && cd backend && npm i && cd ..
 ```
 
-### Step 4: Run the Server now (⭐use all commands in root diectory)
-To run both Frontend & Backend
+### Step 4: Run the Server now 
+⭐ Use all commands in root diectory
+
+#### To run both Frontend & Backend
 ```
     npm run dev 
 ```
 
-To run Frontend
+#### To run Frontend
 ```
     npm run frontend
 ```
 
-To run Backend
+#### To run Backend
 ```
     npm run backend
 ```
