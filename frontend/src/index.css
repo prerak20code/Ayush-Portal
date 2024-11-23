@@ -4,5 +4,5 @@
 
 /* hide the scrollbars */
 ::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
