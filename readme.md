@@ -51,14 +51,14 @@ Before you begin, ensure you have the following software installed:
 
 
 ### Step 1: Fork the Repository (using GitHub UI)
-- Visit the repository on my account.
-- Fork it.
-- You will get the repository on your account.
+- *Visit the repository on my account*
+- *Fork it*
+- *You will get the repository on your account*
 
 ### Step 2: Clone the Repository on VSCode (using VSCode UI)
-- Click on "Clone Git Repository" 
-- Clone from GitHub
-- Select the Forked Repository.
+- *Click on "Clone Git Repository"*
+- *Clone from GitHub*
+- *Select the Forked Repository*
 
 ### Step 3: Run following Command
 - *Run In Root Directory*
