@@ -16,7 +16,7 @@ export default function SecondHalf({ variants }) {
     const logoElements = logos.map((logo, index) => (
         <motion.div
             key={index}
-            className={`rounded-full overflow-hidden drop-shadow-md p-2 size-[150px] ${logo.className}`}
+            className={`rounded-full overflow-hidden drop-shadow-md p-2 size-[180px] ${logo.className}`}
             custom={index}
             variants={iconVariants}
         >

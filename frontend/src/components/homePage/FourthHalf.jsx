@@ -21,7 +21,7 @@ export default function FourthHalf({ variants }) {
     const logoElements = logos.map((logo, index) => (
         <motion.div
             key={index}
-            className="rounded-full overflow-hidden drop-shadow-md p-2 size-[150px]"
+            className="rounded-full overflow-hidden drop-shadow-md p-2 size-[180px]"
             custom={index}
             variants={iconVariants}
         >
