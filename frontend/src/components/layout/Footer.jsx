@@ -4,6 +4,7 @@ import { icons } from '../../assets/icons';
 import { NavLink } from 'react-router-dom';
 
 export default function Footer() {
+    // socials
     const socials = [icons.telegram, icons.twitter, icons.youtube];
     const socialElements = socials.map((social, index) => (
         <div
@@ -13,6 +14,8 @@ export default function Footer() {
             <div className="size-[25px]">{social}</div>
         </div>
     ));
+
+    // quick links
     const quickLinks = [
         'Home',
         'About Ministry',
@@ -21,52 +24,60 @@ export default function Footer() {
         'Contact Us',
     ];
     const quickLinkElements = quickLinks.map((link) => (
-        <div
+        <NavLink
             key={link}
-            className="text-lg"
-            // to="/"
-            // className={({ isActive }) => `${isActive && 'underline'}`}
+            to="/"
+            className={({ isActive }) => `${isActive && 'underline'} text-lg`}
         >
             {link}
-        </div>
+        </NavLink>
     ));
+
+    // extra links
     const extraLinks = [
         'Chat Assistance',
         'Privacy Policy',
         'Terms & Conditions',
     ];
     const extraLinkElements = extraLinks.map((link) => (
-        <div
+        <NavLink
             key={link}
-            className="text-lg"
-            // to="/"
-            // className={({ isActive }) =>
-            //     `${isActive ? 'underline' : ''} text-lg`
-            // }
+            to="/"
+            className={({ isActive }) =>
+                `${isActive ? 'underline' : ''} text-lg`
+            }
         >
             {link}
-        </div>
+        </NavLink>
     ));
+
+    // HTML
     return (
         <div className="w-full text-[#f9f9f9]">
             <div className="flex items-center justify-between bg-[#f68533] w-full pr-10 pl-16 py-4">
+                {/* logos & socials */}
                 <div className="w-[60%] flex flex-col items-start justify-between gap-14">
-                    <div className="flex items-center justify-start gap-36">
+                    {/* logos */}
+                    <div className="flex items-center justify-start flex-col md:flex-row gap-4 md:gap-36">
                         <div>
-                            <img
-                                src={AYUSHLOGOWHITE}
-                                alt="ayush logo"
-                                className="size-[70px]"
-                            />
+                            <div className="size-[70px]">
+                                <img
+                                    src={AYUSHLOGOWHITE}
+                                    alt="ayush logo"
+                                    className="size-full"
+                                />
+                            </div>
                         </div>
-                        <div>
+                        <div className="h-[60px]">
                             <img
                                 src={GOVINDIAIMAGE}
                                 alt="gov india image"
-                                className="h-[60px]"
+                                className="h-full"
                             />
                         </div>
                     </div>
+
+                    {/* socials and ayush logo */}
                     <div className="flex items-center justify-start gap-36">
                         <div className="flex flex-col items-start justify-ccenter gap-4">
                             <p className="text-2xl font-medium">
@@ -76,16 +87,19 @@ export default function Footer() {
                                 {socialElements}
                             </div>
                         </div>
-                        <div>
+                        <div className="size-[120px]">
                             <img
                                 src={AYUSHLOGOWHITE}
                                 alt="ayush logo"
-                                className="size-[120px]"
+                                className="size-full"
                             />
                         </div>
                     </div>
                 </div>
+
+                {/* links */}
                 <div className="w-[40%] flex items-center justify-between">
+                    {/* quick links */}
                     <div>
                         <div className="font-medium text-xl underline mb-2">
                             Quick Links
@@ -94,6 +108,7 @@ export default function Footer() {
                             {quickLinkElements}
                         </div>
                     </div>
+                    {/* extra  links */}
                     <div>
                         <div className="flex flex-col gap-4 items-start">
                             {extraLinkElements}
