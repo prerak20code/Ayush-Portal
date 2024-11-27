@@ -17,37 +17,38 @@ export default function Footer() {
 
     // quick links
     const quickLinks = [
-        'Home',
-        'About Ministry',
-        'AYUSH Services',
-        'Privacy & Guidelines',
-        'Contact Us',
+        { url: '', name: 'Home' },
+        { url: 'about-ministry', name: 'About Ministry' },
+        { url: 'servcies', name: 'AYUSH Services' },
+        { url: 'privacy-policies', name: 'Privacy & Guidelines' },
+        { url: 'faqs', name: 'FAQs' },
+        { url: 'contact-us', name: 'Contact Us' },
     ];
     const quickLinkElements = quickLinks.map((link) => (
         <NavLink
-            key={link}
-            to="/"
+            key={link.name}
+            to={link.url}
             className={({ isActive }) => `${isActive && 'underline'} text-lg`}
         >
-            {link}
+            {link.name}
         </NavLink>
     ));
 
     // extra links
     const extraLinks = [
-        'Chat Assistance',
-        'Privacy Policy',
-        'Terms & Conditions',
+        { url: 'chat', name: 'Chat Assistance' },
+        { url: 'privacy-policies', name: 'Privacy & Guidelines' },
+        { url: 'terms-conditions', name: 'Terms & Conditions' },
     ];
     const extraLinkElements = extraLinks.map((link) => (
         <NavLink
-            key={link}
-            to="/"
+            key={link.name}
+            to={link.url}
             className={({ isActive }) =>
                 `${isActive ? 'underline' : ''} text-lg`
             }
         >
-            {link}
+            {link.name}
         </NavLink>
     ));
 
