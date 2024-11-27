@@ -18,7 +18,7 @@ export default function Header() {
             end
             key={tab.name}
             className={({ isActive }) =>
-                `${isActive && 'underline'} text-[#f9f9f9] font-medium text-md`
+                `${isActive && 'underline'} hover:underline text-[#f9f9f9] font-medium text-md`
             }
         >
             {tab.name}

@@ -28,7 +28,7 @@ export default function Footer() {
         <NavLink
             key={link.name}
             to={link.url}
-            className={({ isActive }) => `${isActive && 'underline'} text-lg`}
+            className={({ isActive }) => `${isActive && 'underline'} hover:underline text-lg`}
         >
             {link.name}
         </NavLink>
@@ -45,7 +45,7 @@ export default function Footer() {
             key={link.name}
             to={link.url}
             className={({ isActive }) =>
-                `${isActive ? 'underline' : ''} text-lg`
+                `${isActive ? 'underline' : ''} hover:underline text-lg`
             }
         >
             {link.name}
