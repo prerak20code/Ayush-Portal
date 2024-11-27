@@ -9,7 +9,7 @@ export default function Footer() {
     const socialElements = socials.map((social, index) => (
         <div
             key={index}
-            className="fill-[#f9f9f9] border-[0.1rem] border-[#f9f9f9] p-2 rounded-full size-fit"
+            className="hover:backdrop-brightness-95 hover:scale-105 transition-all ease-in  fill-[#f9f9f9] border-[0.1rem] border-[#f9f9f9] p-2 drop-shadow-md rounded-full size-fit"
         >
             <div className="size-[25px]">{social}</div>
         </div>
@@ -28,7 +28,9 @@ export default function Footer() {
         <NavLink
             key={link.name}
             to={link.url}
-            className={({ isActive }) => `${isActive && 'underline'} hover:underline text-lg`}
+            className={({ isActive }) =>
+                `${isActive && 'underline'} hover:underline text-lg`
+            }
         >
             {link.name}
         </NavLink>
@@ -61,7 +63,7 @@ export default function Footer() {
                     {/* logos */}
                     <div className="flex items-center justify-start flex-col md:flex-row gap-4 md:gap-36">
                         <div>
-                            <div className="size-[70px]">
+                            <div className="size-[70px] drop-shadow-md">
                                 <img
                                     src={AYUSHLOGOWHITE}
                                     alt="ayush logo"
@@ -69,7 +71,7 @@ export default function Footer() {
                                 />
                             </div>
                         </div>
-                        <div className="h-[60px]">
+                        <div className="h-[60px] drop-shadow-md">
                             <img
                                 src={GOVINDIAIMAGE}
                                 alt="gov india image"
@@ -88,13 +90,16 @@ export default function Footer() {
                                 {socialElements}
                             </div>
                         </div>
-                        <div className="size-[120px]">
+                        <NavLink
+                            to="/"
+                            className="hover:scale-105 transition-all ease-in size-[120px] drop-shadow-md"
+                        >
                             <img
                                 src={AYUSHLOGOWHITE}
                                 alt="ayush logo"
                                 className="size-full"
                             />
-                        </div>
+                        </NavLink>
                     </div>
                 </div>
 
