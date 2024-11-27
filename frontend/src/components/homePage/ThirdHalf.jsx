@@ -22,8 +22,7 @@ export default function ThirdHalf({ variants }) {
             heading: 'Supportive Network',
             description:
                 'join a thriving community of entrepreneurs, fostering valuable partnerships to accelerate your startup’s success.',
-            className:
-                'bg-gradient-to-r from-[#ffa8a8] to-[#a1a9f3]',
+            className: 'bg-gradient-to-r from-[#ffa8a8] to-[#a1a9f3]',
         },
         {
             icon: CARDICON3,
