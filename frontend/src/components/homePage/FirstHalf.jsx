@@ -12,7 +12,7 @@ export default function FirstHalf() {
             transition: { duration: 0.5, ease: 'easeOut' },
         },
     };
-    
+
     // HTML
     return (
         <div className="h-[calc(100vh-110px)] w-full relative">
