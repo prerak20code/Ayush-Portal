@@ -14,5 +14,9 @@
   "devDependencies": {
     "concurrently": "^9.1.0",
     "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "react-phone-input-2": "^2.15.1",
+    "react-router-dom": "^7.0.1"
   }
 }
