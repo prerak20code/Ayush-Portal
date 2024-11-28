@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import AyushLogo from '../assets/images/ayushLogo.png';
+import AyushMinistry from '../assets/images/AyushMinistry.png';
 import { Header } from '../components';
 import Small_Footer from '../components/layout/Small_Footer';
 
@@ -46,11 +46,11 @@ export default function RegisterUser() {
     return (
         <>
             <Header />
-            <div className="bg-gray-100 flex   items-center justify-center ">
+            <div className="flex   items-center justify-center  "  >
                 {/* Wrapper Div */}
-                <div className="flex flex-col my-0 sm:flex-row sm:my-14 bg-gray-100 shadow-lg rounded-lg overflow-hidden max-w-5xl w-full">
+                <div className="flex  flex-col my-0 sm:flex-row sm:my-14 bg-gray-100 shadow-lg rounded-lg overflow-hidden max-w-6xl w-full"  >
                     {/* Header Section */}
-                    <div className="flex-1 bg-gray-200 flex flex-col justify-center items-center p-8 ">
+                    <div className="flex-1 bg-white  flex flex-col justify-center items-center p-8 "  >
                         {/* 'md:block hidden' ensures it is hidden on smaller screens */}
                         <h2 className="text-4xl font-bold text-gray-800 mb-2">
                             Ayush Startup
@@ -59,14 +59,14 @@ export default function RegisterUser() {
                             User Registration Portal
                         </h3>
                         <img
-                            src={AyushLogo}
+                            src={AyushMinistry}
                             alt="Ayush Logo"
                             className="max-w-xs w-full max-sm:hidden"
                         />
                     </div>
 
                     {/* Form Section */}
-                    <div className="flex-1 bg-white p-8">
+                    <div className="flex-1  p-8">
                         <form className="space-y-4" onSubmit={handleSubmit}>
                             {/* User ID */}
                             <div>
