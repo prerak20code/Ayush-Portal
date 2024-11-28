@@ -1,5 +1,5 @@
-import Header from './components/layout/Header';
-import Small_Footer from './components/layout/Small_Footer';
+import { Header } from "../components";
+import Small_Footer from "../components/layout/Small_Footer";
 
 function App() {
     return (

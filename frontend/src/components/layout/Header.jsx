@@ -18,7 +18,7 @@ export default function Header() {
             end
             key={tab.name}
             className={({ isActive }) =>
-                `${isActive && 'underline'} hover:underline text-[#f9f9f9] font-medium text-md`
+                `${isActive && 'underline'} hover:underline text-[#f9f9f9] font-medium text-md max-sm:hidden`
             }
         >
             {tab.name}
@@ -35,7 +35,7 @@ export default function Header() {
                 <img
                     src={AYUSHLOGO}
                     alt="gov india image"
-                    className="object-cover rounded-full size-[60px]"
+                    className="object-cover rounded-full size-[60px]  max-md:hidden"
                 />
             </div>
             <div className="drop-shadow-md bg-[#f68533] h-[40px] flex items-center justify-end gap-10 px-4">
