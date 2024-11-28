@@ -6,3 +6,17 @@
 ::-webkit-scrollbar {
     display: none;
 }
+
+/* Add this to your global CSS file */
+@keyframes slow-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.slow-spin {
+    animation: slow-spin 8s linear infinite; /* slower and smoother spin */
+}

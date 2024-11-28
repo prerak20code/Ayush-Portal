@@ -4,69 +4,83 @@ import { icons } from '../../assets/icons';
 import { NavLink } from 'react-router-dom';
 
 export default function Footer() {
+    // socials
     const socials = [icons.telegram, icons.twitter, icons.youtube];
     const socialElements = socials.map((social, index) => (
         <div
             key={index}
-            className="fill-[#f9f9f9] border-[0.1rem] border-[#f9f9f9] p-2 rounded-full size-fit"
+            className="hover:backdrop-brightness-95 hover:scale-105 transition-all ease-in  fill-[#f9f9f9] border-[0.1rem] border-[#f9f9f9] p-2 drop-shadow-md rounded-full size-fit"
         >
             <div className="size-[25px]">{social}</div>
         </div>
     ));
+
+    // quick links
     const quickLinks = [
-        'Home',
-        'About Ministry',
-        'AYUSH Services',
-        'Privacy & Guidelines',
-        'Contact Us',
+        { url: '', name: 'Home' },
+        { url: 'about-ministry', name: 'About Ministry' },
+        { url: 'servcies', name: 'AYUSH Services' },
+        { url: 'privacy-policies', name: 'Privacy & Guidelines' },
+        { url: 'faqs', name: 'FAQs' },
+        { url: 'contact-us', name: 'Contact Us' },
     ];
     const quickLinkElements = quickLinks.map((link) => (
-        <div
-            key={link}
-            className="text-lg"
-            // to="/"
-            // className={({ isActive }) => `${isActive && 'underline'}`}
+        <NavLink
+            key={link.name}
+            to={link.url}
+            className={({ isActive }) =>
+                `${isActive && 'underline'} hover:underline text-lg`
+            }
         >
-            {link}
-        </div>
+            {link.name}
+        </NavLink>
     ));
+
+    // extra links
     const extraLinks = [
-        'Chat Assistance',
-        'Privacy Policy',
-        'Terms & Conditions',
+        { url: 'chat', name: 'Chat Assistance' },
+        { url: 'privacy-policies', name: 'Privacy & Guidelines' },
+        { url: 'terms-conditions', name: 'Terms & Conditions' },
     ];
     const extraLinkElements = extraLinks.map((link) => (
-        <div
-            key={link}
-            className="text-lg"
-            // to="/"
-            // className={({ isActive }) =>
-            //     `${isActive ? 'underline' : ''} text-lg`
-            // }
+        <NavLink
+            key={link.name}
+            to={link.url}
+            className={({ isActive }) =>
+                `${isActive ? 'underline' : ''} hover:underline text-lg`
+            }
         >
-            {link}
-        </div>
+            {link.name}
+        </NavLink>
     ));
+
+    // HTML
     return (
         <div className="w-full text-[#f9f9f9]">
             <div className="flex items-center justify-between bg-[#f68533] w-full pr-10 pl-16 py-4">
+                {/* logos & socials */}
                 <div className="w-[60%] flex flex-col items-start justify-between gap-14">
-                    <div className="flex items-center justify-start gap-36">
+                    {/* logos */}
+                    <div className="flex items-center justify-start flex-col md:flex-row gap-4 md:gap-36">
                         <div>
-                            <img
-                                src={AYUSHLOGOWHITE}
-                                alt="ayush logo"
-                                className="size-[70px]"
-                            />
+                            <div className="size-[70px] drop-shadow-md">
+                                <img
+                                    src={AYUSHLOGOWHITE}
+                                    alt="ayush logo"
+                                    className="size-full"
+                                />
+                            </div>
                         </div>
-                        <div>
+                        <div className="h-[60px] drop-shadow-md">
                             <img
                                 src={GOVINDIAIMAGE}
                                 alt="gov india image"
-                                className="h-[60px]"
+                                className="h-full"
                             />
                         </div>
                     </div>
+
+                    {/* socials and ayush logo */}
                     <div className="flex items-center justify-start gap-36">
                         <div className="flex flex-col items-start justify-ccenter gap-4">
                             <p className="text-2xl font-medium">
@@ -76,16 +90,22 @@ export default function Footer() {
                                 {socialElements}
                             </div>
                         </div>
-                        <div>
+                        <NavLink
+                            to="/"
+                            className="hover:scale-105 transition-all ease-in size-[120px] drop-shadow-md"
+                        >
                             <img
                                 src={AYUSHLOGOWHITE}
                                 alt="ayush logo"
-                                className="size-[120px]"
+                                className="size-full"
                             />
-                        </div>
+                        </NavLink>
                     </div>
                 </div>
+
+                {/* links */}
                 <div className="w-[40%] flex items-center justify-between">
+                    {/* quick links */}
                     <div>
                         <div className="font-medium text-xl underline mb-2">
                             Quick Links
@@ -94,6 +114,7 @@ export default function Footer() {
                             {quickLinkElements}
                         </div>
                     </div>
+                    {/* extra  links */}
                     <div>
                         <div className="flex flex-col gap-4 items-start">
                             {extraLinkElements}
