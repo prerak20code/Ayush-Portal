@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Small_Footer() {
     return (
-        <div>
+        <nav>
             <footer className="bg-white text-blue-500 py-2  bottom-0 w-full">
                 <div className="container mx-auto flex flex-col sm:flex-row justify-between px-4 space-y-2 sm:space-y-0 sm:space-x-6">
                     <div className="text-center sm:text-left">
@@ -21,6 +21,6 @@ export default function Small_Footer() {
                     </div>
                 </div>
             </footer>
-        </div>
+        </nav>
     );
 }
