@@ -9,7 +9,9 @@ export default function Layout() {
             </div>
 
             <div className="mt-[110px] overflow-hidden">
-                <Outlet />
+                <div className="min-h-[calc(100vh-110px)]">
+                    <Outlet />
+                </div>
                 <Footer />
             </div>
         </div>
