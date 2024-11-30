@@ -11,12 +11,11 @@ import {
 
 import { HomePage } from './pages';
 import RegisterUser from './pages/RegisterUser.jsx';
-import Login from './pages/Login.jsx'
-
+import Login from './pages/Login.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path="/" >
+        <Route path="/">
             <Route path="" element={<HomePage />} />
             <Route path="Registration" element={<RegisterUser />} />
             <Route path="Login" element={<Login />} />
