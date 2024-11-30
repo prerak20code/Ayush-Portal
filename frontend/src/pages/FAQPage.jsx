@@ -9,6 +9,7 @@ export default function FAQpage() {
         setExpanded(expanded === index ? null : index);
     };
 
+    // fetch faqs
     const faqs = [
         {
             question: 'What is AYUSH?',
