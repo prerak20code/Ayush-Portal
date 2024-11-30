@@ -26,7 +26,7 @@ export default function Statistics() {
             <div className="flex items-start justify-start h-full">
                 {/* icon */}
                 <div className="bg-white drop-shadow-md rounded-full p-[5px] md:p-2 mr-3 md:mr-6">
-                    <div className="size-[20px] md:size-[33px] fill-[#f68533]">
+                    <div className="size-[25px] md:size-[33px] fill-[#f68533]">
                         {data.icon}
                     </div>
                 </div>

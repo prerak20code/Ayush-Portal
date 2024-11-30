@@ -1,7 +1,9 @@
-import AYUSHLOGOWHITE from '../../assets/images/ayushLogoWhite.png';
-import GOVINDIAIMAGE from '../../assets/images/govIndiaLogo.png';
-import AYUSHSTARTUPLOGO from '../../assets/images/AyushStartupLogo.png';
-import HASHTAG from '../../assets/images/hashtag.png';
+import {
+    HASHTAG,
+    AYUSHLOGOWHITE,
+    AYUSHSTARTUPLOGO,
+    GOVINDIAIMAGE,
+} from '../../assets/images';
 import { icons } from '../../assets/icons';
 import { NavLink } from 'react-router-dom';
 import { Button } from '..';
@@ -37,7 +39,7 @@ export default function Footer() {
     const socialElements = socials.map((social, index) => (
         <div
             key={index}
-            className="hover:backdrop-brightness-95 hover:scale-105 transition-all ease-in fill-[#f9f9f9] border-[0.1rem] border-[#f9f9f9] p-[5px] drop-shadow-md rounded-full size-fit"
+            className="cursor-pointer hover:backdrop-brightness-95 hover:scale-105 transition-all ease-in fill-[#f9f9f9] border-[0.1rem] border-[#f9f9f9] p-[5px] drop-shadow-md rounded-full size-fit"
         >
             <div className="size-[13px] md:size-[20px] lg:size-[25px]">
                 {social}
@@ -210,13 +212,13 @@ export default function Footer() {
 
                 <div className="sm:w-[58%] md:w-[55%] lg:w-[50%] xl:w-[40%] sm:flex flex-col h-full sm:gap-4">
                     <div className="mt-2 w-full flex flex-wrap items-center justify-between gap-2">
-                        <div className="h-[50px] drop-shadow-md">
+                        <NavLink to="/" className="hover:scale-105 transition-all ease-in h-[50px] drop-shadow-md">
                             <img
                                 src={AYUSHSTARTUPLOGO}
                                 alt="ayush logo"
                                 className="size-full object-contain"
                             />
-                        </div>
+                        </NavLink>
 
                         <NavLink
                             to="/"
@@ -229,13 +231,13 @@ export default function Footer() {
                             />
                         </NavLink>
 
-                        <div className="h-[45px] drop-shadow-md">
+                        <NavLink to="/" className="hover:scale-105 transition-all ease-in h-[45px] drop-shadow-md">
                             <img
                                 src={GOVINDIAIMAGE}
                                 alt="gov india image"
                                 className="h-full object-contain"
                             />
-                        </div>
+                        </NavLink>
                     </div>
 
                     <div className="flex items-center justify-between gap-2 flex-wrap mt-2 w-full">

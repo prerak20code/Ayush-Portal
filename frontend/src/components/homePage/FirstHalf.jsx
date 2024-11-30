@@ -1,5 +1,5 @@
 import { Statistics } from '..';
-import HOMEBG from '../../assets/images/HomeBG.png';
+import { HOMEBG } from '../../assets/images';
 import { motion } from 'framer-motion';
 
 export default function FirstHalf() {

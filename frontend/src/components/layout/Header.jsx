@@ -1,5 +1,4 @@
-import AYUSHLOGO from '../../assets/images/ayushLogo.png';
-import GOVINDIAIMAGE from '../../assets/images/govIndiaLogo.png';
+import { AYUSHLOGO, GOVINDIAIMAGE } from '../../assets/images';
 import { icons } from '../../assets/icons';
 import { NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -88,11 +87,11 @@ export default function Header() {
 
                 {/* Icons */}
                 <div className="flex items-center justify-end gap-x-6">
-                    <div className="size-[20px] fill-[#f9f9f9]">
+                    <div className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]">
                         {icons.search}
                     </div>
                     <div
-                        className="md:hidden size-[20px] fill-[#f9f9f9] cursor-pointer"
+                        className="md:hidden hover:scale-125 transition-all ease-in size-[20px] fill-[#f9f9f9] cursor-pointer"
                         onClick={() => setShowDropdown((prev) => !prev)}
                     >
                         {icons.hamburgur}

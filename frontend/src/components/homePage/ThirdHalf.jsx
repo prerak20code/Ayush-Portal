@@ -1,7 +1,5 @@
 import { Card } from '..';
-import CARDICON1 from '../../assets/images/card-1.png';
-import CARDICON2 from '../../assets/images/card-2.png';
-import CARDICON3 from '../../assets/images/card-3.png';
+import { CARDICON1, CARDICON2, CARDICON3 } from '../../assets/images';
 import { motion } from 'framer-motion';
 
 export default function ThirdHalf({ variants }) {

@@ -1,8 +1,10 @@
-import AYUSHIMAGE1 from '../../assets/images/ayush/ayush-1.png';
-import AYUSHIMAGE2 from '../../assets/images/ayush/ayush-2.png';
-import AYUSHIMAGE3 from '../../assets/images/ayush/ayush-3.png';
-import AYUSHIMAGE4 from '../../assets/images/ayush/ayush-4.png';
-import AYUSHIMAGE5 from '../../assets/images/ayush/ayush-5.png';
+import {
+    AYUSHIMAGE1,
+    AYUSHIMAGE2,
+    AYUSHIMAGE3,
+    AYUSHIMAGE4,
+    AYUSHIMAGE5,
+} from '../../assets/images';
 import { motion } from 'framer-motion';
 
 export default function FourthHalf({ variants }) {

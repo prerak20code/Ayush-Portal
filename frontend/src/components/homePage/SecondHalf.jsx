@@ -1,6 +1,4 @@
-import AYUSHLOGO from '../../assets/images/ayushLogo.png';
-import ASHOKACHAKAR from '../../assets/images/ashokaChakar.png';
-import ASHOKAPILLAR from '../../assets/images/ashokaPillar.png';
+import { ASHOKAPILLAR, ASHOKACHAKAR, AYUSHLOGO } from '../../assets/images';
 import { motion } from 'framer-motion';
 
 export default function SecondHalf({ variants }) {
