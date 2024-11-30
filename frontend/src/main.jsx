@@ -19,7 +19,6 @@ import InvestorType from './Investor Connect/InvestorType.jsx';
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/">
-        <Route path="/">
             <Route path="" element={<HomePage />} />
             <Route path="about-us" element={<AboutUsPage />} />
             <Route path="contact-us" element={<ContactUsPage />} />
