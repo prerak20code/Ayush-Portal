@@ -46,11 +46,11 @@ export default function RegisterUser() {
     return (
         <>
             <Header />
-            <div className="flex   items-center justify-center  "  >
+            <div className="flex   items-center justify-center  ">
                 {/* Wrapper Div */}
-                <div className="flex  flex-col my-0 sm:flex-row sm:my-14 bg-gray-100 shadow-lg rounded-lg overflow-hidden max-w-6xl w-full"  >
+                <div className="flex  flex-col sm:mt-[4vh] sm:flex-row  bg-gray-100 shadow-md rounded-md overflow-hidden max-w-4xl w-full ">
                     {/* Header Section */}
-                    <div className="flex-1 bg-white  flex flex-col justify-center items-center p-8 "  >
+                    <div className="flex-1 bg-white  flex flex-col justify-center items-center p-8 ">
                         {/* 'md:block hidden' ensures it is hidden on smaller screens */}
                         <h2 className="text-4xl font-bold text-gray-800 mb-2">
                             Ayush Startup
@@ -176,6 +176,19 @@ export default function RegisterUser() {
                                 </button>
                             </div>
                         </form>
+                        <div className="mt-3">
+                            <label htmlFor="loginref">
+                                Already have an account?
+                            </label>{' '}
+                            &nbsp;
+                            <a
+                                id="loginref"
+                                href="/Login"
+                                className="underline"
+                            >
+                                Login
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

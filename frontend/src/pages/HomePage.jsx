@@ -21,7 +21,7 @@ export default function HomePage() {
 
     // HTML
     return (
-        <div className="h-full flex flex-col gap-28 pb-28 bg-[#f9f9f9]">
+        <div className="flex flex-col gap-20 pb-28 bg-[#f9f9f9]">
             <FirstHalf />
             <SecondHalf variants={{ iconVariants, textVariants }} />
             <ThirdHalf variants={{ iconVariants, textVariants }} />
