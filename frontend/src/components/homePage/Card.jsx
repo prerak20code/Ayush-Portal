@@ -14,7 +14,7 @@ export default function Card({ card }) {
             transition={{
                 type: 'tween',
             }}
-            className={`relative text-[#040606] ${card.className} rounded-3xl p-8 drop-shadow-md`}
+            className={`relative text-[#040606] ${card.className} rounded-3xl p-8 m-2 drop-shadow-md max-w-[400px] min-w-[300px]`}
         >
             <div className="bg-[#f9f9f9] drop-shadow-md p-2 size-fit overflow-hidden rounded-full">
                 <img
