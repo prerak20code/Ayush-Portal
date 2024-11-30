@@ -9,6 +9,8 @@ import { NavLink } from 'react-router-dom';
 import { Button } from '..';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { copyEmail } from '../../utils';
+import { EMAIL, NUMBER1, NUMBER2 } from '../../constants/contacts';
 
 export default function Footer() {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -50,7 +52,7 @@ export default function Footer() {
     // quick links
     const quickLinks = [
         { url: '', name: 'Home' },
-        { url: 'about-ministry', name: 'About Ministry' },
+        { url: 'about-us', name: 'About Ministry' },
         { url: 'servcies', name: 'AYUSH Services' },
         { url: 'faqs', name: 'FAQs' },
         { url: 'contact-us', name: 'Contact Us' },
@@ -144,17 +146,19 @@ export default function Footer() {
                         )}
                     </AnimatePresence>
 
-                    <div className="hidden sm:block overflow-x-scroll leading-4 text-sm text-[#f9f9f9] pt-12">
+                    <div className="hidden sm:block overflow-x-scroll text-sm text-[#f9f9f9] pt-12">
                         <p className="font-medium text-[1rem] mb-[3px]">
                             Contact us :
                         </p>
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2">
                             <div>
                                 <div className="size-[12px] fill-[#f9f9f9]">
                                     {icons.call}
                                 </div>
                             </div>
-                            <p className="">+91 xxxxxx7657, xxx-xxx-xxxx</p>
+                            <p className="">
+                                +91 {NUMBER1}, {NUMBER2}
+                            </p>
                         </div>
                         <div className="flex items-center gap-2">
                             <div>
@@ -162,7 +166,13 @@ export default function Footer() {
                                     {icons.mail}
                                 </div>
                             </div>
-                            <p>ayushstartup@gmail.com</p>
+                            <p>{EMAIL}</p>
+                            <div
+                                className="cursor-pointer hover:scale-125 transition-all ease-in size-[12px] fill-[#f9f9f9]"
+                                onClick={copyEmail}
+                            >
+                                {icons.clipboard}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,17 +193,19 @@ export default function Footer() {
 
                     <div className="text-[0.95rem] flex flex-col gap-1">
                         {extraLinkElements}
-                        <div className="hidden lg:block overflow-x-scroll leading-4 text-sm mt-4 text-[#f9f9f9]">
+                        <div className="hidden lg:block overflow-x-scroll text-sm mt-2 text-[#f9f9f9]">
                             <p className="font-medium text-[1rem] mb-[3px]">
                                 Contact us :
                             </p>
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2">
                                 <div>
                                     <div className="size-[12px] fill-[#f9f9f9]">
                                         {icons.call}
                                     </div>
                                 </div>
-                                <p className="">+91 xxxxxx7657, xxx-xxx-xxxx</p>
+                                <p className="">
+                                    +91 {NUMBER1}, {NUMBER2}
+                                </p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div>
@@ -201,7 +213,13 @@ export default function Footer() {
                                         {icons.mail}
                                     </div>
                                 </div>
-                                <p>ayushstartup@gmail.com</p>
+                                <p>{EMAIL}</p>
+                                <div
+                                    className="cursor-pointer hover:scale-125 transition-all ease-in size-[12px] fill-[#f9f9f9]"
+                                    onClick={copyEmail}
+                                >
+                                    {icons.clipboard}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -212,7 +230,10 @@ export default function Footer() {
 
                 <div className="sm:w-[58%] md:w-[55%] lg:w-[50%] xl:w-[40%] sm:flex flex-col h-full sm:gap-4">
                     <div className="mt-2 w-full flex flex-wrap items-center justify-between gap-2">
-                        <NavLink to="/" className="hover:scale-105 transition-all ease-in h-[50px] drop-shadow-md">
+                        <NavLink
+                            to="/"
+                            className="hover:scale-105 transition-all ease-in h-[50px] drop-shadow-md"
+                        >
                             <img
                                 src={AYUSHSTARTUPLOGO}
                                 alt="ayush logo"
@@ -231,7 +252,10 @@ export default function Footer() {
                             />
                         </NavLink>
 
-                        <NavLink to="/" className="hover:scale-105 transition-all ease-in h-[45px] drop-shadow-md">
+                        <NavLink
+                            to="/"
+                            className="hover:scale-105 transition-all ease-in h-[45px] drop-shadow-md"
+                        >
                             <img
                                 src={GOVINDIAIMAGE}
                                 alt="gov india image"
@@ -276,13 +300,15 @@ export default function Footer() {
                             <p className="font-medium text-[1rem] mb-[3px]">
                                 Contact us :
                             </p>
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2">
                                 <div>
                                     <div className="size-[12px] fill-[#f9f9f9]">
                                         {icons.call}
                                     </div>
                                 </div>
-                                <p className="">+91 xxxxxx7657, xxx-xxx-xxxx</p>
+                                <p className="">
+                                    +91 {NUMBER1}, {NUMBER2}
+                                </p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div>
@@ -290,7 +316,13 @@ export default function Footer() {
                                         {icons.mail}
                                     </div>
                                 </div>
-                                <p>ayushstartup@gmail.com</p>
+                                <p>{EMAIL}</p>
+                                <div
+                                    className="cursor-pointer hover:scale-125 transition-all ease-in size-[12px] fill-[#f9f9f9]"
+                                    onClick={copyEmail}
+                                >
+                                    {icons.clipboard}
+                                </div>
                             </div>
                         </div>
                     </div>
