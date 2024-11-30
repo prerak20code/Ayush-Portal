@@ -25,7 +25,7 @@ export default function Header() {
         </NavLink>
     ));
     return (
-        <div className="h-[110px]">
+        <div className="h-[110px] w-full">
             <div className="drop-shadow-md h-[70px] bg-[#f9f9f9] flex items-center justify-between w-full px-4 py-[5px]">
                 <img
                     src={GOVINDIAIMAGE}
