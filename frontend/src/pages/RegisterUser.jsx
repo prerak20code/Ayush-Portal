@@ -40,7 +40,7 @@ export default function RegisterUser() {
         setPassword('');
         setConfirmPassword('');
         setPhone('');
-        alert('Registration successful!');
+        alert('Registration successful Please verify your email');
     };
 
     return (

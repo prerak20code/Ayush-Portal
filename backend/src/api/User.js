@@ -93,7 +93,8 @@ router.post('/signup', async (req, res) => {
                         .catch((err) => {
                             res.json({
                                 status: 'FAILED',
-                                message:'An error occured while hashing password !',
+                                message:
+                                    'An error occured while hashing password !',
                             });
                         });
                 }
@@ -102,7 +103,8 @@ router.post('/signup', async (req, res) => {
                 console.log(err);
                 res.json({
                     status: 'FAILED',
-                    message:'An error occured while checking for existing user !',
+                    message:
+                        'An error occured while checking for existing user !',
                 });
             });
     }
