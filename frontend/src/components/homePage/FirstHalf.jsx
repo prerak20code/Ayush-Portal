@@ -27,7 +27,9 @@ export default function FirstHalf() {
 
             {/* Overlay Content */}
             <div className="h-full w-full absolute z-1 top-0">
-                <div className="h-[calc(100vh-210px)] ">// CONTENT</div>
+                <div className="h-[calc(100vh-190px)] md:h-[calc(100vh-210px)] ">
+                    // CONTENT
+                </div>
                 <motion.div
                     variants={riseVariants}
                     initial="hidden"
