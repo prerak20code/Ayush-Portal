@@ -3,7 +3,7 @@ import GOVINDIAIMAGE from '../../assets/images/govIndiaLogo.png';
 import { icons } from '../../assets/icons';
 import { NavLink } from 'react-router-dom';
 
-export default function Startups_Header() {
+export default function StartupHeader() {
     const tabs = [
         { url: '', name: 'Home' },
         { url: 'register', name: 'Status' },

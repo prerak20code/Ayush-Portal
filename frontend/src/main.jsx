@@ -18,18 +18,24 @@ import {
     LoginPage,
 } from './pages';
 
+import { LayoutOne, LayoutTwo } from './components';
+
 import { VariantContextProvider } from './contexts';
 // import InvestorType from './Investor Connect/InvestorType.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
-            <Route path="" element={<HomePage />} />
-            <Route path="about-us" element={<AboutUsPage />} />
-            <Route path="contact-us" element={<ContactUsPage />} />
-            <Route path="faqs" element={<FAQpage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="login" element={<LoginPage />} />
+            <Route path="" element={<LayoutOne />}>
+                <Route path="" element={<HomePage />} />
+                <Route path="about-us" element={<AboutUsPage />} />
+                <Route path="contact-us" element={<ContactUsPage />} />
+                <Route path="faqs" element={<FAQpage />} />
+            </Route>
+            <Route path="" element={<LayoutTwo />}>
+                <Route path="register" element={<RegisterPage />} />
+                <Route path="login" element={<LoginPage />} />
+            </Route>
             {/* <Route path="InvestorType" element={<InvestorType />} /> */}
         </Route>
     )

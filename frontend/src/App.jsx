@@ -1,12 +1,9 @@
-import { Layout } from './components';
-import { motion } from 'framer-motion';
+import { Outlet } from 'react-router-dom';
 
-function App() {
+export default function App() {
     return (
         <div className="w-screen h-screen">
-            <Layout />
+            <Outlet />
         </div>
     );
 }
-
-export default App;

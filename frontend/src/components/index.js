@@ -1,6 +1,9 @@
-import Layout from './layout/Layout';
+import LayoutOne from './layout/LayoutOne';
+import LayoutTwo from './layout/LayoutTwo';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
+import StartupHeader from './layout/StartupHeader';
+import SmallFooter from './layout/SmallFooter';
 import Statistics from './homePage/Statistics';
 import FirstHalf from './homePage/FirstHalf';
 import SecondHalf from './homePage/SecondHalf';
@@ -10,8 +13,11 @@ import Button from './general/Button';
 import Card from './homePage/Card';
 
 export {
-    Layout,
+    LayoutOne,
+    LayoutTwo,
     Header,
+    StartupHeader,
+    SmallFooter,
     Footer,
     Statistics,
     FirstHalf,
