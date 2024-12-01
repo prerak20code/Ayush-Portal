@@ -13,10 +13,11 @@ const router = express.Router();
 
 //signup route
 router.post('/signup', async (req, res) => {
-    let { name, email, password, dateOfBirth } = req.body;
+    let { name, email, password, dateOfBirth, phone } = req.body;
     name = name.trim();
     email = email.trim();
     dateOfBirth = dateOfBirth.trim();
+    phone = phone.trim();
 
     if (name === '' || email === '' || password === '' || dateOfBirth === '') {
         return res.json({
@@ -74,6 +75,7 @@ router.post('/signup', async (req, res) => {
                                 email,
                                 password: hashedPassword,
                                 dateOfBirth,
+                                phone,
                                 verified: false,
                             });
                             newUser
@@ -93,7 +95,8 @@ router.post('/signup', async (req, res) => {
                         .catch((err) => {
                             res.json({
                                 status: 'FAILED',
-                                message:'An error occured while hashing password !',
+                                message:
+                                    'An error occured while hashing password !',
                             });
                         });
                 }
@@ -102,7 +105,8 @@ router.post('/signup', async (req, res) => {
                 console.log(err);
                 res.json({
                     status: 'FAILED',
-                    message:'An error occured while checking for existing user !',
+                    message:
+                        'An error occured while checking for existing user !',
                 });
             });
     }

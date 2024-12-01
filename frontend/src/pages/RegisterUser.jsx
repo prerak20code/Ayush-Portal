@@ -70,7 +70,7 @@ export default function RegisterUser() {
         <>
             <div className="flex items-center justify-center">
                 {/* Wrapper Div */}
-                <div className="flex flex-col sm:mt-[4vh] sm:flex-row bg-gray-100 shadow-md rounded-md overflow-hidden max-w-4xl w-full">
+                <div className="flex flex-col sm:mt-[2vh] sm:flex-row bg-gray-100 shadow-md rounded-md overflow-hidden max-w-4xl w-full">
                     {/* Header Section */}
                     <div className="flex-1 bg-white flex flex-col justify-center items-center p-8">
                         <h2 className="text-4xl font-bold text-gray-800 mb-2">
@@ -87,7 +87,7 @@ export default function RegisterUser() {
                     </div>
 
                     {/* Form Section */}
-                    <div className="flex-1 p-8">
+                    <div className="flex-1 p-4">
                         <form className="space-y-4" onSubmit={handleSubmit}>
                             {/* User ID */}
                             <div>

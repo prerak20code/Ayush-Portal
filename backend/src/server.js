@@ -13,19 +13,21 @@ app.use(cookieParser());
 
 const whitelist = process.env.WHITELIST ? process.env.WHITELIST.split(',') : [];
 app.use(
-    cors({
-        origin: function (origin, callback) {
-            if (!origin || whitelist.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-        credentials: true,
-        optionsSuccessStatus: 200,
-        allowedHeaders: ['Content-Type', 'Authorization'],
-    })
+    cors(
+    //     {
+    //     origin: function (origin, callback) {
+    //         if (!origin || whitelist.includes(origin)) {
+    //             callback(null, true);
+    //         } else {
+    //             callback(new Error('Not allowed by CORS'));
+    //         }
+    //     },
+    //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    //     credentials: true,
+    //     optionsSuccessStatus: 200,
+    //     allowedHeaders: ['Content-Type', 'Authorization'],
+    // }
+)
 );
 
 app.use('/user', UserRouter);
