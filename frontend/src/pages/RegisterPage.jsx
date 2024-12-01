@@ -1,57 +1,77 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import AyushLogo from '../assets/images/ayushLogo.png';
-import { Header } from '../components';
+import AyushMinistry from '../assets/images/AyushMinistry.png';
+import axios from 'axios';
+
 import Small_Footer from '../components/layout/Small_Footer';
 
-export default function RegisterUser() {
+export default function RegisterPage() {
     // States for form inputs
-    const [userId, setUserId] = useState('');
+    const [userName, setUserName] = useState('');
     const [emailId, setEmailId] = useState('');
+    const [dob, setDob] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone, setPhone] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Basic validation
         if (password !== confirmPassword) {
-            alert('Passwords do not match!');
+            setErrorMessage('Passwords do not match!');
             return;
         }
 
         // Create user object
         const userData = {
-            userId,
-            emailId,
+            name: userName,
+            email: emailId,
             password,
             phone,
+            dateOfBirth: dob, // You might want to add a date of birth input if needed.
         };
 
-        // Log or send user data to API
-        console.log('User Data:', userData);
+        try {
+            // Send POST request to the backend for user registration
+            const response = await axios.post(
+                'http://localhost:4000/user/signup',
+                userData
+            );
 
-        // Clear form (optional)
-        setUserId('');
+            if (response.data.status === 'FAILED') {
+                setErrorMessage(response.data.message);
+                setSuccessMessage('');
+            } else {
+                setSuccessMessage(response.data.message);
+                setErrorMessage('');
+            }
+        } catch (error) {
+            console.log(error);
+            setErrorMessage('An error occurred while registering.');
+            setSuccessMessage('');
+        }
+
+        // Clear form fields (optional)
+        setUserName('');
         setEmailId('');
         setPassword('');
         setConfirmPassword('');
         setPhone('');
-        alert('Registration successful!');
+        setDob('');
     };
 
     return (
         <>
-            <Header />
-            <div className="bg-gray-100 flex   items-center justify-center ">
+            <div className="flex items-center justify-center">
                 {/* Wrapper Div */}
-                <div className="flex flex-col my-0 sm:flex-row sm:my-14 bg-gray-100 shadow-lg rounded-lg overflow-hidden max-w-5xl w-full">
+                <div className="flex flex-col sm:mt-[2vh] sm:flex-row bg-gray-100 shadow-md rounded-md overflow-hidden max-w-4xl w-full">
                     {/* Header Section */}
-                    <div className="flex-1 bg-gray-200 flex flex-col justify-center items-center p-8 ">
-                        {/* 'md:block hidden' ensures it is hidden on smaller screens */}
+                    <div className="flex-1 bg-white flex flex-col justify-center items-center p-8">
                         <h2 className="text-4xl font-bold text-gray-800 mb-2">
                             Ayush Startup
                         </h2>
@@ -59,14 +79,14 @@ export default function RegisterUser() {
                             User Registration Portal
                         </h3>
                         <img
-                            src={AyushLogo}
+                            src={AyushMinistry}
                             alt="Ayush Logo"
                             className="max-w-xs w-full max-sm:hidden"
                         />
                     </div>
 
                     {/* Form Section */}
-                    <div className="flex-1 bg-white p-8">
+                    <div className="flex-1 p-4">
                         <form className="space-y-4" onSubmit={handleSubmit}>
                             {/* User ID */}
                             <div>
@@ -74,14 +94,16 @@ export default function RegisterUser() {
                                     htmlFor="userId"
                                     className="block text-sm font-medium text-gray-700"
                                 >
-                                    User Id
+                                    Name
                                 </label>
                                 <input
-                                    id="userId"
+                                    id="userName"
                                     type="text"
-                                    placeholder="Enter User Id"
-                                    value={userId}
-                                    onChange={(e) => setUserId(e.target.value)}
+                                    placeholder="Enter Your NAmr"
+                                    value={userName}
+                                    onChange={(e) =>
+                                        setUserName(e.target.value)
+                                    }
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     required
                                 />
@@ -101,6 +123,22 @@ export default function RegisterUser() {
                                     placeholder="Enter Email"
                                     value={emailId}
                                     onChange={(e) => setEmailId(e.target.value)}
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="dob"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    DOB
+                                </label>
+                                <input
+                                    id="dobl"
+                                    type="date"
+                                    value={dob}
+                                    onChange={(e) => setDob(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     required
                                 />
@@ -176,6 +214,32 @@ export default function RegisterUser() {
                                 </button>
                             </div>
                         </form>
+
+                        {/* Display Error or Success Message */}
+                        {errorMessage && (
+                            <div className="mt-3 text-red-500">
+                                {errorMessage}
+                            </div>
+                        )}
+                        {successMessage && (
+                            <div className="mt-3 text-green-500">
+                                {successMessage}
+                            </div>
+                        )}
+
+                        <div className="mt-3">
+                            <label htmlFor="loginref">
+                                Already have an account?
+                            </label>{' '}
+                            &nbsp;
+                            <a
+                                id="loginref"
+                                href="/Login"
+                                className="underline"
+                            >
+                                Login
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

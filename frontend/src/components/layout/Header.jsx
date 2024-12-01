@@ -1,18 +1,23 @@
 import { AYUSHLOGO, GOVINDIAIMAGE } from '../../assets/images';
 import { icons } from '../../assets/icons';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Header() {
     const [showDropdown, setShowDropdown] = useState(false);
+    const location = useLocation();
 
-    // Close dropdown on screen resize
+    // Close dropdown
     useEffect(() => {
         const handleResize = () => setShowDropdown(false);
+        // Listen for window resize
         window.addEventListener('resize', handleResize);
+
+        // Close dropdown when location changes
+        setShowDropdown(false);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [location]);
 
     const dropdownVariants = {
         hidden: { opacity: 0, y: -10 },

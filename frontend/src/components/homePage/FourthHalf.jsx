@@ -6,10 +6,11 @@ import {
     AYUSHIMAGE5,
 } from '../../assets/images';
 import { motion } from 'framer-motion';
+import { useVariantContext } from '../../contexts';
 
-export default function FourthHalf({ variants }) {
+export default function FourthHalf() {
     // variants
-    const { iconVariants, textVariants } = variants;
+    const { iconVariants, textVariants } = useVariantContext();
 
     // logos array
     const logos = [
