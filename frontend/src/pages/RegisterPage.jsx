@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import Small_Footer from '../components/layout/Small_Footer';
 
-export default function RegisterUser() {
+export default function RegisterPage() {
     // States for form inputs
     const [userName, setUserName] = useState('');
     const [emailId, setEmailId] = useState('');
@@ -42,14 +42,13 @@ export default function RegisterUser() {
                 'http://localhost:4000/user/signup',
                 userData
             );
-           
 
             if (response.data.status === 'FAILED') {
                 setErrorMessage(response.data.message);
-               setSuccessMessage('');
+                setSuccessMessage('');
             } else {
                 setSuccessMessage(response.data.message);
-                 setErrorMessage('');
+                setErrorMessage('');
             }
         } catch (error) {
             console.log(error);

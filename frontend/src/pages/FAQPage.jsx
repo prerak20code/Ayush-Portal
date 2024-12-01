@@ -46,7 +46,7 @@ export default function FAQpage() {
                 Frequently Asked Questions
             </motion.h1>
 
-            <div className="flex flex-col lg:grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-4">
+            <div className="flex flex-col gap-4">
                 {faqs.map((faq, index) => (
                     <motion.div
                         variants={iconVariants}

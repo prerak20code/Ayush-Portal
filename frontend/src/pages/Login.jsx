@@ -4,12 +4,11 @@ import Owner_Type from '../components/LoginPage/Owner_Type';
 import Stakeholder_Type from '../components/LoginPage/Stakeholder_Type';
 import Government_Type from '../components/LoginPage/Government_Type';
 
-function App() {
+export default function LoginPage() {
     const [role, setRole] = useState('Startup Owner'); // Default role
 
     return (
         <div className="w-screen sm:h-[80vh] h-screen flex flex-col">
-         
             <div className="relative flex-1 flex items-center justify-center bg-gray-100">
                 {/* Background */}
                 <div
@@ -51,5 +50,3 @@ function App() {
         </div>
     );
 }
-
-export default App;
