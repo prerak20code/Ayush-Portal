@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker'; // Import react-datepicker
+import 'react-datepicker/dist/react-datepicker.css'; // Import the default styles
 import {
     FaUser,
     FaPhone,
@@ -7,8 +9,18 @@ import {
     FaCalendarAlt,
     FaLinkedin,
 } from 'react-icons/fa';
+import Select from 'react-select'; // React Select for nationality dropdown
+import validator from 'validator'; // For email validation
+import { countries } from 'countries-list'; // Get country data from the package
+import { debounce } from 'lodash'; // Debounce utility to prevent unnecessary filtering
 
 const PersonalInformation = ({ data = {}, onComplete }) => {
+    // Get all countries from the countries-list package
+    const countryList = Object.values(countries).map((country) => ({
+        value: country.alpha2,
+        label: country.name,
+    }));
+
     // State for form fields
     const [formData, setFormData] = useState({
         fullName: data.fullName || '',
@@ -16,13 +28,14 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
         email: data.email || '',
         address: data.address || '',
         dateOfBirth: data.dateOfBirth || '',
-        nationality: data.nationality || '',
+        nationality: data.nationality || '', // Initially empty
         linkedIn: data.linkedIn || '',
         photo: data.photo || null, // Optional field
     });
 
     // State for tracking form validation
     const [isFormComplete, setIsFormComplete] = useState(false);
+    const [nationalityInput, setNationalityInput] = useState(''); // For tracking nationality input
 
     // Handle input changes
     const handleChange = (e) => {
@@ -30,6 +43,21 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
         setFormData((prevData) => ({
             ...prevData,
             [name]: type === 'file' ? files[0] : value,
+        }));
+    };
+
+    const handleDateChange = (date) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            dateOfBirth: date ? date.toISOString().split('T')[0] : '', // Store in YYYY-MM-DD format
+        }));
+    };
+
+    // Handle nationality change from select
+    const handleNationalityChange = (selectedOption) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            nationality: selectedOption ? selectedOption.value : '', // Make sure value is correctly updated
         }));
     };
 
@@ -43,10 +71,24 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
             'dateOfBirth',
             'nationality',
         ];
-        const isComplete = requiredFields.every(
-            (field) => formData[field]?.trim() !== ''
-        );
+        const isComplete =
+            requiredFields.every((field) => formData[field]?.trim() !== '') &&
+            validator.isEmail(formData.email) &&
+            validateEmailDomain(formData.email);
+
         setIsFormComplete(isComplete);
+    };
+
+    // Custom email domain validation
+    const validateEmailDomain = (email) => {
+        // Check if email ends with popular domains like gmail.com or email.com
+        const validDomains = [
+            'gmail.com',
+            'email.com',
+            'outlook.com',
+            'yahoo.com',
+        ];
+        return validDomains.some((domain) => email.endsWith(domain));
     };
 
     // Call validateForm on every change
@@ -61,9 +103,16 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
             // Pass the completed data back to the parent component
             onComplete(formData);
         } else {
-            alert('Please complete all required fields.');
+            alert(
+                'Please complete all required fields and ensure email is valid.'
+            );
         }
     };
+
+    // Debounce the nationality input to avoid excessive filtering
+    const debouncedInputChange = debounce((inputValue) => {
+        setNationalityInput(inputValue);
+    }, 300); // 300ms debounce time
 
     return (
         <div className="p-6 bg-orange-50 rounded-lg shadow-md border border-gray-200">
@@ -87,6 +136,7 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                             placeholder="Enter full name"
                             value={formData.fullName}
                             onChange={handleChange}
+                            required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         />
                     </div>
@@ -105,6 +155,7 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                             placeholder="Enter phone number"
                             value={formData.phoneNumber}
                             onChange={handleChange}
+                            required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         />
                     </div>
@@ -123,6 +174,7 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                             placeholder="Enter email address"
                             value={formData.email}
                             onChange={handleChange}
+                            required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         />
                     </div>
@@ -141,6 +193,7 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                             rows="3"
                             value={formData.address}
                             onChange={handleChange}
+                            required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         ></textarea>
                     </div>
@@ -153,12 +206,17 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                         <label className="block text-sm font-medium text-gray-700">
                             Date of Birth
                         </label>
-                        <input
-                            type="date"
-                            name="dateOfBirth"
-                            value={formData.dateOfBirth}
-                            onChange={handleChange}
+                        <DatePicker
+                            selected={
+                                formData.dateOfBirth
+                                    ? new Date(formData.dateOfBirth)
+                                    : null
+                            }
+                            onChange={handleDateChange}
+                            dateFormat="yyyy-MM-dd"
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                            placeholderText="Select your date of birth"
+                            required
                         />
                     </div>
                 </div>
@@ -170,13 +228,26 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                         <label className="block text-sm font-medium text-gray-700">
                             Nationality
                         </label>
-                        <input
-                            type="text"
-                            name="nationality"
-                            placeholder="Enter nationality"
-                            value={formData.nationality}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                        <Select
+                            key={formData.nationality} // Force re-render when nationality changes
+                            options={countryList}
+                            value={
+                                countryList.find(
+                                    (option) =>
+                                        option.value === formData.nationality
+                                ) || null
+                            } // Ensure correct value
+                            onChange={handleNationalityChange}
+                            onInputChange={debouncedInputChange}
+                            placeholder="Select your nationality"
+                            required
+                            isClearable={false}
+                            filterOption={(candidate, input) =>
+                                candidate.label
+                                    .toLowerCase()
+                                    .includes(input.toLowerCase())
+                            }
+                            className="mt-1"
                         />
                     </div>
                 </div>

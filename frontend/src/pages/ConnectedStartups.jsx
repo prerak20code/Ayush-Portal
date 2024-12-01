@@ -1,6 +1,4 @@
-import Startups_Header from '../components/layout/Startups_Header';
 import Favourite_Startups from '../components/layout/Favourite_Startups';
-import { Footer } from '../components';
 
 // Card Component
 const Card = ({ image, title, description, showButton }) => {
@@ -44,7 +42,6 @@ const ConnectedStartups = () => {
 
     return (
         <>
-            <Startups_Header />
             <div className="white min-h-screen p-6 bg-orange-200 ">
                 <div className="max-w-6xl mx-auto ">
                     {/* Connected Startups Section */}
@@ -84,7 +81,6 @@ const ConnectedStartups = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </>
     );
 };
