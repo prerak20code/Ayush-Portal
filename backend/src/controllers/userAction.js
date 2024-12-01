@@ -68,30 +68,19 @@ export const signupUser = (
 
             if (data.status === 'FAILED') {
                 const { message } = data;
-            if (data.status === 'FAILED') {
-                const { message } = data;
+                if (data.status === 'FAILED') {
+                    const { message } = data;
 
-                // checking for specific error
-                if (message.includes('name')) {
-                    setFieldError('name', message);
-                } else if (message.includes('email')) {
-                    setFieldError('email', message);
-                } else if (message.includes('date')) {
-                    setFieldError('dateOfBirth', message);
-                } else if (message.includes('password')) {
-                    setFieldError('password', message);
-                }
-            }
-        });
-                // checking for specific error
-                if (message.includes('name')) {
-                    setFieldError('name', message);
-                } else if (message.includes('email')) {
-                    setFieldError('email', message);
-                } else if (message.includes('date')) {
-                    setFieldError('dateOfBirth', message);
-                } else if (message.includes('password')) {
-                    setFieldError('password', message);
+                    // checking for specific error
+                    if (message.includes('name')) {
+                        setFieldError('name', message);
+                    } else if (message.includes('email')) {
+                        setFieldError('email', message);
+                    } else if (message.includes('date')) {
+                        setFieldError('dateOfBirth', message);
+                    } else if (message.includes('password')) {
+                        setFieldError('password', message);
+                    }
                 }
             }
         });

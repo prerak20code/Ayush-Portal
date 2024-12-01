@@ -16,16 +16,19 @@ export default function Owner_Type() {
             return;
         }
         const userData = {
-            email,password
+            email,
+            password,
         };
 
         // Send POST request to the backend
         try {
-            const response = await axios.post('http://localhost:4000/user/signin', userData);
+            const response = await axios.post(
+                'http://localhost:4000/user/signin',
+                userData
+            );
 
-            const status =  response.data.status;
-            const message =  response.data.message;
-
+            const status = response.data.status;
+            const message = response.data.message;
 
             if (status === 'SUCCESS') {
                 setSuccessMessage(message);

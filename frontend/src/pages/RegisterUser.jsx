@@ -42,14 +42,13 @@ export default function RegisterUser() {
                 'http://localhost:4000/user/signup',
                 userData
             );
-           
 
             if (response.data.status === 'FAILED') {
                 setErrorMessage(response.data.message);
-               setSuccessMessage('');
+                setSuccessMessage('');
             } else {
                 setSuccessMessage(response.data.message);
-                 setErrorMessage('');
+                setErrorMessage('');
             }
         } catch (error) {
             console.log(error);

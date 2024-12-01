@@ -9,7 +9,6 @@ function App() {
 
     return (
         <div className="w-screen sm:h-[80vh] h-screen flex flex-col">
-         
             <div className="relative flex-1 flex items-center justify-center bg-gray-100">
                 {/* Background */}
                 <div

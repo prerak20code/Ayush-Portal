@@ -12,7 +12,7 @@ app.use(cookieParser());
 
 const whitelist = process.env.WHITELIST ? process.env.WHITELIST.split(',') : [];
 app.use(
-    cors(
+    cors()
     //     {
     //     origin: function (origin, callback) {
     //         if (!origin || whitelist.includes(origin)) {
@@ -26,21 +26,18 @@ app.use(
     //     optionsSuccessStatus: 200,
     //     allowedHeaders: ['Content-Type', 'Authorization'],
     // }
-)
 );
 
-
 import UserRouter from './api/user.js';
-import startupRoute from "./routes/startup.js";
-import  investmentRoute  from './routes/investment.js';
+import startupRoute from './routes/startup.js';
+import investmentRoute from './routes/investment.js';
 import { GovOfficial } from './models/govOfficial.js';
-
 
 // api
 app.use('/user', UserRouter);
-app.use("/api/v1/startup",startupRoute);
-app.use("/api/v1/investment", investmentRoute);
-app.use("/api/v1/investment",GovOfficial);
+app.use('/api/v1/startup', startupRoute);
+app.use('/api/v1/investment', investmentRoute);
+app.use('/api/v1/investment', GovOfficial);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
