@@ -3,7 +3,6 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import cors from 'cors';
 import './db/db.js';
-import UserRouter from './api/user.js';
 
 const app = express();
 
@@ -30,7 +29,18 @@ app.use(
 )
 );
 
+
+import UserRouter from './api/user.js';
+import startupRoute from "./routes/startup.js";
+import  investmentRoute  from './routes/investment.js';
+import { GovOfficial } from './models/govOfficial.js';
+
+
+// api
 app.use('/user', UserRouter);
+app.use("/api/v1/startup",startupRoute);
+app.use("/api/v1/investment", investmentRoute);
+app.use("/api/v1/investment",GovOfficial);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

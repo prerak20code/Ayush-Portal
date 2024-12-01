@@ -25,5 +25,19 @@ router
         }),
         wrapAsync(StakeholderControl.login)
     );
+router
+    .route('/Stakeholder/login')
+    .get((req, res) => {
+        res.render('');
+    })
+    .post(
+        saveRedirectUrl,
+        passport.authenticate('local', {
+            failureRedirect: '/login',
+            failureFlash: true,
+        }),
+        wrapAsync(StakeholderControl.login)
+    );
 
+router.get('/Stakeholder/logout', StakeholderControl.logout);
 router.get('/Stakeholder/logout', StakeholderControl.logout);
