@@ -1,4 +1,4 @@
-import {investment} from "../models/investment.model.js";
+import {investment} from "../models/investment.js";
 import startup, {startup} from "../models/startup.js";
 
 export const applystartup = async(req,res)=>{
