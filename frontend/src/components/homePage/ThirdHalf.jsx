@@ -1,7 +1,5 @@
 import { Card } from '..';
-import CARDICON1 from '../../assets/images/card-1.png';
-import CARDICON2 from '../../assets/images/card-2.png';
-import CARDICON3 from '../../assets/images/card-3.png';
+import { CARDICON1, CARDICON2, CARDICON3 } from '../../assets/images';
 import { motion } from 'framer-motion';
 
 export default function ThirdHalf({ variants }) {
@@ -40,7 +38,7 @@ export default function ThirdHalf({ variants }) {
 
     // HTML
     return (
-        <div className="px-12 md:px-24">
+        <div className="px-[5%]">
             {/* text section */}
             <motion.div
                 initial="hidden"
@@ -52,7 +50,7 @@ export default function ThirdHalf({ variants }) {
                     Our Key Features and Highlights
                 </h2>
 
-                <p className="px-12 text-lg leading-8 text-center mb-14">
+                <p className="mx-[5%]  text-lg leading-8 text-center mb-10">
                     Explore the unique features and resources designed to
                     support, fund, and grow your AYUSH startup, empowering you
                     to transform innovative ideas into impactful solutions.
@@ -64,7 +62,7 @@ export default function ThirdHalf({ variants }) {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
-                className="px-10 grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-10 gap-y-6"
+                className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] place-items-center overflow-x-scroll gap-6"
             >
                 {cardElements}
             </motion.div>

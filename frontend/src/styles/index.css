@@ -7,7 +7,6 @@
     display: none;
 }
 
-/* Add this to your global CSS file */
 @keyframes slow-spin {
     0% {
         transform: rotate(0deg);

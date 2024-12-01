@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 function App() {
     return (
-        <div className="w-screen h-screen overflow-x-hidden overflow-y-scroll">
+        <div className="w-screen h-screen">
             <Layout />
         </div>
     );

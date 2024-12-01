@@ -1,62 +1,51 @@
-import Header from './components/layout/Header';
-import Small_Footer from './components/layout/Small_Footer';
+import { useState } from 'react';
+import { Header } from '../components';
+import Small_Footer from '../components/layout/Small_Footer';
+import Owner_Type from '../components/LoginPage/Owner_Type';
+import Stakeholder_Type from '../components/LoginPage/Stakeholder_Type';
+import Government_Type from '../components/LoginPage/Government_Type';
 
 function App() {
-    return (
-        <div className="w-screen h-screen overflow-hidden flex flex-col">
-            <Header />
+    const [role, setRole] = useState('Startup Owner'); // Default role
 
-            <div className="relative flex-1">
-                {/* Background container */}
+    return (
+        <div className="w-screen h-screen flex flex-col">
+            <Header />
+            <div className="relative flex-1 flex items-center justify-center bg-gray-100">
+                {/* Background */}
                 <div
-                    className="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed transform scale-x-[-1] filter brightness-75"
+                    className="absolute inset-0 bg-cover bg-center transform scale-x-[-1] filter brightness-75"
                     style={{
                         backgroundImage: `url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/c3/c9/ee/impressive-construction.jpg')`,
                     }}
                 />
 
-                <div className="relative z-10 flex items-center justify-center sm:justify-end h-full pr-4 sm:pr-12">
-                    <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md flex flex-col justify-between">
-                        <h1 className="text-3xl font-bold text-center mb-6">
-                            Welcome Back!
-                        </h1>
-                        <form className="flex flex-col space-y-4">
-                            <div className="mb-4">
-                                <label
-                                    className="block text-gray-700 font-semibold mb-2"
-                                    htmlFor="userId"
-                                >
-                                    User ID:
-                                </label>
-                                <input
-                                    type="text"
-                                    id="userId"
-                                    placeholder="Enter your UserID"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    className="block text-gray-700 font-semibold mb-2"
-                                    htmlFor="password"
-                                >
-                                    Password:
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    placeholder="Enter your Password"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-orange-500 text-white font-semibold py-2 rounded-lg hover:bg-orange-600 transition duration-200"
-                            >
-                                Login
-                            </button>
-                        </form>
-                    </div>
+                {/* Main Content */}
+                <div className="relative z-10 bg-gray-200 p-6 rounded-lg shadow-md max-w-md w-full text-center">
+                    <h1 className="text-xl font-bold text-gray-800 mb-4">
+                        Welcome Back!
+                    </h1>
+                    <label
+                        htmlFor="role"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                        Select Your Role
+                    </label>
+                    <select
+                        id="role"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                        className="w-full mb-4 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="Startup Owner">Startup Owner</option>
+                        <option value="Stakeholder">Stakeholder</option>
+                        <option value="Govt. Official">Govt. Official</option>
+                    </select>
+
+                    {/* Conditional Rendering */}
+                    {role === 'Startup Owner' && <Owner_Type />}
+                    {role === 'Stakeholder' && <Stakeholder_Type />}
+                    {role === 'Govt. Official' && <Government_Type />}
                 </div>
             </div>
             <Small_Footer />

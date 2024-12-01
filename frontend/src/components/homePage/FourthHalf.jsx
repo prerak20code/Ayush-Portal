@@ -1,8 +1,10 @@
-import AYUSHIMAGE1 from '../../assets/images/ayush/ayush-1.png';
-import AYUSHIMAGE2 from '../../assets/images/ayush/ayush-2.png';
-import AYUSHIMAGE3 from '../../assets/images/ayush/ayush-3.png';
-import AYUSHIMAGE4 from '../../assets/images/ayush/ayush-4.png';
-import AYUSHIMAGE5 from '../../assets/images/ayush/ayush-5.png';
+import {
+    AYUSHIMAGE1,
+    AYUSHIMAGE2,
+    AYUSHIMAGE3,
+    AYUSHIMAGE4,
+    AYUSHIMAGE5,
+} from '../../assets/images';
 import { motion } from 'framer-motion';
 
 export default function FourthHalf({ variants }) {
@@ -21,7 +23,7 @@ export default function FourthHalf({ variants }) {
     const logoElements = logos.map((logo, index) => (
         <motion.div
             key={index}
-            className="rounded-full overflow-hidden drop-shadow-md p-2 size-[180px]"
+            className="drop-shadow-md size-[80px] sm:size-[100px] md:size-[120px] lg:size-[130px]"
             custom={index}
             variants={iconVariants}
         >
@@ -35,10 +37,10 @@ export default function FourthHalf({ variants }) {
 
     // HTML
     return (
-        <div className="px-12 md:px-36 text-justify">
+        <div className="px-[6%]">
             {/* logo section */}
             <motion.div
-                className="flex items-center justify-evenly mb-10"
+                className="flex items-center justify-evenly flex-wrap gap-4 mb-10"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
@@ -57,7 +59,7 @@ export default function FourthHalf({ variants }) {
                     The Core Principles of AYUSH: Foundations of Holistic
                     Wellness
                 </h2>
-                <p className="text-lg leading-8">
+                <p className="text-lg leading-8 text-justify">
                     The AYUSH system, encompassing Ayurveda, Yoga, Naturopathy,
                     Unani, Siddha, and Homeopathy, is built on timeless
                     principles that promote balance, health, and harmony in
