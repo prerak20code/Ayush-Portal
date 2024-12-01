@@ -1,9 +1,10 @@
 import { ASHOKAPILLAR, ASHOKACHAKAR, AYUSHLOGO } from '../../assets/images';
 import { motion } from 'framer-motion';
+import { useVariantContext } from '../../contexts';
 
-export default function SecondHalf({ variants }) {
+export default function SecondHalf() {
     // variants
-    const { iconVariants, textVariants } = variants;
+    const { iconVariants, textVariants } = useVariantContext();
 
     // logos array
     const logos = [

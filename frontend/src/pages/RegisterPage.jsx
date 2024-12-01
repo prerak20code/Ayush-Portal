@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import AyushMinistry from '../assets/images/AyushMinistry.png';
@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import Small_Footer from '../components/layout/Small_Footer';
 
-export default function RegisterUser() {
+export default function RegisterPage() {
     // States for form inputs
     const [userName, setUserName] = useState('');
     const [emailId, setEmailId] = useState('');

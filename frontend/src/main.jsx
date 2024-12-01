@@ -9,12 +9,17 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 
-import { AboutUsPage, ContactUsPage, FAQpage, HomePage } from './pages';
+import {
+    AboutUsPage,
+    ContactUsPage,
+    FAQpage,
+    HomePage,
+    RegisterPage,
+    LoginPage,
+} from './pages';
 
-import RegisterUser from './pages/RegisterUser.jsx';
-import Login from './pages/Login.jsx';
-
-import InvestorType from './Investor Connect/InvestorType.jsx';
+import { VariantContextProvider } from './contexts';
+// import InvestorType from './Investor Connect/InvestorType.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -23,15 +28,17 @@ const router = createBrowserRouter(
             <Route path="about-us" element={<AboutUsPage />} />
             <Route path="contact-us" element={<ContactUsPage />} />
             <Route path="faqs" element={<FAQpage />} />
-            <Route path="register" element={<RegisterUser />} />
-            <Route path="login" element={<Login />} />
-            <Route path="InvestorType" element={<InvestorType />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPage />} />
+            {/* <Route path="InvestorType" element={<InvestorType />} /> */}
         </Route>
     )
 );
 
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
-    <RouterProvider router={router} />
+    <VariantContextProvider>
+        <RouterProvider router={router} />
+    </VariantContextProvider>
     // </StrictMode>
 );
