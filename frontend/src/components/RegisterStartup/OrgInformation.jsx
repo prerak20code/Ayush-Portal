@@ -1,28 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import {
-    FaUser,
-    FaPhone,
-    FaEnvelope,
-    FaMapMarkerAlt,
+    FaBuilding,
     FaCalendarAlt,
-    FaLinkedin,
+    FaMoneyBillWave,
+    FaMapMarkerAlt,
+    FaFilePdf,
 } from 'react-icons/fa';
 
-const PersonalInformation = ({ data = {}, onComplete }) => {
+const OrganizationInformation = ({ onComplete }) => {
     // State for form fields
     const [formData, setFormData] = useState({
-        fullName: data.fullName || '',
-        phoneNumber: data.phoneNumber || '',
-        email: data.email || '',
-        address: data.address || '',
-        dateOfBirth: data.dateOfBirth || '',
-        nationality: data.nationality || '',
-        linkedIn: data.linkedIn || '',
-        photo: data.photo || null, // Optional field
+        startupName: '',
+        dateOfEstablishment: '',
+        evaluation: '',
+        address: '',
+        industry: '',
+        website: '',
+        pdf: null, // Field for uploading PDFs
     });
 
     // State for tracking form validation
     const [isFormComplete, setIsFormComplete] = useState(false);
+
+    // Load saved data from localStorage on component mount
+    useEffect(() => {
+        const savedData = localStorage.getItem('organizationInformation');
+        if (savedData) {
+            setFormData(JSON.parse(savedData));
+        }
+    }, []);
+
+    // Save form data to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem(
+            'organizationInformation',
+            JSON.stringify(formData)
+        );
+    }, [formData]);
 
     // Handle input changes
     const handleChange = (e) => {
@@ -36,12 +50,11 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
     // Validate form completeness
     const validateForm = () => {
         const requiredFields = [
-            'fullName',
-            'phoneNumber',
-            'email',
+            'startupName',
+            'dateOfEstablishment',
+            'evaluation',
             'address',
-            'dateOfBirth',
-            'nationality',
+            'industry',
         ];
         const isComplete = requiredFields.every(
             (field) => formData[field]?.trim() !== ''
@@ -58,79 +71,76 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (isFormComplete) {
-            // Pass the completed data back to the parent component
-            onComplete(formData);
-        } else {
-            alert('Please complete all required fields.');
+            console.log('Form submitted successfully!');
+            onComplete(); // Notify parent to mark step as complete and move to the next page
         }
     };
 
     return (
-        <div className="p-6 bg-orange-50 rounded-lg shadow-md border border-gray-200">
+        <div className="p-6 bg-blue-50 rounded-lg shadow-md border border-gray-200">
             {/* Section Title */}
-            <h2 className="text-2xl font-bold text-orange-600 mb-6 text-center">
-                Founder/Co-Founder Personal Information
+            <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">
+                Startup/Organization Information
             </h2>
 
             {/* Form */}
             <form className="space-y-6" onSubmit={handleSubmit}>
-                {/* Full Name */}
+                {/* Startup Name */}
                 <div className="flex items-center space-x-3">
-                    <FaUser className="text-orange-500" />
+                    <FaBuilding className="text-blue-500" />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
-                            Full Name
+                            Startup Name
                         </label>
                         <input
                             type="text"
-                            name="fullName"
-                            placeholder="Enter full name"
-                            value={formData.fullName}
+                            name="startupName"
+                            placeholder="Enter startup name"
+                            value={formData.startupName}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
                 </div>
 
-                {/* Phone Number */}
+                {/* Date of Establishment */}
                 <div className="flex items-center space-x-3">
-                    <FaPhone className="text-orange-500" />
+                    <FaCalendarAlt className="text-blue-500" />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
-                            Phone Number
+                            Date of Establishment
                         </label>
                         <input
-                            type="tel"
-                            name="phoneNumber"
-                            placeholder="Enter phone number"
-                            value={formData.phoneNumber}
+                            type="date"
+                            name="dateOfEstablishment"
+                            value={formData.dateOfEstablishment}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
                 </div>
 
-                {/* Email */}
+                {/* Evaluation */}
                 <div className="flex items-center space-x-3">
-                    <FaEnvelope className="text-orange-500" />
+                    <FaMoneyBillWave className="text-blue-500" />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
-                            Email Address
+                            Evaluation (in Crores)
                         </label>
                         <input
-                            type="email"
-                            name="email"
-                            placeholder="Enter email address"
-                            value={formData.email}
+                            type="number"
+                            name="evaluation"
+                            placeholder="Enter evaluation in crores"
+                            value={formData.evaluation}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
                 </div>
 
                 {/* Address */}
                 <div className="flex items-center space-x-3">
-                    <FaMapMarkerAlt className="text-orange-500" />
+                    <FaMapMarkerAlt className="text-blue-500" />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
                             Address
@@ -141,60 +151,60 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                             rows="3"
                             value={formData.address}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         ></textarea>
                     </div>
                 </div>
 
-                {/* Date of Birth */}
+                {/* Industry */}
                 <div className="flex items-center space-x-3">
-                    <FaCalendarAlt className="text-orange-500" />
+                    <FaBuilding className="text-blue-500" />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
-                            Date of Birth
-                        </label>
-                        <input
-                            type="date"
-                            name="dateOfBirth"
-                            value={formData.dateOfBirth}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                        />
-                    </div>
-                </div>
-
-                {/* Nationality */}
-                <div className="flex items-center space-x-3">
-                    <FaUser className="text-orange-500" />
-                    <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Nationality
+                            Industry
                         </label>
                         <input
                             type="text"
-                            name="nationality"
-                            placeholder="Enter nationality"
-                            value={formData.nationality}
+                            name="industry"
+                            placeholder="Enter industry"
+                            value={formData.industry}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
                 </div>
 
-                {/* LinkedIn Profile */}
+                {/* Website */}
                 <div className="flex items-center space-x-3">
-                    <FaLinkedin className="text-orange-500" />
+                    <FaBuilding className="text-blue-500" />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
-                            LinkedIn Profile (Optional)
+                            Website (Optional)
                         </label>
                         <input
                             type="url"
-                            name="linkedIn"
-                            placeholder="Enter LinkedIn profile URL"
-                            value={formData.linkedIn}
+                            name="website"
+                            placeholder="Enter website URL"
+                            value={formData.website}
                             onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+                </div>
+
+                {/* PDF Upload */}
+                <div className="flex items-center space-x-3">
+                    <FaFilePdf className="text-blue-500" />
+                    <div className="w-full">
+                        <label className="block text-sm font-medium text-gray-700">
+                            Upload PDF (Optional)
+                        </label>
+                        <input
+                            type="file"
+                            name="pdf"
+                            accept=".pdf"
+                            onChange={handleChange}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
                 </div>
@@ -205,7 +215,7 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
                         type="submit"
                         className={`py-2 px-6 rounded-md font-semibold text-white ${
                             isFormComplete
-                                ? 'bg-orange-500 hover:bg-orange-600'
+                                ? 'bg-blue-500 hover:bg-blue-600'
                                 : 'bg-gray-400 cursor-not-allowed'
                         }`}
                         disabled={!isFormComplete}
@@ -218,4 +228,4 @@ const PersonalInformation = ({ data = {}, onComplete }) => {
     );
 };
 
-export default PersonalInformation;
+export default OrganizationInformation;
