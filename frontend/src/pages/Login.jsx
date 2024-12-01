@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Header } from '../components';
 import Small_Footer from '../components/layout/Small_Footer';
 import Owner_Type from '../components/LoginPage/Owner_Type';
 import Stakeholder_Type from '../components/LoginPage/Stakeholder_Type';
@@ -9,8 +8,8 @@ function App() {
     const [role, setRole] = useState('Startup Owner'); // Default role
 
     return (
-        <div className="w-screen h-screen flex flex-col">
-            <Header />
+        <div className="w-screen sm:h-[80vh] h-screen flex flex-col">
+         
             <div className="relative flex-1 flex items-center justify-center bg-gray-100">
                 {/* Background */}
                 <div
@@ -21,7 +20,7 @@ function App() {
                 />
 
                 {/* Main Content */}
-                <div className="relative z-10 bg-gray-200 p-6 rounded-lg shadow-md max-w-md w-full text-center">
+                <div className="relative bg-gray-200 p-6 rounded-lg shadow-md max-w-md w-full text-center">
                     <h1 className="text-xl font-bold text-gray-800 mb-4">
                         Welcome Back!
                     </h1>

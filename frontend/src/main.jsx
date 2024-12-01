@@ -14,7 +14,11 @@ import { AboutUsPage, ContactUsPage, FAQpage, HomePage } from './pages';
 import RegisterUser from './pages/RegisterUser.jsx';
 import Login from './pages/Login.jsx';
 
+<<<<<<< HEAD
 import { VariantContextProvider } from './contexts';
+=======
+import InvestorType from './Investor Connect/InvestorType.jsx';
+>>>>>>> 0747724ad644a714da498eadde3171577e7898a1
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -23,8 +27,9 @@ const router = createBrowserRouter(
             <Route path="about-us" element={<AboutUsPage />} />
             <Route path="contact-us" element={<ContactUsPage />} />
             <Route path="faqs" element={<FAQpage />} />
-            <Route path="Registration" element={<RegisterUser />} />
-            <Route path="Login" element={<Login />} />
+            <Route path="register" element={<RegisterUser />} />
+            <Route path="login" element={<Login />} />
+            <Route path="InvestorType" element={<InvestorType />} />
         </Route>
     )
 );
