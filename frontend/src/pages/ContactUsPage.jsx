@@ -4,8 +4,11 @@ import { useState } from 'react';
 import { icons } from '../assets/icons';
 import { EMAIL, NUMBER1, NUMBER2 } from '../constants/contacts';
 import { copyEmail } from '../utils';
+import { useVariantContext } from '../contexts';
+import { motion } from 'framer-motion';
 
 export default function ContactUsPage() {
+    const { textVariants } = useVariantContext();
     const [inputs, setInputs] = useState({ email: '', query: '' });
 
     function handleChange(e) {
@@ -62,7 +65,12 @@ export default function ContactUsPage() {
 
     return (
         <div className="w-full h-full py-8 px-[5%] flex flex-col items-start justify-start gap-8">
-            <section className="w-full">
+            <motion.section
+                variants={textVariants}
+                initial="hidden"
+                animate="visible"
+                className="w-full"
+            >
                 <h1 className="text-3xl font-bold text-center mb-10 w-full">
                     Contact Us
                 </h1>
@@ -72,13 +80,18 @@ export default function ContactUsPage() {
                     guidance, feel free to reach out to us. Our team is ready to
                     assist you every step of the way!
                 </p>
-            </section>
+            </motion.section>
 
             <hr className="w-full" />
 
             <div className="flex flex-col lg:flex-row items-start justify-between lg:gap-24 gap-14 w-full h-full">
                 <div className="flex flex-col w-full items-start justify-start gap-8">
-                    <section className="w-full">
+                    <motion.section
+                        initial="hidden"
+                        whileInView="visible"
+                        variants={textVariants}
+                        className="w-full"
+                    >
                         <h2 className="mb-4 font-semibold text-xl">
                             👥 Technical Support
                         </h2>
@@ -100,11 +113,15 @@ export default function ContactUsPage() {
                             for assistance, troubleshooting tips, and to connect
                             directly with team members if you need further help.
                         </p>
-                    </section>
+                    </motion.section>
 
                     <hr className="w-full" />
 
-                    <section>
+                    <motion.section
+                        initial="hidden"
+                        whileInView="visible"
+                        variants={textVariants}
+                    >
                         <h2 className="mb-4 font-semibold text-xl">
                             📚 Frequently Asked Questions (FAQs)
                         </h2>
@@ -119,14 +136,24 @@ export default function ContactUsPage() {
                             . You might find the answer you're looking for right
                             there!
                         </p>
-                    </section>
+                    </motion.section>
 
-                    <section className="flex flex-col gap-4 items-start justify-start bg-[#fffcf9] drop-shadow-md rounded-md p-4">
+                    <motion.section
+                        initial="hidden"
+                        whileInView="visible"
+                        variants={textVariants}
+                        className="flex flex-col gap-4 items-start justify-start bg-[#fffcf9] drop-shadow-md rounded-md p-4"
+                    >
                         {contactElements}
-                    </section>
+                    </motion.section>
                 </div>
 
-                <div className="w-full">
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    variants={textVariants}
+                    className="w-full"
+                >
                     <section className="w-full">
                         <h2 className="mb-4 font-semibold text-xl">
                             ❓Queries & Feedbacks
@@ -195,10 +222,10 @@ export default function ContactUsPage() {
 
                         <Button
                             btnText={'Submit'}
-                            className="text-[#f9f9f9] mt-4 rounded-md w-[90%] self-center from-[#f68533] to-[#f68533] hover:from-[#f68533] hover:to-[#e08748]"
+                            className="text-[#f9f9f9] mt-4 rounded-md w-[90%] self-center from-[#f1924f] to-[#f68533] hover:from-[#f68533] hover:to-[#e08748]"
                         />
                     </form>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

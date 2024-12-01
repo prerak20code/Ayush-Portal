@@ -14,6 +14,8 @@ import { AboutUsPage, ContactUsPage, FAQpage, HomePage } from './pages';
 import RegisterUser from './pages/RegisterUser.jsx';
 import Login from './pages/Login.jsx';
 
+import { VariantContextProvider } from './contexts';
+
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
@@ -29,6 +31,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
-    <RouterProvider router={router} />
+    <VariantContextProvider>
+        <RouterProvider router={router} />
+    </VariantContextProvider>
     // </StrictMode>
 );

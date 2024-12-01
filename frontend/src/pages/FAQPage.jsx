@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { icons } from '../assets/icons';
+import { useVariantContext } from '../contexts';
 
 export default function FAQpage() {
+    const { textVariants, iconVariants } = useVariantContext();
     const [expanded, setExpanded] = useState(null);
 
     const toggleExpand = (index) => {
@@ -35,13 +37,23 @@ export default function FAQpage() {
 
     return (
         <div className="h-full w-full py-8 px-[5%] text-[#040606]">
-            <h1 className="text-3xl font-bold text-center mb-10">
+            <motion.h1
+                variants={textVariants}
+                initial="hidden"
+                animate="visible"
+                className="text-3xl font-bold text-center mb-10"
+            >
                 Frequently Asked Questions
-            </h1>
+            </motion.h1>
 
             <div className="flex flex-col lg:grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-4">
                 {faqs.map((faq, index) => (
-                    <div
+                    <motion.div
+                        variants={iconVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        custom={index}
+                        viewport={{ once: true, amount: 0.2 }}
                         key={index}
                         className="bg-[#fffcf9] p-6 rounded-lg shadow-md cursor-pointer"
                         onClick={() => toggleExpand(index)}
@@ -83,7 +95,7 @@ export default function FAQpage() {
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
         </div>

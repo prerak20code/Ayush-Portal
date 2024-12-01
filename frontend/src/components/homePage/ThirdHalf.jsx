@@ -1,10 +1,11 @@
 import { Card } from '..';
 import { CARDICON1, CARDICON2, CARDICON3 } from '../../assets/images';
 import { motion } from 'framer-motion';
+import { useVariantContext } from '../../contexts';
 
-export default function ThirdHalf({ variants }) {
+export default function ThirdHalf() {
     // variants
-    const { iconVariants, textVariants } = variants;
+    const { iconVariants, textVariants } = useVariantContext();
 
     // cards
     const cards = [

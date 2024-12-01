@@ -1,17 +1,11 @@
 import { Statistics } from '..';
 import { HOMEBG } from '../../assets/images';
+import { useVariantContext } from '../../contexts';
 import { motion } from 'framer-motion';
 
 export default function FirstHalf() {
     // variants
-    const riseVariants = {
-        hidden: { opacity: 0, y: 100 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5, ease: 'easeOut' },
-        },
-    };
+    const { textVariants } = useVariantContext();
 
     // HTML
     return (
@@ -31,7 +25,7 @@ export default function FirstHalf() {
                     // CONTENT
                 </div>
                 <motion.div
-                    variants={riseVariants}
+                    variants={textVariants}
                     initial="hidden"
                     animate="visible"
                 >

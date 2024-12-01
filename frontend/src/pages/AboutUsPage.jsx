@@ -1,25 +1,11 @@
 import { Link } from 'react-router-dom';
 import { ASHOKAPILLAR, ASHOKACHAKAR, AYUSHLOGO } from '../assets/images';
 import { motion } from 'framer-motion';
+import { useVariantContext } from '../contexts';
 
 export default function AboutUsPage() {
     // variants
-    const textVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { delay: 0.2, duration: 0.8 },
-        },
-    };
-    const iconVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: (i) => ({
-            opacity: 1,
-            y: 0,
-            transition: { delay: i * 0.3, duration: 0.8, ease: 'easeOut' },
-        }),
-    };
+    const { textVariants, iconVariants } = useVariantContext();
 
     // logos
     const logos = [

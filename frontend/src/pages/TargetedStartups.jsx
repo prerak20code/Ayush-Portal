@@ -1,4 +1,3 @@
-import React from 'react';
 import { Footer, Header } from '../components';
 import Favourite_Startups from '../components/layout/Favourite_Startups';
 
