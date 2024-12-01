@@ -1,32 +1,17 @@
 import { Header, Footer } from '..';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useVariantContext } from '../../contexts';
+import { useEffect } from 'react';
 
-export default function Layout() {
+export default function LayoutOne() {
     const location = useLocation();
+    const { pageVariants } = useVariantContext();
 
-    const pageVariants = {
-        initial: {
-            opacity: 0,
-            scale: 0.95,
-        },
-        animate: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                duration: 0.4,
-                ease: 'easeOut',
-            },
-        },
-        exit: {
-            opacity: 0,
-            scale: 1.05,
-            transition: {
-                duration: 0.3,
-                ease: 'easeIn',
-            },
-        },
-    };
+    // Scroll to top on route change
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location]);
 
     return (
         <div className="h-full w-full">

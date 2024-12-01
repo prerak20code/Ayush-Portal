@@ -1,6 +1,4 @@
-import React from 'react';
-
-export default function Small_Footer() {
+export default function SmallFooter() {
     return (
         <footer className="bg-[#f9f9f9] text-blue-700 py-2 w-full relative sm:fixed sm:bottom-0">
             <div className="container mx-auto flex flex-col sm:flex-row justify-between px-4 space-y-2 sm:space-y-0 sm:space-x-6">
