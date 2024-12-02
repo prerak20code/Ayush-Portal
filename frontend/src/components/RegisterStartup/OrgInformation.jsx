@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios
 import {
     FaBuilding,
     FaCalendarAlt,
@@ -8,7 +9,6 @@ import {
 } from 'react-icons/fa';
 
 const OrganizationInformation = ({ onComplete }) => {
-    // State for form fields
     const [formData, setFormData] = useState({
         startupName: '',
         dateOfEstablishment: '',
@@ -16,11 +16,26 @@ const OrganizationInformation = ({ onComplete }) => {
         address: '',
         industry: '',
         website: '',
-        pdf: null, // Field for uploading PDFs
+        pdf: null,
+        BusinessType: '',
+        country: '', // Add country field
     });
 
     // State for tracking form validation
     const [isFormComplete, setIsFormComplete] = useState(false);
+
+    // State for sector dropdown visibility and options
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const sectorOptions = [
+        'Ayurveda',
+        'Yoga and Naturopathy',
+        'Unani',
+        'Siddha',
+        'Homoeopathy',
+    ];
+
+    // State for country options
+    const [countryOptions, setCountryOptions] = useState([]);
 
     // Load saved data from localStorage on component mount
     useEffect(() => {
@@ -28,6 +43,23 @@ const OrganizationInformation = ({ onComplete }) => {
         if (savedData) {
             setFormData(JSON.parse(savedData));
         }
+
+        // Fetch countries dynamically
+        const fetchCountries = async () => {
+            try {
+                const response = await axios.get('https://restcountries.com/v3.1/all');
+                const countries = response.data.map((country) => ({
+                    label: country.name.common,
+                    value: country.name.common,
+                }));
+                countries.sort((a, b) => a.label.localeCompare(b.label)); // Sort countries alphabetically
+                setCountryOptions(countries);
+            } catch (error) {
+                console.error('Error fetching country data:', error);
+            }
+        };
+
+        fetchCountries(); // Fetch countries on component mount
     }, []);
 
     // Save form data to localStorage whenever it changes
@@ -47,6 +79,25 @@ const OrganizationInformation = ({ onComplete }) => {
         }));
     };
 
+    // Handle industry input change
+    const handleIndustryChange = (e) => {
+        const value = e.target.value;
+        setFormData((prevData) => ({
+            ...prevData,
+            industry: value,
+        }));
+        setIsDropdownVisible(value.trim() !== '');
+    };
+
+    // Handle selection from dropdown
+    const handleSectorSelect = (sector) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            industry: sector,
+        }));
+        setIsDropdownVisible(false); // Hide dropdown after selection
+    };
+
     // Validate form completeness
     const validateForm = () => {
         const requiredFields = [
@@ -55,6 +106,9 @@ const OrganizationInformation = ({ onComplete }) => {
             'evaluation',
             'address',
             'industry',
+            'BusinessType',
+            'country', // Add country to required fields
+            'website'
         ];
         const isComplete = requiredFields.every(
             (field) => formData[field]?.trim() !== ''
@@ -120,6 +174,52 @@ const OrganizationInformation = ({ onComplete }) => {
                     </div>
                 </div>
 
+                {/* Country Dropdown */}
+                <div className="flex items-center space-x-3">
+                    <FaMapMarkerAlt className="text-blue-500" />
+                    <div className="w-full relative">
+                        <label className="block text-sm font-medium text-gray-700">
+                            Country
+                        </label>
+                        <select
+                            name="country"
+                            value={formData.country}
+                            onChange={handleChange} // Use handleChange to update formData
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="">Select Country</option>
+                            {countryOptions.map((country) => (
+                                <option key={country.value} value={country.value}>
+                                    {country.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {/* Business Type */}
+                <div className="flex items-center space-x-3">
+                    <FaBuilding className="text-blue-500" />
+                    <div className="w-full">
+                        <label className="block text-sm font-medium text-gray-700">
+                            Type of Business Entity
+                        </label>
+                        <select
+                            name="BusinessType"
+                            value={formData.BusinessType} // Bind to BusinessType
+                            onChange={handleChange} // Directly use handleChange to update formData
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="">Select Business Type</option>
+                            <option value="Sole Partnership">Sole Partnership</option>
+                            <option value="Partnership">Partnership</option>
+                            <option value="Corporation">Corporation (Private or Public)</option>
+                            <option value="LLC">Limited Liability Company (LLC)</option>
+                            <option value="Nonprofit">Nonprofit</option>
+                        </select>
+                    </div>
+                </div>
+
                 {/* Evaluation */}
                 <div className="flex items-center space-x-3">
                     <FaMoneyBillWave className="text-blue-500" />
@@ -143,7 +243,7 @@ const OrganizationInformation = ({ onComplete }) => {
                     <FaMapMarkerAlt className="text-blue-500" />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
-                            Address
+                            Address (Headquarter)
                         </label>
                         <textarea
                             name="address"
@@ -152,45 +252,72 @@ const OrganizationInformation = ({ onComplete }) => {
                             value={formData.address}
                             onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        ></textarea>
+                        />
                     </div>
                 </div>
 
-                {/* Industry */}
+                {/* Industry Dropdown */}
                 <div className="flex items-center space-x-3">
                     <FaBuilding className="text-blue-500" />
-                    <div className="w-full">
+                    <div className="w-full relative">
                         <label className="block text-sm font-medium text-gray-700">
                             Industry
                         </label>
-                        <input
-                            type="text"
-                            name="industry"
-                            placeholder="Enter industry"
-                            value={formData.industry}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
+                        <div className="relative">
+                            <select
+                                name="industry"
+                                value={formData.industry}
+                                onChange={handleIndustryChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option value="">Select Industry</option>
+                                {sectorOptions.map((option, index) => (
+                                    <option key={index} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </select>
+                            {/* Dropdown Custom Styling */}
+                            {isDropdownVisible && (
+                                <div
+                                    className="absolute left-0 w-full bg-white border mt-1 rounded-md shadow-lg z-10"
+                                    style={{ maxHeight: '200px', overflowY: 'auto' }}
+                                >
+                                    {sectorOptions.map((sector, index) => (
+                                        <div
+                                            key={index}
+                                            onClick={() => handleSectorSelect(sector)}
+                                            className="p-2 cursor-pointer hover:bg-blue-500 hover:text-white"
+                                        >
+                                            {sector}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
                 {/* Website */}
-                <div className="flex items-center space-x-3">
-                    <FaBuilding className="text-blue-500" />
-                    <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Website (Optional)
-                        </label>
-                        <input
-                            type="url"
-                            name="website"
-                            placeholder="Enter website URL"
-                            value={formData.website}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                </div>
+             {/* Website */}
+<div className="flex items-center space-x-3">
+    <FaBuilding className="text-blue-500" />
+    <div className="w-full">
+        <label className="block text-sm font-medium text-gray-700">
+            Website
+        </label>
+        <input
+            type="url"
+            name="website"
+            placeholder="Enter website URL"
+            value={formData.website}
+            onChange={handleChange}
+            required // Make the field required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        />
+    </div>
+</div>
+
 
                 {/* PDF Upload */}
                 <div className="flex items-center space-x-3">
@@ -213,10 +340,9 @@ const OrganizationInformation = ({ onComplete }) => {
                 <div className="text-center">
                     <button
                         type="submit"
-                        className={`py-2 px-6 rounded-md font-semibold text-white ${
-                            isFormComplete
-                                ? 'bg-blue-500 hover:bg-blue-600'
-                                : 'bg-gray-400 cursor-not-allowed'
+                        className={`py-2 px-6 rounded-md font-semibold text-white ${isFormComplete
+                            ? 'bg-blue-500 hover:bg-blue-600'
+                            : 'bg-gray-400 cursor-not-allowed'
                         }`}
                         disabled={!isFormComplete}
                     >
