@@ -3,6 +3,4 @@ import { ASHOKAPILLAR, ASHOKACHAKAR, AYUSHLOGO } from '../assets/images';
 import { motion } from 'framer-motion';
 import { useVariantContext } from '../contexts';
 
-export default function AboutUsPage() {
-    
-}
+export default function AboutUsPage() {}

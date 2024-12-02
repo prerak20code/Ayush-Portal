@@ -105,11 +105,11 @@ export default function HomePage() {
             case 4:
                 return (
                     <div className="p-4">
-                        <h2>Review and Submit</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Review and Submit</h2>
                         <pre>{JSON.stringify(formData, null, 2)}</pre>
                         <button
                             onClick={handleFinalSubmit}
-                            className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg"
+                            className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg transform hover:scale-105 transition-all duration-300"
                         >
                             Submit
                         </button>
@@ -123,38 +123,34 @@ export default function HomePage() {
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-orange-500 to-white">
             {/* Steps Navigation */}
-            <div className="bg-orange-100 py-6 shadow-sm">
+            <div className="bg-orange-100 py-6 shadow-lg">
                 <div className="flex flex-wrap items-center justify-between mx-auto max-w-full px-6 gap-4">
                     {/* Current Step Label */}
                     <div className="w-full text-center mb-4">
-                        <h2 className="text-xl font-bold text-orange-600">
+                        <h2 className="text-xl font-bold text-orange-600 transition-all duration-300">
                             Current Step: {steps[currentStep]}
                         </h2>
                     </div>
 
                     {/* Steps Navigation */}
-                    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between ">
                         {steps.map((step, index) => (
                             <div
                                 key={index}
-                                className="flex items-center w-full sm:w-auto flex-1"
+                                className="flex items-center w-full sm:w-auto flex-1 cursor-pointer mb-2 sm:mb-0"
                                 onClick={() => handleStepClick(index)}
                                 style={{
-                                    cursor:
-                                        index <= currentStep
-                                            ? 'pointer'
-                                            : 'default',
-                                    marginBottom: '10px', // Add margin for small screens
+                                    pointerEvents: index <= currentStep ? 'auto' : 'none',
                                 }}
                             >
                                 {/* Step Circle */}
                                 <div
                                     className={`flex items-center justify-center w-16 h-16 rounded-full border-2 text-sm font-semibold transition-all duration-300 ${
                                         index === currentStep
-                                            ? 'bg-orange-500 text-white border-orange-500 scale-110 shadow-lg'
+                                            ? 'bg-orange-500 text-white border-orange-500 scale-110 shadow-xl'
                                             : isStepComplete(index)
-                                              ? 'bg-green-400 text-white border-green-400'
-                                              : 'bg-gray-200 text-gray-700 border-gray-300'
+                                            ? 'bg-green-400 text-white border-green-400'
+                                            : 'bg-gray-200 text-gray-700 border-gray-300'
                                     }`}
                                 >
                                     {index + 1}
@@ -163,7 +159,7 @@ export default function HomePage() {
                                 {/* Step Name */}
                                 <div className="text-center mx-2 sm:mx-4">
                                     <span
-                                        className={`text-xs sm:text-sm font-medium ${
+                                        className={`text-xs sm:text-sm font-medium transition-all duration-300 ${
                                             index === currentStep
                                                 ? 'text-orange-600'
                                                 : 'text-gray-600'
@@ -195,7 +191,7 @@ export default function HomePage() {
 
             {/* Dynamic Content */}
             <main className="flex-grow flex justify-center items-start py-10">
-                <div className="w-full max-w-5xl bg-gray-200 shadow-lg rounded-lg p-8">
+                <div className="w-full max-w-5xl bg-white shadow-2xl rounded-lg p-8 transition-all duration-300">
                     {renderContent()}
                 </div>
             </main>
