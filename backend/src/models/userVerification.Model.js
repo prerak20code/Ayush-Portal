@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const UserVerificationSchema = new mongoose.Schema({
+const userVerificationSchema = new mongoose.Schema({
     userId: String,
     uniqueString: String,
     createdAt: Date,
@@ -9,5 +9,5 @@ const UserVerificationSchema = new mongoose.Schema({
 
 export const UserVerification = mongoose.model(
     'UserVerifcation',
-    UserVerificationSchema
+    userVerificationSchema
 );

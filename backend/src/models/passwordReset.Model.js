@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const PasswordResetSchema = new mongoose.Schema({
+const passwordResetSchema = new mongoose.Schema({
     userId: String,
     Resetstring: String,
     createdAt: Date,
@@ -9,5 +9,5 @@ const PasswordResetSchema = new mongoose.Schema({
 
 export const PasswordReset = mongoose.model(
     'PasswordReset',
-    PasswordResetSchema
+    passwordResetSchema
 );

@@ -7,6 +7,7 @@ import {
     validateRegex,
     getTranporter,
     generateTokens,
+    validatePassword,
 } from '../utils/index.js';
 import { OK, SERVER_ERROR, BAD_REQUEST } from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
@@ -192,14 +193,14 @@ const register = async (req, res) => {
         } else {
             //create new user
 
-            //password hashing
-            const saltRounds = 10;
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
-            if (!hashedPassword) {
-                res.status(SERVER_ERROR).json({
-                    message: 'An error occured while hashing password !',
-                });
-            }
+            //password hashing ( auto done using pre hook )
+            // const saltRounds = 10;
+            // const hashedPassword = await bcrypt.hash(password, saltRounds);
+            // if (!hashedPassword) {
+            //     res.status(SERVER_ERROR).json({
+            //         message: 'An error occured while hashing password !',
+            //     });
+            // }
 
             // create user
             const newUser = await User.create({
@@ -214,15 +215,11 @@ const register = async (req, res) => {
             // send mail
             if (newUser) {
                 await sendVerificationEmail(newUser, res);
-            } else {
-                res.status(SERVER_ERROR).json({
-                    message: 'An error occured while registering user',
-                });
             }
         }
     } catch (err) {
         res.status(SERVER_ERROR).json({
-            message: 'An error occured while checking for existing user !',
+            message: 'An error occured while registering user !',
             error: err.message,
         });
     }
@@ -252,10 +249,9 @@ const login = async (req, res) => {
                         'Email has not been verified yet. Check your inbox',
                 });
             } else {
-                const hashedPassword = user.password;
-                const isPasswordVerified = bcrypt.compare(
+                const isPasswordVerified = validatePassword(
                     password,
-                    hashedPassword
+                    user.password // hashed password
                 );
                 if (isPasswordVerified) {
                     // generate tokens

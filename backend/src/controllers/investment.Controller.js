@@ -4,7 +4,7 @@ import {
     NOT_FOUND,
     OK,
 } from '../constants/statusCodes.js';
-import { Investment } from '../models/index.jsy';
+import { Investment } from '../models/index.js';
 
 // apply to be a investor in a startup
 const applyStartup = async (req, res) => {
