@@ -1,5 +1,10 @@
-import { BAD_REQUEST, CREATED, NOT_FOUND, OK } from '../constants/statusCodes.js';
-import { Investment } from '../models/index.js';
+import {
+    BAD_REQUEST,
+    CREATED,
+    NOT_FOUND,
+    OK,
+} from '../constants/statusCodes.js';
+import { Investment } from '../models/index.jsy';
 
 // apply to be a investor in a startup
 const applyStartup = async (req, res) => {
