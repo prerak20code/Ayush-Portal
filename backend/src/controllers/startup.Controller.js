@@ -83,8 +83,8 @@ const getAllStartups = async (req, res) => {
 
 const getStartup = async (req, res) => {
     try {
-        const { id } = req.params;
-        const startup = await Startup.findById(id);
+        const { startupId } = req.params;
+        const startup = await Startup.findById(startupId);
         if (!startup) {
             return res.status(NOT_FOUND).json({
                 message: 'startup not found.',
@@ -121,11 +121,11 @@ const getUserStartups = async (req, res) => {
 
 const updateStartup = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { startupId } = req.params;
         const userId = req.user;
         const updates = req.body;
 
-        const existingStartup = await Startup.findById(id);
+        const existingStartup = await Startup.findById(startupId);
 
         if (!existingStartup) {
             return res.status(NOT_FOUND).json({
@@ -141,10 +141,14 @@ const updateStartup = async (req, res) => {
         }
 
         // Update the startup
-        const updatedStartup = await Startup.findByIdAndUpdate(id, updates, {
-            new: true, // Return the updated document
-            runValidators: true,
-        });
+        const updatedStartup = await Startup.findByIdAndUpdate(
+            startupId,
+            updates,
+            {
+                new: true, // Return the updated document
+                runValidators: true,
+            }
+        );
 
         return res.status(OK).json({
             message: 'Startup updated successfully',
@@ -160,11 +164,11 @@ const updateStartup = async (req, res) => {
 
 const deleteStartup = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { startupId } = req.params;
         const userId = req.user;
 
         // Find the startup by ID
-        const existingStartup = await Startup.findById(id);
+        const existingStartup = await Startup.findById(startupId);
 
         if (!existingStartup) {
             return res.status(NOT_FOUND).json({
@@ -180,7 +184,7 @@ const deleteStartup = async (req, res) => {
         }
 
         // Delete the startup
-        await Startup.findByIdAndDelete(id);
+        await Startup.findByIdAndDelete(startupId);
 
         return res.status(OK).json({
             message: 'Startup deleted successfully',
