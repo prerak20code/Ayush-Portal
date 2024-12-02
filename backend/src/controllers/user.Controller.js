@@ -74,7 +74,7 @@ const verifyEmail = async (req, res, next) => {
                             res.sendFile(
                                 path.join(
                                     __dirname,
-                                    'Ayush-portal/backend/src/views/verified.html'
+                                    '../views/verified.html'
                                 )
                             );
                         } else {
