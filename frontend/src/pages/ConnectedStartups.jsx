@@ -33,7 +33,7 @@ const Card = ({ image, title, description, showButton }) => {
 };
 
 // Main App Component
-const ConnectedStartups = () => {
+export const ConnectedStartups = () => {
     const startups = Favourite_Startups.startups || [];
 
     // Partitioning startups
@@ -41,7 +41,6 @@ const ConnectedStartups = () => {
     const trendingStartups = startups.slice(6); // Remaining startups
 
     return (
-<<<<<<< HEAD
         <div className="white min-h-screen p-6 bg-orange-200 ">
             <div className="max-w-6xl mx-auto ">
                 {/* Connected Startups Section */}
@@ -59,27 +58,6 @@ const ConnectedStartups = () => {
                                 showButton={false} // No button for connected startups
                             />
                         ))}
-=======
-        <>
-            <div className="white min-h-screen p-6 bg-orange-200 ">
-                <div className="max-w-6xl mx-auto ">
-                    {/* Connected Startups Section */}
-                    <div className="bg-gradient-to-r from-orange-400 to-white rounded-lg p-8 shadow-md mb-12  ">
-                        <h1 className="text-4xl font-semibold text-gray-800 mb-8 tracking-wide leading-tight shadow-md font-poppins">
-                            Connected Startups
-                        </h1>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {connectedStartups.map((startup) => (
-                                <Card
-                                    key={startup.id}
-                                    image={startup.image}
-                                    title={startup.title}
-                                    description={startup.description}
-                                    showButton={false} // No button for connected startups
-                                />
-                            ))}
-                        </div>
->>>>>>> 52ba4b8b75de82c582332fa2085e54e7e6b629c8
                     </div>
                 </div>
 
@@ -101,12 +79,6 @@ const ConnectedStartups = () => {
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
         </div>
-=======
-        </>
->>>>>>> 52ba4b8b75de82c582332fa2085e54e7e6b629c8
     );
 };
-
-export default ConnectedStartups;

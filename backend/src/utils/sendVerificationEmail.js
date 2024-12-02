@@ -8,7 +8,7 @@ export const sendVerificationEmail = async (user, res) => {
     try {
         const { _id, email } = user;
         const uniqueString = uuid() + _id;
-        
+
         const url = `http://localhost:${process.env.PORT}/users/verify/${_id}/${uniqueString}`;
 
         //mail options

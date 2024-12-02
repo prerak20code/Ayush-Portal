@@ -134,92 +134,98 @@ export default function RegisterPage() {
     ));
 
     return (
-        <div className="p-8 text-[#040606] flex flex-col items-center justify-start gap-8 overflow-y-scroll bg-white">
-            <div className="w-full flex items-center justify-center">
-                <div className="bg-white flex flex-col justify-center items-center">
-                    <h2 className="text-4xl font-bold text-[#040606] mb-2">
-                        Ayush Startup
-                    </h2>
-                    <h3 className="text-xl font-semibold text-[#1a2424] mb-6">
-                        User Registration Portal
-                    </h3>
-                    <Link to={'/'} className="size-[150px] hover:brightness-75">
-                        <img
-                            src={AYUSHLOGO}
-                            alt="Ayush Logo"
-                            className="size-full object-contain"
-                        />
-                    </Link>
-                </div>
-            </div>
-            <div className="w-fit">
-                <p className="text-center text-3xl font-medium">
-                    Create a new Account
-                </p>
-                <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 0.2 }}
-                    className="relative top-0 h-[0.1rem] bg-[#040606]"
-                />
-            </div>
-
-            <div className="w-[400px] flex flex-col items-center justify-center gap-3">
-                {error.root && (
-                    <div className="text-red-500 w-full text-center">
-                        {error.root}
-                    </div>
-                )}
-
-                <form
-                    onSubmit={handleSubmit}
-                    className="flex flex-col items-start justify-center gap-4 w-full"
+        <div className="p-8 text-[#040606] flex flex-col md:flex-row items-center md:items-start justify-start gap-8 bg-white">
+            <div className="bg-white w-full flex flex-col justify-center items-center">
+                <h2 className="text-4xl font-bold text-[#040606] mb-2">
+                    Ayush Startup
+                </h2>
+                <h3 className="text-xl font-semibold text-[#1a2424] mb-6">
+                    User Registration Portal
+                </h3>
+                <Link
+                    to={'/'}
+                    className="size-[150px] md:size-[200px] hover:brightness-75"
                 >
-                    {inputElements}
-                    {/* Phone Number */}
-                    <div>
-                        <label
-                            htmlFor="phone"
-                            className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium"
-                        >
-                            Phone Number
-                        </label>
-                        <PhoneInput
-                            country="in"
-                            value={inputs.phone}
-                            onChange={(value) =>
-                                setInputs((prev) => ({
-                                    ...prev,
-                                    phone: value,
-                                }))
-                            }
-                            inputProps={{
-                                name: 'phone',
-                                required: true,
-                                id: 'phone',
-                            }}
-                            inputClass="!w-full !border !border-gray-300 !rounded-md !shadow-sm focus:!ring-blue-500 focus:!border-blue-500 sm:!text-sm"
-                        />
-                    </div>
+                    <img
+                        src={AYUSHLOGO}
+                        alt="Ayush Logo"
+                        className="size-full object-contain"
+                    />
+                </Link>
+            </div>
 
-                    <div className="w-full">
-                        <Button
-                            className="text-[#f9f9f9] mt-4 rounded-md w-full from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
-                            disabled={disabled}
-                            onMouseOver={onMouseOver}
-                            btnText={loading ? 'Registering...' : 'Register'}
-                        />
-                        <p className="w-full text-center text-[16px]">
-                            already have an Account ?{' '}
-                            <Link
-                                to={'/login'}
-                                className="text-[#355ab6] hover:underline"
+            <div className="flex-1 flex flex-col items-center gap-4">
+                <div className="w-fit">
+                    <p className="text-center text-3xl font-medium">
+                        Create a new Account
+                    </p>
+                    <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: '100%' }}
+                        transition={{ duration: 0.2 }}
+                        className="relative top-0 h-[0.1rem] bg-[#040606]"
+                    />
+                </div>
+
+                <div className="w-[400px] flex flex-col items-center justify-center gap-3">
+                    {error.root && (
+                        <div className="text-red-500 w-full text-center">
+                            {error.root}
+                        </div>
+                    )}
+
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex flex-col items-start justify-center gap-4 w-full"
+                    >
+                        {inputElements}
+                        {/* Phone Number */}
+                        <div>
+                            <label
+                                htmlFor="phone"
+                                className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium"
                             >
-                                Login
-                            </Link>
-                        </p>
-                    </div>
-                </form>
+                                Phone Number
+                            </label>
+                            <PhoneInput
+                                country="in"
+                                value={inputs.phone}
+                                onChange={(value) =>
+                                    setInputs((prev) => ({
+                                        ...prev,
+                                        phone: value,
+                                    }))
+                                }
+                                inputProps={{
+                                    name: 'phone',
+                                    required: true,
+                                    id: 'phone',
+                                }}
+                                inputClass="!w-full !border !border-gray-300 !rounded-md !shadow-sm focus:!ring-blue-500 focus:!border-blue-500 sm:!text-sm"
+                            />
+                        </div>
+
+                        <div className="w-full">
+                            <Button
+                                className="text-[#f9f9f9] mt-4 rounded-md w-full from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                                disabled={disabled}
+                                onMouseOver={onMouseOver}
+                                btnText={
+                                    loading ? 'Registering...' : 'Register'
+                                }
+                            />
+                            <p className="w-full text-center text-[16px]">
+                                already have an Account ?{' '}
+                                <Link
+                                    to={'/login'}
+                                    className="text-[#355ab6] hover:underline"
+                                >
+                                    Login
+                                </Link>
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

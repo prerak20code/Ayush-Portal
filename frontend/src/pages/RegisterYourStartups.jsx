@@ -105,7 +105,9 @@ export default function HomePage() {
             case 4:
                 return (
                     <div className="p-4">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Review and Submit</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                            Review and Submit
+                        </h2>
                         <pre>{JSON.stringify(formData, null, 2)}</pre>
                         <button
                             onClick={handleFinalSubmit}
@@ -140,7 +142,8 @@ export default function HomePage() {
                                 className="flex items-center w-full sm:w-auto flex-1 cursor-pointer mb-2 sm:mb-0"
                                 onClick={() => handleStepClick(index)}
                                 style={{
-                                    pointerEvents: index <= currentStep ? 'auto' : 'none',
+                                    pointerEvents:
+                                        index <= currentStep ? 'auto' : 'none',
                                 }}
                             >
                                 {/* Step Circle */}
@@ -149,8 +152,8 @@ export default function HomePage() {
                                         index === currentStep
                                             ? 'bg-orange-500 text-white border-orange-500 scale-110 shadow-xl'
                                             : isStepComplete(index)
-                                            ? 'bg-green-400 text-white border-green-400'
-                                            : 'bg-gray-200 text-gray-700 border-gray-300'
+                                              ? 'bg-green-400 text-white border-green-400'
+                                              : 'bg-gray-200 text-gray-700 border-gray-300'
                                     }`}
                                 >
                                     {index + 1}
