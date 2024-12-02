@@ -2,10 +2,16 @@ import bcrypt from 'bcrypt';
 import { User, UserVerification, PasswordReset } from '../models/index.js';
 import { v4 as uuid } from 'uuid';
 import path from 'path';
-import { sendVerificationEmail, validateRegex, getTranporter, generateTokens } from '../utils/index.js';
+import {
+    sendVerificationEmail,
+    validateRegex,
+    getTranporter,
+    generateTokens,
+} from '../utils/index.js';
 import { OK, SERVER_ERROR, BAD_REQUEST } from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
 
+//  PENDING FOR REFINING
 // verify email
 // userRouter.get('/verify/:userId/:uniqueString', (req, res) => {
 //     let { userId, uniqueString } = req.params;
@@ -285,6 +291,7 @@ const login = async (req, res) => {
     }
 };
 
+// PENDING FOR REFINING
 // reset password logics
 // const requestResetPassword = async (req, res) => {
 //     try {
@@ -331,8 +338,8 @@ const login = async (req, res) => {
 //                 to: email,
 //                 subject: 'Password reset',
 //                 html: `
-//                         <p>Reset password with below link and login to your account.</p> 
-//                         <p>This link will <b>expire in an hour.</b></p> 
+//                         <p>Reset password with below link and login to your account.</p>
+//                         <p>This link will <b>expire in an hour.</b></p>
 //                         <p>Press <a href=${redirectUrl + 'user/verify/' + _id + '/' + resetString}> here </a> to proceed.</p>
 //                     `,
 //             };
