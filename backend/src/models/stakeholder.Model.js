@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
 
-const { Schema } = mongoose;
-const InvestorSchema = new Schema({
+const InvestorSchema = new mongoose.Schema({
     Name: {
         type: String,
         required: true,
@@ -52,4 +51,4 @@ const InvestorSchema = new Schema({
 
 InvestorSchema.plugin(passportLocalMongoose);
 
-module.exports = mongoose.model('Investor', InvestorSchema);
+export const Investor = mongoose.model('Investor', InvestorSchema);
