@@ -1,6 +1,4 @@
-import React from 'react';
-import { Header } from '../components';
-import Small_Footer from '../components/layout/Small_Footer';
+import { Header, SmallFooter } from '../components';
 function InvestorType() {
     return (
         <>
@@ -24,7 +22,7 @@ function InvestorType() {
                     </button>
                 </div>
             </div>
-            <Small_Footer />
+            <SmallFooter />
         </>
     );
 }

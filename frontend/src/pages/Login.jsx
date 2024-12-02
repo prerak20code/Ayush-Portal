@@ -46,7 +46,6 @@ export default function LoginPage() {
                     {role === 'Govt. Official' && <Government_Type />}
                 </div>
             </div>
-            <Small_Footer />
         </div>
     );
 }

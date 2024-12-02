@@ -1,248 +1,226 @@
-import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import AyushMinistry from '../assets/images/AyushMinistry.png';
-import axios from 'axios';
-import Small_Footer from '../components/layout/SmallFooter';
+import { AYUSHLOGO } from '../assets/images';
+import { useState } from 'react';
+import { userService } from '../services';
+import { useUserContext } from '../contexts';
+import { useNavigate, Link } from 'react-router-dom';
+import { Button } from '../components';
+import { verifyRegex } from '../utils';
+import { motion } from 'framer-motion';
 
 export default function RegisterPage() {
-    // States for form inputs
-    const [userName, setUserName] = useState('');
-    const [emailId, setEmailId] = useState('');
-    const [dob, setDob] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [phone, setPhone] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const [inputs, setInputs] = useState({
+        name: '',
+        email: '',
+        dateOfBirth: '',
+        password: '',
+        phone: '',
+    });
 
-    // Handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const [error, setError] = useState({
+        root: '',
+        name: '',
+        email: '',
+        dateOfBirth: '',
+        password: '',
+        phone: '',
+    });
+    const [disabled, setDisabled] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const { setUser } = useUserContext();
+    const navigate = useNavigate();
 
-        // Basic validation
-        if (password !== confirmPassword) {
-            setErrorMessage('Passwords do not match!');
-            return;
+    async function handleChange(e) {
+        const { value, name } = e.target;
+        setInputs((prev) => ({ ...prev, [name]: value }));
+    }
+
+    const handleBlur = (e) => {
+        let { name, value } = e.target;
+        if (value) {
+            verifyRegex(name, value, setError);
         }
-
-        // Create user object
-        const userData = {
-            name: userName,
-            email: emailId,
-            password,
-            phone,
-            dateOfBirth: dob, // You might want to add a date of birth input if needed.
-        };
-
-        try {
-            // Send POST request to the backend for user registration
-            const response = await axios.post(
-                'http://localhost:4000/user/signup',
-                userData
-            );
-
-            if (response.data.status === 'FAILED') {
-                setErrorMessage(response.data.message);
-                setSuccessMessage('');
-            } else {
-                setSuccessMessage(response.data.message);
-                setErrorMessage('');
-            }
-        } catch (error) {
-            console.log(error);
-            setErrorMessage('An error occurred while registering.');
-            setSuccessMessage('');
-        }
-
-        // Clear form fields (optional)
-        setUserName('');
-        setEmailId('');
-        setPassword('');
-        setConfirmPassword('');
-        setPhone('');
-        setDob('');
     };
 
+    function onMouseOver() {
+        if (
+            Object.values(inputs).some((value) => !value) ||
+            Object.entries(error).some(
+                ([key, value]) => value !== '' && key !== 'root'
+            )
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setLoading(true);
+        setDisabled(true);
+        try {
+            const res = await userService.register(inputs);
+            if (res && !res.message) {
+                setUser(res);
+                navigate('/');
+            } else {
+                setError((prev) => ({ ...prev, root: res.message }));
+            }
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setDisabled(false);
+            setLoading(false);
+        }
+    }
+
+    /* creating the input fields */
+
+    const inputFields = [
+        {
+            type: 'text',
+            name: 'name',
+            label: 'Name',
+            placeholder: 'Enter your Name',
+            required: true,
+        },
+        {
+            type: 'text',
+            name: 'email',
+            label: 'Email',
+            placeholder: 'Enter your email',
+            required: true,
+        },
+        {
+            type: 'password',
+            name: 'password',
+            label: 'Password',
+            placeholder: 'Create a strong password',
+            required: true,
+        },
+    ];
+
+    const inputElements = inputFields.map((field) => (
+        <div key={field.name} className="w-full">
+            <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
+                <label htmlFor={field.name}>
+                    {field.required && <span className="text-red-500">* </span>}
+                    {field.label} :
+                </label>
+            </div>
+            <div>
+                <input
+                    type={field.type}
+                    name={field.name}
+                    id={field.name}
+                    value={inputs[field.name]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder={field.placeholder}
+                    className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
+                />
+            </div>
+            {error[field.name] && (
+                <div className="mt-1 text-red-500 text-sm font-medium">
+                    {error[field.name]}
+                </div>
+            )}
+            {field.name === 'password' && !error.password && (
+                <div className="text-xs">password must be 8-12 characters.</div>
+            )}
+        </div>
+    ));
+
     return (
-        <>
-            <div className="flex items-center justify-center">
-                {/* Wrapper Div */}
-                <div className="flex flex-col sm:mt-[2vh] sm:flex-row bg-gray-100 shadow-md rounded-md overflow-hidden max-w-4xl w-full">
-                    {/* Header Section */}
-                    <div className="flex-1 bg-white flex flex-col justify-center items-center p-8">
-                        <h2 className="text-4xl font-bold text-gray-800 mb-2">
-                            Ayush Startup
-                        </h2>
-                        <h3 className="text-xl font-semibold text-gray-600 mb-4">
-                            User Registration Portal
-                        </h3>
+        <div className="p-8 text-[#040606] flex flex-col items-center justify-start gap-8 overflow-y-scroll bg-white">
+            <div className="w-full flex items-center justify-center">
+                <div className="bg-white flex flex-col justify-center items-center">
+                    <h2 className="text-4xl font-bold text-[#040606] mb-2">
+                        Ayush Startup
+                    </h2>
+                    <h3 className="text-xl font-semibold text-[#1a2424] mb-6">
+                        User Registration Portal
+                    </h3>
+                    <Link to={'/'} className="size-[150px] hover:brightness-75">
                         <img
-                            src={AyushMinistry}
+                            src={AYUSHLOGO}
                             alt="Ayush Logo"
-                            className="max-w-xs w-full max-sm:hidden"
+                            className="size-full object-contain"
+                        />
+                    </Link>
+                </div>
+            </div>
+            <div className="w-fit">
+                <p className="text-center text-3xl font-medium">
+                    Create a new Account
+                </p>
+                <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 0.2 }}
+                    className="relative top-0 h-[0.1rem] bg-[#040606]"
+                />
+            </div>
+
+            <div className="w-[400px] flex flex-col items-center justify-center gap-3">
+                {error.root && (
+                    <div className="text-red-500 w-full text-center">
+                        {error.root}
+                    </div>
+                )}
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col items-start justify-center gap-4 w-full"
+                >
+                    {inputElements}
+                    {/* Phone Number */}
+                    <div>
+                        <label
+                            htmlFor="phone"
+                            className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium"
+                        >
+                            Phone Number
+                        </label>
+                        <PhoneInput
+                            country="in"
+                            value={inputs.phone}
+                            onChange={(value) =>
+                                setInputs((prev) => ({
+                                    ...prev,
+                                    phone: value,
+                                }))
+                            }
+                            inputProps={{
+                                name: 'phone',
+                                required: true,
+                                id: 'phone',
+                            }}
+                            inputClass="!w-full !border !border-gray-300 !rounded-md !shadow-sm focus:!ring-blue-500 focus:!border-blue-500 sm:!text-sm"
                         />
                     </div>
 
-                    {/* Form Section */}
-                    <div className="flex-1 p-4">
-                        <form className="space-y-4" onSubmit={handleSubmit}>
-                            {/* User ID */}
-                            <div>
-                                <label
-                                    htmlFor="userId"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Name
-                                </label>
-                                <input
-                                    id="userName"
-                                    type="text"
-                                    placeholder="Enter Your NAmr"
-                                    value={userName}
-                                    onChange={(e) =>
-                                        setUserName(e.target.value)
-                                    }
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    required
-                                />
-                            </div>
-
-                            {/* Email */}
-                            <div>
-                                <label
-                                    htmlFor="userEmail"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    E-mail
-                                </label>
-                                <input
-                                    id="userEmail"
-                                    type="email"
-                                    placeholder="Enter Email"
-                                    value={emailId}
-                                    onChange={(e) => setEmailId(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="dob"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    DOB
-                                </label>
-                                <input
-                                    id="dobl"
-                                    type="date"
-                                    value={dob}
-                                    onChange={(e) => setDob(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    required
-                                />
-                            </div>
-
-                            {/* Password */}
-                            <div>
-                                <label
-                                    htmlFor="userPassword"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Password
-                                </label>
-                                <input
-                                    id="userPassword"
-                                    type="password"
-                                    placeholder="Enter Password"
-                                    minLength={8}
-                                    value={password}
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
-                                    }
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    required
-                                />
-                            </div>
-
-                            {/* Confirm Password */}
-                            <div>
-                                <label
-                                    htmlFor="userConfirmPassword"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Confirm Password
-                                </label>
-                                <input
-                                    id="userConfirmPassword"
-                                    type="password"
-                                    placeholder="Re-enter Password"
-                                    minLength={8}
-                                    value={confirmPassword}
-                                    onChange={(e) =>
-                                        setConfirmPassword(e.target.value)
-                                    }
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    required
-                                />
-                            </div>
-
-                            {/* Phone Number */}
-                            <div>
-                                <label
-                                    htmlFor="userPhoneNumber"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Phone Number
-                                </label>
-                                <PhoneInput
-                                    country="in"
-                                    value={phone}
-                                    onChange={(value) => setPhone(value)}
-                                    inputClass="!w-full !border !border-gray-300 !rounded-md !shadow-sm focus:!ring-blue-500 focus:!border-blue-500 sm:!text-sm"
-                                />
-                            </div>
-
-                            {/* Submit Button */}
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="w-full bg-[#f68533] text-white font-medium py-2 px-4 rounded-md hover:bg-green-600 transition duration-200"
-                                >
-                                    Register
-                                </button>
-                            </div>
-                        </form>
-
-                        {/* Display Error or Success Message */}
-                        {errorMessage && (
-                            <div className="mt-3 text-red-500">
-                                {errorMessage}
-                            </div>
-                        )}
-                        {successMessage && (
-                            <div className="mt-3 text-green-500">
-                                {successMessage}
-                            </div>
-                        )}
-
-                        <div className="mt-3">
-                            <label htmlFor="loginref">
-                                Already have an account?
-                            </label>{' '}
-                            &nbsp;
-                            <a
-                                id="loginref"
-                                href="/Login"
-                                className="underline"
+                    <div className="w-full">
+                        <Button
+                            className="text-[#f9f9f9] mt-4 rounded-md w-full from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                            disabled={disabled}
+                            onMouseOver={onMouseOver}
+                            btnText={loading ? 'Registering...' : 'Register'}
+                        />
+                        <p className="w-full text-center text-[16px]">
+                            already have an Account ?{' '}
+                            <Link
+                                to={'/login'}
+                                className="text-[#355ab6] hover:underline"
                             >
                                 Login
-                            </a>
-                        </div>
+                            </Link>
+                        </p>
                     </div>
-                </div>
+                </form>
             </div>
-            <Small_Footer />
-        </>
+        </div>
     );
 }

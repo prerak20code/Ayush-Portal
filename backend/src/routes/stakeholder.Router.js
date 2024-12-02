@@ -26,19 +26,4 @@
 //         }),
 //         wrapAsync(StakeholderControl.login)
 //     );
-// stakeholderRouter
-//     .route('/Stakeholder/login')
-//     .get((req, res) => {
-//         res.render('');
-//     })
-//     .post(
-//         saveRedirectUrl,
-//         passport.authenticate('local', {
-//             failureRedirect: '/login',
-//             failureFlash: true,
-//         }),
-//         wrapAsync(StakeholderControl.login)
-//     );
-
-// stakeholderRouter.get('/Stakeholder/logout', StakeholderControl.logout);
 // stakeholderRouter.get('/Stakeholder/logout', StakeholderControl.logout);

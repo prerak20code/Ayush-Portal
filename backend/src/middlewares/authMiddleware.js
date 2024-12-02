@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from '../constants/statusCodes.js';
+import {
+    FORBIDDEN,
+    NOT_FOUND,
+    SERVER_ERROR,
+} from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
 import { User } from '../models/index.js';
 

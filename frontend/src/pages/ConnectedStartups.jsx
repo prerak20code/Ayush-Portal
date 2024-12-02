@@ -1,6 +1,4 @@
-import Startups_Header from '../components/layout/Startups_Header';
 import Favourite_Startups from '../components/layout/Favourite_Startups';
-import { Footer } from '../components';
 
 // Card Component
 const Card = ({ image, title, description, showButton }) => {
@@ -43,49 +41,45 @@ const ConnectedStartups = () => {
     const trendingStartups = startups.slice(6); // Remaining startups
 
     return (
-        <>
-            <Startups_Header />
-            <div className="white min-h-screen p-6 bg-orange-200 ">
-                <div className="max-w-6xl mx-auto ">
-                    {/* Connected Startups Section */}
-                    <div className="bg-gradient-to-r from-orange-400 to-white rounded-lg p-8 shadow-md mb-12  ">
-                        <h1 className="text-4xl font-semibold text-gray-800 mb-8 tracking-wide leading-tight shadow-md font-poppins">
-                            Connected Startups
-                        </h1>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {connectedStartups.map((startup) => (
-                                <Card
-                                    key={startup.id}
-                                    image={startup.image}
-                                    title={startup.title}
-                                    description={startup.description}
-                                    showButton={false} // No button for connected startups
-                                />
-                            ))}
-                        </div>
+        <div className="white min-h-screen p-6 bg-orange-200 ">
+            <div className="max-w-6xl mx-auto ">
+                {/* Connected Startups Section */}
+                <div className="bg-gradient-to-r from-orange-400 to-white rounded-lg p-8 shadow-md mb-12  ">
+                    <h1 className="text-4xl font-semibold text-gray-800 mb-8 tracking-wide leading-tight shadow-md font-poppins">
+                        Connected Startups
+                    </h1>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {connectedStartups.map((startup) => (
+                            <Card
+                                key={startup.id}
+                                image={startup.image}
+                                title={startup.title}
+                                description={startup.description}
+                                showButton={false} // No button for connected startups
+                            />
+                        ))}
                     </div>
+                </div>
 
-                    {/* Trending Startups Section */}
-                    <div className="bg-gradient-to-r from-orange-500 to-white rounded-lg p-8 shadow-md">
-                        <h1 className="text-4xl font-semibold text-gray-800 mb-8 tracking-wide leading-tight shadow-md font-poppins">
-                            Trending Startups
-                        </h1>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {trendingStartups.map((startup) => (
-                                <Card
-                                    key={startup.id}
-                                    image={startup.image}
-                                    title={startup.title}
-                                    description={startup.description}
-                                    showButton={true} // Button only for trending startups
-                                />
-                            ))}
-                        </div>
+                {/* Trending Startups Section */}
+                <div className="bg-gradient-to-r from-orange-500 to-white rounded-lg p-8 shadow-md">
+                    <h1 className="text-4xl font-semibold text-gray-800 mb-8 tracking-wide leading-tight shadow-md font-poppins">
+                        Trending Startups
+                    </h1>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {trendingStartups.map((startup) => (
+                            <Card
+                                key={startup.id}
+                                image={startup.image}
+                                title={startup.title}
+                                description={startup.description}
+                                showButton={true} // Button only for trending startups
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
-            <Footer />
-        </>
+        </div>
     );
 };
 

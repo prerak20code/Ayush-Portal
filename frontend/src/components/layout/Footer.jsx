@@ -72,7 +72,7 @@ export default function Footer() {
     // extra links
     const extraLinks = [
         { url: 'chat', name: 'Chat Assistance' },
-        { url: 'privacy-guidelines', name: 'Privacy & Guidelines' },
+        { url: 'privacy-policies', name: 'Privacy Policy' },
         { url: 'terms-conditions', name: 'Terms & Conditions' },
     ];
     const extraLinkElements = extraLinks.map((link) => (
@@ -110,7 +110,7 @@ export default function Footer() {
                 <div className="w-full sm:w-[35%] self-start lg:hidden relative flex flex-col items-center">
                     <div>
                         <Button
-                            className="drop-shadow-md rounded-md h-[28px] px-[6px] mb-4"
+                            className="drop-shadow-md rounded-md h-[28px] px-[6px] mb-4 bg-gradient-to-r from-[#f9f9f9] to-[#e1e1e1] hover:to-[#cbcbcb]"
                             onClick={() => setShowDropdown((prev) => !prev)}
                             btnText={
                                 <div className="flex items-center justify-center gap-1">

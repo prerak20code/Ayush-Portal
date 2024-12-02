@@ -1,6 +1,4 @@
-import { Header } from '../components';
 import { useState } from 'react';
-import Small_Footer from '../components/layout/Small_Footer';
 
 export default function OwnerConnect() {
     const [selectedChat, setSelectedChat] = useState(null); // Track selected chat

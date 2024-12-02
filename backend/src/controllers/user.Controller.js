@@ -9,10 +9,443 @@ import {
     generateTokens,
     validatePassword,
 } from '../utils/index.js';
-import { OK, SERVER_ERROR, BAD_REQUEST } from '../constants/statusCodes.js';
+import {
+    OK,
+    SERVER_ERROR,
+    BAD_REQUEST,
+    PENDING,
+} from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
 
-//  PENDING FOR REFINING
+// verify email
+const verifyEmail = async (req, res, next) => {
+    try {
+        let { userId, uniqueString } = req.params;
+        const verificationRecord = await UserVerification.find({ userId });
+        if (verificationRecord) {
+            //user verification record exists
+            const { expiresAt } = verificationRecord;
+            const hashedUniqueString = verificationRecord.uniqueString;
+
+            // checking for expired unique string
+            if (expiresAt < Date.now()) {
+                // record has expired so we delete it
+                const deletedVerificationRecord =
+                    await UserVerification.deleteOne({ userId });
+                if (deletedVerificationRecord) {
+                    const deletedUser = await User.deleteOne({ _id: userId });
+                    if (deletedUser) {
+                        let message = 'Link has expired please sign up again.';
+                        res.redirect(
+                            `/users/verified/error=true&message=${message}`
+                        );
+                    } else {
+                        let message =
+                            'Clearing user with existing record failed';
+                        res.redirect(
+                            `/users/verified/error=true&message=${message}`
+                        );
+                    }
+                } else {
+                    let message =
+                        'An error occured while clearing expired user verification record';
+                    res.redirect(
+                        `/users/verified/error=true&message=${message}`
+                    );
+                }
+            } else {
+                //valid record exists (link is not expired) validate user string
+                //first compare the hashed unique string
+
+                const doesStringsMatch = bcrypt.compare(
+                    uniqueString,
+                    hashedUniqueString
+                );
+                if (doesStringsMatch) {
+                    //strings match
+                    const updatedUser = await User.updateOne(
+                        { _id: userId },
+                        { verified: true }
+                    );
+                    if (updatedUser) {
+                        const deletedVerificationRecord =
+                            await UserVerification.deleteOne({ userId });
+                        if (deletedVerificationRecord) {
+                            res.sendFile(
+                                path.join(
+                                    __dirname,
+                                    'Ayush-portal/backend/src/views/verified.html'
+                                )
+                            );
+                        } else {
+                            let message =
+                                'An error occured while finalizing successful verification.';
+                            res.redirect(
+                                `/users/verified/error=true&message=${message}`
+                            );
+                        }
+                    } else {
+                        let message =
+                            'An error occured while updating user record to show verified.';
+                        res.redirect(
+                            `/users/verified/error=true&message=${message}`
+                        );
+                    }
+                } else {
+                    // existing record but incorrect verification details (strings doesn't match)
+                    let message = 'Invalid verification details passed';
+                    res.redirect(
+                        `/users/verified/error=true&message=${message}`
+                    );
+                }
+            }
+        } else {
+            //user verification record doesnt exist
+            let message =
+                'Account record doesnt exist or has been verified already. Please sign up or login';
+            res.redirect(`/users/verified/error=true&message=${message}`);
+        }
+    } catch (error) {
+        console.log(error);
+        let message =
+            'An error occured while checking for existing user verification record';
+        res.redirect(`/users/verified/error=true&message=${message}`);
+    }
+};
+
+const register = async (req, res) => {
+    try {
+        let { name, email, password, dateOfBirth, phone } = req.body;
+        name = name.trim();
+        email = email.trim();
+        dateOfBirth = dateOfBirth.trim();
+        phone = phone.trim();
+
+        if (!name || !email || !password || !dateOfBirth) {
+            return res.status(BAD_REQUEST).json({
+                message: 'Empty input fields!',
+            });
+        }
+
+        // regex validation
+        let regexError = validateRegex('name', name);
+        if (regexError) {
+            return res.status(BAD_REQUEST).json({
+                message: regexError,
+            });
+        }
+
+        regexError = validateRegex('email', email);
+        if (regexError) {
+            return res.status(BAD_REQUEST).json({
+                message: regexError,
+            });
+        }
+
+        regexError = validateRegex('password', password);
+        if (regexError) {
+            return res.status(BAD_REQUEST).json({
+                message: regexError,
+            });
+        }
+
+        regexError = validateRegex('dateOfBirth', dateOfBirth);
+        if (regexError) {
+            return res.status(BAD_REQUEST).json({
+                message: regexError,
+            });
+        }
+
+        //check if user already exists
+        const user = await User.findOne({ email });
+        if (user) {
+            //Already exists
+            res.status(BAD_REQUEST).json({
+                message: 'user already exists with this email',
+            });
+        } else {
+            //create new user
+
+            //password hashing ( auto done using pre hook )
+
+            // create user
+            const newUser = await User.create({
+                name,
+                email,
+                password: hashedPassword,
+                dateOfBirth,
+                phone,
+                verified: false,
+            });
+
+            // send mail
+            if (newUser) {
+                await sendVerificationEmail(newUser, res);
+            }
+        }
+    } catch (err) {
+        res.status(SERVER_ERROR).json({
+            message: 'An error occured while registering user !',
+            error: err.message,
+        });
+    }
+};
+
+const login = async (req, res) => {
+    try {
+        let { email, password } = req.body;
+        email = email.trim();
+        password = password.trim();
+
+        if (email === '' || password === '') {
+            res.status(BAD_REQUEST).json({
+                message: 'Empty credentials provided !',
+            });
+        }
+
+        //check if user exists
+        const user = await User.findOne({ email });
+        if (user) {
+            //user exists
+
+            //check if user is verified
+            if (!user.verified) {
+                res.status(BAD_REQUEST).json({
+                    message:
+                        'Email has not been verified yet. Check your inbox',
+                });
+            } else {
+                const isPasswordVerified = validatePassword(
+                    password,
+                    user.password // hashed password
+                );
+                if (isPasswordVerified) {
+                    // generate tokens
+                    const { accessToken, refreshToken } = generateTokens(user);
+
+                    // send cookies
+                    res.status(OK)
+                        .cookie('accessToken', accessToken, {
+                            ...cookieOptions,
+                            maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
+                        })
+                        .cookie('refreshToken', refreshToken, {
+                            ...cookieOptions,
+                            maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
+                        })
+                        .json(user);
+                } else {
+                    res.status(BAD_REQUEST).json({
+                        message: 'invalid credentials !!',
+                    });
+                }
+            }
+        } else {
+            res.status(BAD_REQUEST).json({
+                message: 'user not found.',
+            });
+        }
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while logging the user.',
+            error: error.message,
+        });
+    }
+};
+
+const getCurrentUser = async (req, res) => {
+    try {
+        return res.status(OK).json(req.user);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while fetching the current logged in user',
+            err: err.message,
+        });
+    }
+};
+
+// reset password logics
+const requestResetPassword = async (req, res) => {
+    try {
+        const { email, redirectUrl } = req.body;
+
+        //check if user exists
+        const user = await User.findOne({ email });
+        if (user) {
+            //check if user is verified
+            if (!user.verified) {
+                res.status(BAD_REQUEST).json({
+                    message:
+                        'Email has not been verified yet. Check your inbox',
+                });
+            } else {
+                //user is verified so we can proceed with reset email
+                //Clear existing reset records
+                const deletedResetRecords = await PasswordReset.deleteMany({
+                    userId: user._id,
+                });
+                if (deletedResetRecords) {
+                    //reset records deleted successfully
+                    // hash the reset string (auto done using pre hook)
+                    const newPasswordResetRecord = await PasswordReset.create({
+                        userId: _id,
+                        resetString,
+                        createdAt: Date.now(),
+                        expiresAt: Date.now() + 3600000,
+                    });
+                    if (newPasswordResetRecord) {
+                        // send the email
+                        await sendPasswordResetEmail(user, redirectUrl, res);
+                    } else {
+                        throw new Error(
+                            'error occured while creating new reset record'
+                        );
+                    }
+                } else {
+                    throw new Error(
+                        'error occured while deleting existing reset records'
+                    );
+                }
+            }
+        } else {
+            res.status(BAD_REQUEST).json({
+                message: 'user not found',
+            });
+        }
+    } catch (error) {
+        res.status(SERVER_ERROR).json({
+            message: 'error occured while requesting for reset password',
+            error,
+        });
+    }
+};
+
+const sendPasswordResetEmail = async (user, redirectUrl, res) => {
+    try {
+        const { _id, email } = user;
+        const resetString = uuid() + _id;
+        const url = `${redirectUrl}/users/verify/${_id}/${resetString}`;
+
+        const mailOptions = {
+            from: process.env.AUTH_EMAIL,
+            to: email,
+            subject: 'Reset Password',
+            html: `
+                    <p>Reset password with below link and login to your account.</p>
+                    <p>This link will <b>expire in an hour.</b></p>
+                    <p>Press <a href=${url}> here</a> to proceed.</p>
+                `,
+        };
+        const transporter = getTranporter();
+        await transporter.sendMail(mailOptions);
+        //reset email sent and password reset record saved
+        res.status(PENDING).json({
+            message: 'Password reset email sent!',
+        });
+    } catch (err) {
+        res.status(SERVER_ERROR).json({
+            message: 'error occured while sending password reset email',
+            error: err.message,
+        });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        let { userId, resetString, newPassword } = req.body;
+
+        const resetRecord = await PasswordReset.findOne({ userId });
+
+        if (resetRecord) {
+            //password reset record exists so we proceed
+            const { expiresAt } = resetRecord;
+            const hashedResetString = resetRecord.resetString;
+            //check for expired reset string
+            if (expiresAt < Date.now()) {
+                const deletedResetRecord = await PasswordReset.deleteOne({
+                    userId,
+                });
+                if (deletedResetRecord) {
+                    // Reset record deleted successfully
+                    res.status(BAD_REQUEST).json({
+                        message: 'Password reset link has expired',
+                    });
+                } else {
+                    //deletion failed
+                    throw new Error(
+                        'string is expired, but deleting password reset record failed'
+                    );
+                }
+            } else {
+                //valid reset record exists so we validate the reset string
+                //first compare the hashed reset string
+
+                const doesResetStringsMatch = bcrypt.compare(
+                    resetString,
+                    hashedResetString
+                );
+                if (doesResetStringsMatch) {
+                    //strings matched
+                    //so we can directly update the password hashing will be auto done using pre hook
+
+                    //update user password
+                    const updatedUser = User.updateOne(
+                        { _id: userId },
+                        { password: newPassword }
+                    );
+                    if (updatedUser) {
+                        //update complete now delete reset record
+                        const deletedResetRecord = PasswordReset.deleteOne({
+                            userId,
+                        });
+                        if (deletedResetRecord) {
+                            //reset reset record deleted
+                            res.status(OK).json({
+                                message: 'Password has been reset successfully',
+                            });
+                        } else {
+                            // deletion failed
+                            throw new Error(
+                                'password reset successfully, but error occured while deleting reset record'
+                            );
+                        }
+                    } else {
+                        throw new Error(
+                            'error occured while updating user password'
+                        );
+                    }
+                } else {
+                    //existing record but incorrect reset string
+                    res.status(BAD_REQUEST).json({
+                        message: 'invalid reset string.',
+                    });
+                }
+            }
+        } else {
+            res.status(BAD_REQUEST).json({
+                message: 'No reset record with privided string found.',
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(SERVER_ERROR).json({
+            message: 'error occured while reseting password',
+            error: err.message,
+        });
+    }
+};
+
+export {
+    register,
+    verifyEmail,
+    login,
+    getCurrentUser,
+    resetPassword,
+    requestResetPassword,
+    sendPasswordResetEmail,
+};
+
+//  BEFORE CODE
 // verify email
 // userRouter.get('/verify/:userId/:uniqueString', (req, res) => {
 //     let { userId, uniqueString } = req.params;
@@ -135,159 +568,6 @@ import { cookieOptions } from '../constants/cookie.js';
 //     res.sendFile(path.join(__dirname, './../views/verified.html'));
 // });
 
-const register = async (req, res) => {
-    try {
-        let { name, email, password, dateOfBirth, phone } = req.body;
-        name = name.trim();
-        email = email.trim();
-        dateOfBirth = dateOfBirth.trim();
-        phone = phone.trim();
-
-        if (
-            name === '' ||
-            email === '' ||
-            password === '' ||
-            dateOfBirth === ''
-        ) {
-            return res.status(BAD_REQUEST).json({
-                message: 'Empty input fields!',
-            });
-        }
-
-        // regex validation
-        let regexError = validateRegex('name', name);
-        if (regexError) {
-            return res.status(BAD_REQUEST).json({
-                message: regexError,
-            });
-        }
-
-        regexError = validateRegex('email', email);
-        if (regexError) {
-            return res.status(BAD_REQUEST).json({
-                message: regexError,
-            });
-        }
-
-        regexError = validateRegex('password', password);
-        if (regexError) {
-            return res.status(BAD_REQUEST).json({
-                message: regexError,
-            });
-        }
-
-        regexError = validateRegex('DOB', dateOfBirth);
-        if (regexError) {
-            return res.status(BAD_REQUEST).json({
-                message: regexError,
-            });
-        }
-
-        //check if user already exists
-        const user = await User.findOne({ email });
-        if (user) {
-            //Already exists
-            res.status(BAD_REQUEST).json({
-                message: 'User exists with this email',
-            });
-        } else {
-            //create new user
-
-            //password hashing ( auto done using pre hook )
-            // const saltRounds = 10;
-            // const hashedPassword = await bcrypt.hash(password, saltRounds);
-            // if (!hashedPassword) {
-            //     res.status(SERVER_ERROR).json({
-            //         message: 'An error occured while hashing password !',
-            //     });
-            // }
-
-            // create user
-            const newUser = await User.create({
-                name,
-                email,
-                password: hashedPassword,
-                dateOfBirth,
-                phone,
-                verified: false,
-            });
-
-            // send mail
-            if (newUser) {
-                await sendVerificationEmail(newUser, res);
-            }
-        }
-    } catch (err) {
-        res.status(SERVER_ERROR).json({
-            message: 'An error occured while registering user !',
-            error: err.message,
-        });
-    }
-};
-
-const login = async (req, res) => {
-    try {
-        let { email, password } = req.body;
-        email = email.trim();
-        password = password.trim();
-
-        if (email === '' || password === '') {
-            res.status(BAD_REQUEST).json({
-                message: 'Empty credentials provided !',
-            });
-        }
-
-        //check if user exists
-        const user = await User.findOne({ email });
-        if (user) {
-            //user exists
-
-            //check if user is verified
-            if (!user.verified) {
-                res.status(BAD_REQUEST).json({
-                    message:
-                        'Email has not been verified yet. Check your inbox',
-                });
-            } else {
-                const isPasswordVerified = validatePassword(
-                    password,
-                    user.password // hashed password
-                );
-                if (isPasswordVerified) {
-                    // generate tokens
-                    const { accessToken, refreshToken } = generateTokens(user);
-
-                    // send cookies
-                    res.status(OK)
-                        .cookie('accessToken', accessToken, {
-                            ...cookieOptions,
-                            maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
-                        })
-                        .cookie('refreshToken', refreshToken, {
-                            ...cookieOptions,
-                            maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
-                        })
-                        .json(user);
-                } else {
-                    res.status(BAD_REQUEST).json({
-                        message: 'Invalid password !',
-                    });
-                }
-            }
-        } else {
-            res.status(BAD_REQUEST).json({
-                message: 'user not found.',
-            });
-        }
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'error occured while logging the user.',
-            error: error.message,
-        });
-    }
-};
-
-// PENDING FOR REFINING
 // reset password logics
 // const requestResetPassword = async (req, res) => {
 //     try {
@@ -416,19 +696,16 @@ const login = async (req, res) => {
 //                     PasswordReset.deleteOne({ userId })
 //                         .then(() => {
 //                             // Reset record deleted successfully
-//                             res.json({
-//                                 status: 'FAILED',
+//                             res.status(BAD_REQUEST).json({
 //                                 message: 'Password reset link has expired',
 //                             });
 //                         })
 //                         .catch((error) => {
 //                             //deletion failed
 //                             console.log(error);
-//                             res.json({
-//                                 status: 'FAILED',
-//                                 message:
-//                                     'Clearing password reset record failed',
-//                             });
+//                             throw new Error(
+//                                 'Clearing password reset record failed'
+//                             );
 //                         });
 //                 } else {
 //                     //valid reset record exists so we validate the reset string
@@ -440,15 +717,13 @@ const login = async (req, res) => {
 //                             if (result) {
 //                                 //strings matched
 //                                 //hash password again
-
-//                                 const saltRounds = 10;
 //                                 bcrypt
-//                                     .hash(newPassword, saltRounds)
+//                                     .hash(newPassword, 10)
 //                                     .then((hashedNewPassword) => {
 //                                         //update user password
 //                                         User.updateOne(
 //                                             { _id: userId },
-//                                             { password: hashedNewPassword }
+//                                             { password: newPassword }
 //                                         )
 //                                             .then(() => {
 //                                                 //update complete delete reset record
@@ -523,11 +798,3 @@ const login = async (req, res) => {
 //             });
 //         });
 // };
-
-export {
-    register,
-    login,
-    // resetPassword,
-    // requestResetPassword,
-    // sendPasswordResetEmail,
-};

@@ -30,21 +30,21 @@ const investorSchema = new mongoose.Schema(
 
         connectedStartups: [
             {
-                type: Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.ObjectId,
                 ref: 'Startups',
             },
         ],
 
         likedStartups: [
             {
-                type: Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.ObjectId,
                 ref: 'Startups',
             },
         ],
 
         applicationStatus: [
             {
-                type: Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.ObjectId,
                 ref: 'notification',
             },
         ],
@@ -52,6 +52,6 @@ const investorSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-InvestorSchema.plugin(passportLocalMongoose);
+investorSchema.plugin(passportLocalMongoose);
 
 export const Investor = mongoose.model('Investor', investorSchema);

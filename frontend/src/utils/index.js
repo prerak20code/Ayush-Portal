@@ -1,2 +1,3 @@
 import copyEmail from './copyEmail';
-export { copyEmail };
+import verifyRegex from './verifyRegex';
+export { copyEmail, verifyRegex };

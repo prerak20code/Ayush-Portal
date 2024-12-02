@@ -1,12 +1,9 @@
 import { Header, SmallFooter } from '..';
 import { Outlet, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useVariantContext } from '../../contexts';
 import { useEffect } from 'react';
 
 export default function LayoutTwo() {
     const location = useLocation();
-    const { pageVariants } = useVariantContext();
 
     // Scroll to top on route change
     useEffect(() => {
@@ -20,18 +17,9 @@ export default function LayoutTwo() {
             </div>
 
             <div className="mt-[110px] overflow-hidden">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={location.pathname}
-                        variants={pageVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        className="min-h-[calc(100vh-110px)]"
-                    >
-                        <Outlet />
-                    </motion.div>
-                </AnimatePresence>
+                <div className="min-h-[calc(100vh-110px)]">
+                    <Outlet />
+                </div>
 
                 <SmallFooter />
             </div>
