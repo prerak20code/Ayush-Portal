@@ -1,30 +1,46 @@
 import jwt from 'jsonwebtoken';
+import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from '../constants/statusCodes';
+import { cookieOptions } from '../constants/cookie';
+import { User } from '../models';
 
-// Middleware to check if the user is authenticated
-const isAuthenticated = (req, res, next) => {
-    // Get the token from the authorization header
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res
-            .status(401)
-            .json({ message: 'Access Denied: No Token Provided' });
-    }
-
-    const token = authHeader.split(' ')[1]; // Extract token from header
-
+export const verifyJWT = async (req, res, next) => {
     try {
-        // Verify the token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const accessToken =
+            req.cookies?.accessToken ||
+            req.headers['Authorization']?.split(' ')[1];
+        if (!accessToken)
+            return res
+                .status(NOT_FOUND)
+                .json({ message: 'access token missing' }); //user was logged out
 
-        // Attach user information to the request object
-        req.user = decoded;
+        const decodedToken = jwt.verify(
+            accessToken,
+            process.env.ACCESS_TOKEN_SECRET
+        );
+        if (!decodedToken) {
+            return res
+                .status(FORBIDDEN)
+                .clearCookie('accessToken', cookieOptions)
+                .json({ message: 'forged access token' });
+        }
 
-        // Call the next middleware or route handler
+        //since token is valid but is this id user in oue db or not
+        const user = await User.findById(decodedToken._id);
+        if (!user) {
+            return res
+                .status(NOT_FOUND)
+                .clearCookie('accessToken', cookieOptions)
+                .json({ message: 'user with provided access token not found' });
+        }
+
+        req.user = user; // we set a custom property name user in the req object so now after the middleware we can directly get the user using req.user
+
         next();
-    } catch (error) {
-        res.status(401).json({ message: 'Access Denied: Invalid Token' });
+    } catch (err) {
+        console.log(err.message);
+        return res
+            .status(SERVER_ERROR)
+            .clearCookie('accessToken', cookieOptions)
+            .json({ message: 'expired access token' });
     }
 };
-
-export default isAuthenticated;

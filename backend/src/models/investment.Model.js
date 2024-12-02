@@ -15,4 +15,4 @@ const investmentSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-export const investment = mongoose.model('investment', investmentSchema);
+export const Investment = mongoose.model('investment', investmentSchema);

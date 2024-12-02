@@ -1,16 +1,13 @@
 import mongoose from 'mongoose';
-const { Schema } = mongoose;
 
-const UserVerificationSchema = new Schema({
+const UserVerificationSchema = new mongoose.Schema({
     userId: String,
     uniqueString: String,
     createdAt: Date,
     expiresAt: Date,
 });
 
-const UserVerification = mongoose.model(
+export const UserVerification = mongoose.model(
     'UserVerifcation',
     UserVerificationSchema
 );
-
-export default UserVerification;

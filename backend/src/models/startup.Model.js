@@ -49,6 +49,4 @@ const startupSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const startup = mongoose.model('startup', startupSchema);
-
-export default startup;
+export const Startup = mongoose.model('startup', startupSchema);
