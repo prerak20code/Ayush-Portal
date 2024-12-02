@@ -1,3 +1,3 @@
-import { verifyJWT } from './authMiddleware';
+import { verifyJWT } from './authMiddleware.js';
 
 export { verifyJWT };

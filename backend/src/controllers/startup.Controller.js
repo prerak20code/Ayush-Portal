@@ -6,7 +6,7 @@ import {
     SERVER_ERROR,
     FORBIDDEN,
 } from '../constants/statusCodes.js';
-import { Startup } from '../models';
+import { Startup } from '../models/index.js';
 
 const addStartup = async (req, res) => {
     try {

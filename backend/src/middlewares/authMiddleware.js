@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from '../constants/statusCodes';
-import { cookieOptions } from '../constants/cookie';
-import { User } from '../models';
+import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from '../constants/statusCodes.js';
+import { cookieOptions } from '../constants/cookie.js';
+import { User } from '../models/index.js';
 
 export const verifyJWT = async (req, res, next) => {
     try {

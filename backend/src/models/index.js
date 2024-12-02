@@ -1,9 +1,9 @@
-import { GovOfficial } from './govOfficial.Model';
-import { Startup } from './startup.Model';
-import { Investment } from './investment.Model';
-import { PasswordReset } from './passwordReset.Model';
-import { User } from './user.Model';
-import { UserVerification } from './userVerification.Model';
+import { GovOfficial } from './govOfficial.Model.js';
+import { Startup } from './startup.Model.js';
+import { Investment } from './investment.Model.js';
+import { PasswordReset } from './passwordReset.Model.js';
+import { User } from './user.Model.js';
+import { UserVerification } from './userVerification.Model.js';
 
 export {
     GovOfficial,

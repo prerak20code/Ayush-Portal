@@ -30,7 +30,7 @@ import {
     investmentRouter,
     govOfficialrouter,
     userRouter,
-} from './routes';
+} from './routes/index.js';
 
 // api
 app.use('/api/v1/users', userRouter);

@@ -1,7 +1,7 @@
 import express from 'express';
 export const startupRouter = express.Router();
 
-import { verifyJWT } from '../middlewares';
+import { verifyJWT } from '../middlewares/index.js';
 
 import {
     addStartup,
@@ -10,7 +10,7 @@ import {
     getStartup,
     getAllStartups,
     getUserStartups,
-} from '../controllers/startup.Controller';
+} from '../controllers/startup.Controller.js';
 
 startupRouter.route('/add').post(verifyJWT, addStartup);
 startupRouter.route('/get-startups').get(verifyJWT, getUserStartups);

@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
-import { UserVerification } from '../models';
+import { UserVerification } from '../models/index.js';
 import bcrypt from 'bcrypt';
-import { getTranporter } from '.';
-import { BAD_REQUEST, PENDING } from '../constants/statusCodes';
+import { getTranporter } from './index.js';
+import { BAD_REQUEST, PENDING } from '../constants/statusCodes.js';
 
 export const sendVerificationEmail = async ({ _id, email }, res) => {
     try {

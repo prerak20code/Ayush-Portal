@@ -1,4 +1,4 @@
-import { SERVER_ERROR } from '../constants/statusCodes';
+import { SERVER_ERROR } from '../constants/statusCodes.js';
 
 const generateTokens = async (user) => {
     try {

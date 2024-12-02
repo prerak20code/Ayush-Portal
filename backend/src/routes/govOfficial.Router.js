@@ -5,9 +5,9 @@ import {
     getAllInvestorsForGov,
     getAllStartupsForGov,
     approveOrRejectStartup,
-} from '../controllers/government.controller.js';
+} from '../controllers/govOfficial.Controller.js';
 
-import { verifyJWT } from '../middlewares';
+import { verifyJWT } from '../middlewares/index.js';
 
 govOfficialrouter.route('/startups').get(verifyJWT, getAllStartupsForGov);
 govOfficialrouter.route('/investors').get(verifyJWT, getAllInvestorsForGov);

@@ -1,11 +1,6 @@
-import { investmentRouter } from './investment.Router';
-import { govOfficialrouter } from './govOfficial.Router';
-import { stakeholderRouter } from './stakeholder.Router';
-import { startupRouter } from './startup.Router';
+import { investmentRouter } from './investment.Router.js';
+import { govOfficialrouter } from './govOfficial.Router.js';
+import { startupRouter } from './startup.Router.js';
+import { userRouter } from './user.Router.js';
 
-export {
-    investmentRouter,
-    govOfficialrouter,
-    stakeholderRouter,
-    startupRouter,
-};
+export { investmentRouter, govOfficialrouter, userRouter, startupRouter };

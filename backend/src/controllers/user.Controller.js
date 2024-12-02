@@ -1,11 +1,10 @@
 import bcrypt from 'bcrypt';
-import { User, UserVerification, PasswordReset } from '../models';
+import { User, UserVerification, PasswordReset } from '../models/index.js';
 import { v4 as uuid } from 'uuid';
 import path from 'path';
-import { sendVerificationEmail, validateRegex, getTranporter } from '../utils';
-import { OK, SERVER_ERROR, BAD_REQUEST } from '../constants/statusCodes';
-import { cookieOptions } from '../constants/cookie';
-import { generateTokens } from '../utils/generateTokens';
+import { sendVerificationEmail, validateRegex, getTranporter, generateTokens } from '../utils/index.js';
+import { OK, SERVER_ERROR, BAD_REQUEST } from '../constants/statusCodes.js';
+import { cookieOptions } from '../constants/cookie.js';
 
 // verify email
 userRouter.get('/verify/:userId/:uniqueString', (req, res) => {

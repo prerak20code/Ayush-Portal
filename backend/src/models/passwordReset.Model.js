@@ -7,4 +7,7 @@ const PasswordResetSchema = new mongoose.Schema({
     expiresAt: Date,
 });
 
-export const PasswordReset = mongoose.model('PasswordReset', PasswordResetSchema);
+export const PasswordReset = mongoose.model(
+    'PasswordReset',
+    PasswordResetSchema
+);

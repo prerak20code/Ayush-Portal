@@ -1,7 +1,7 @@
 import express from 'express';
 export const investmentRouter = express.Router();
 
-import { verifyJWT } from '../middlewares';
+import { verifyJWT } from '../middlewares/index.js';
 
 import {
     applyStartup,

@@ -1,5 +1,17 @@
-import { sendVerificationEmail } from './sendVerificationEmail';
-import { validateRegex } from './regex';
-import { getTranporter } from './getTransporter';
+import { sendVerificationEmail } from './sendVerificationEmail.js';
+import { validateRegex } from './regex.js';
+import { getTranporter } from './getTransporter.js';
+import {
+    generateAccessToken,
+    generateRefreshToken,
+    generateTokens,
+} from './generateTokens.js';
 
-export { sendVerificationEmail, validateRegex, getTranporter };
+export {
+    sendVerificationEmail,
+    validateRegex,
+    getTranporter,
+    generateAccessToken,
+    generateRefreshToken,
+    generateTokens,
+};

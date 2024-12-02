@@ -3,8 +3,8 @@ import {
     NOT_FOUND,
     OK,
     SERVER_ERROR,
-} from '../constants/statusCodes';
-import { Startup, Investment } from '../models';
+} from '../constants/statusCodes.js';
+import { Startup, Investment } from '../models/index.js';
 
 const getAllStartupsForGov = async (req, res) => {
     try {
