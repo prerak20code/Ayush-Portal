@@ -24,7 +24,6 @@ app.use(
     // }
 );
 
-// import { GovOfficial } from './models/govOfficial.Model.js';
 import {
     startupRouter,
     investmentRouter,
@@ -32,7 +31,7 @@ import {
     userRouter,
 } from './routes/index.js';
 
-// api
+
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/startups', startupRouter);
 app.use('/api/v1/investments', investmentRouter);
