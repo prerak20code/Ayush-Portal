@@ -20,10 +20,9 @@ userRouter
 
 userRouter.route('/reset-password').post(resetPassword);
 
-userRouter
-    .route('/verify-email/:userId/:uniqueString')
-    .get(verifyEmail, (req, res) => {
-        res.sendFile(path.join(__dirname, '../views/verified.html'));
-    });
+userRouter.route('/verify-email/:userId/:uniqueString').get(verifyEmail);
+userRouter.route('/verified').get((req, res) => {
+    res.sendFile(path.join(__dirname, '../views/verified.html'));
+});
 
 userRouter.route('/').get(getCurrentUser);

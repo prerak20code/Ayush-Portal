@@ -18,7 +18,7 @@ import {
 import { cookieOptions } from '../constants/cookie.js';
 
 // verify email
-const verifyEmail = async (req, res, next) => {
+const verifyEmail = async (req, res) => {
     try {
         let { userId, uniqueString } = req.params;
         const verificationRecord = await UserVerification.find({ userId });
@@ -71,12 +71,7 @@ const verifyEmail = async (req, res, next) => {
                         const deletedVerificationRecord =
                             await UserVerification.deleteOne({ userId });
                         if (deletedVerificationRecord) {
-                            res.sendFile(
-                                path.join(
-                                    __dirname,
-                                    '../views/verified.html'
-                                )
-                            );
+                            res.redirect('/users/verified');
                         } else {
                             let message =
                                 'An error occured while finalizing successful verification.';
