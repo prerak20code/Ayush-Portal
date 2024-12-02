@@ -3,14 +3,8 @@ import startup from '../models/startup.js';
 // user jobs post karega
 export const poststartup = async (req, res) => {
     try {
-        const {
-            title,
-            description,
-            startuptype,
-            Ask,
-            startupage,
-            UserId,
-        } = req.body;
+        const { title, description, startuptype, Ask, startupage, UserId } =
+            req.body;
         const userId = req.id;
 
         if (
@@ -55,9 +49,12 @@ export const getAllStartups = async (req, res) => {
                 { description: { $regex: keyword, $options: 'i' } },
             ],
         };
-        const startup = await startup.find(query).populate({
-            path: "user"
-        }).sort({ createdAt: -1 });                    //to get all information about the user populate is used
+        const startup = await startup
+            .find(query)
+            .populate({
+                path: 'user',
+            })
+            .sort({ createdAt: -1 }); //to get all information about the user populate is used
         if (!startup) {
             return res.status(404).json({
                 message: 'Startup not found',
@@ -105,15 +102,15 @@ export const getuserstartup = async (req, res) => {
             startup,
             success: true,
         });
-    } catch (error) { }
+    } catch (error) {}
 };
 
 // update user
 export const updateStartup = async (req, res) => {
     try {
-        const { id } = req.params; 
-        const userId = req.id; 
-        const updates = req.body; 
+        const { id } = req.params;
+        const userId = req.id;
+        const updates = req.body;
 
         // Find the startup by ID
         const existingStartup = await startup.findById(id);
@@ -157,8 +154,8 @@ export const updateStartup = async (req, res) => {
 // startup delete krne ke lia
 export const deleteStartup = async (req, res) => {
     try {
-        const { id } = req.params; 
-        const userId = req.id; 
+        const { id } = req.params;
+        const userId = req.id;
 
         // Find the startup by ID
         const existingStartup = await startup.findById(id);
@@ -193,4 +190,3 @@ export const deleteStartup = async (req, res) => {
         });
     }
 };
-

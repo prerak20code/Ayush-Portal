@@ -28,9 +28,9 @@ const startupSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        status:{
+        status: {
             type: String,
-            enum: ['pending','approved','rejected'],
+            enum: ['pending', 'approved', 'rejected'],
             default: 'pending',
         },
         created_by: {
@@ -38,7 +38,7 @@ const startupSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        createdAt:{type:Date, default: Date.now},
+        createdAt: { type: Date, default: Date.now },
         investment: [
             {
                 type: mongoose.Schema.Types.ObjectId,

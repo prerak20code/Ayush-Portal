@@ -2,7 +2,10 @@ import startup from '../models/startup.js';
 
 export const getAllStartupsForGov = async (req, res) => {
     try {
-        const startups = await startup.find().populate('user').sort({ createdAt: -1 });
+        const startups = await startup
+            .find()
+            .populate('user')
+            .sort({ createdAt: -1 });
         return res.status(200).json({
             startups,
             success: true,
@@ -15,7 +18,6 @@ export const getAllStartupsForGov = async (req, res) => {
         });
     }
 };
-
 
 // get all invester
 export const getAllInvestorsForGov = async (req, res) => {
@@ -42,11 +44,9 @@ export const getAllInvestorsForGov = async (req, res) => {
     }
 };
 
-
-
 export const approveOrRejectStartup = async (req, res) => {
     try {
-        const { id } = req.params; 
+        const { id } = req.params;
         const { status } = req.body; // New status: 'approved' or 'rejected'
 
         if (!['approved', 'rejected'].includes(status)) {
