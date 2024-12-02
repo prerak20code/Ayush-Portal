@@ -21,9 +21,6 @@ import {
 import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
 import RegisterYourStartups from './pages/RegisterYourStartups.jsx';
 
-import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
-import RegisterYourStartups from './pages/RegisterYourStartups.jsx';
-
 import { LayoutOne, LayoutTwo, LayoutThree } from './components';
 
 import { VariantContextProvider, UserContextProvider } from './contexts';
