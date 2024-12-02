@@ -1,6 +1,6 @@
 export default function SmallFooter() {
     return (
-        <footer className="bg-[#f9f9f9] text-blue-700 py-2 w-full relative sm:fixed sm:bottom-0">
+        <footer className="bg-[#f9f9f9] text-blue-700 py-2 w-full  fixed bottom-0">
             <div className="container mx-auto flex flex-col sm:flex-row justify-between px-4 space-y-2 sm:space-y-0 sm:space-x-6">
                 <div className="text-center sm:text-left">
                     © 2024 Your Company Name

@@ -18,10 +18,13 @@ import {
     LoginPage,
 } from './pages';
 
+import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
+import RegisterYourStartups from './pages/RegisterYourStartups.jsx';
+
 import { LayoutOne, LayoutTwo } from './components';
 
 import { VariantContextProvider } from './contexts';
-// import InvestorType from './Investor Connect/InvestorType.jsx';
+import InvestorType from './Investor Connect/InvestorType.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -31,12 +34,20 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
+                <Route
+                    path="user/RegisterYourStartup"
+                    element={<RegisterYourStartups />}
+                />
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
+                <Route
+                    path="user/verify/:userId/:uniqueString"
+                    element={<EmailVerification />}
+                />
+                <Route path="InvestorType" element={<InvestorType />} />
             </Route>
-            {/* <Route path="InvestorType" element={<InvestorType />} /> */}
         </Route>
     )
 );

@@ -12,7 +12,7 @@ const EmailVerification = () => {
         const verifyEmail = async () => {
             try {
                 const response = await axios.get(
-                    `/user/verify/${userId}/${uniqueString}`
+                    `http://localhost:5173/user/verify/${userId}/${uniqueString}`
                 );
                 if (response.data.status === 'SUCCESS') {
                     setStatus('success');
