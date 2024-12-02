@@ -20,9 +20,33 @@ export const VariantContextProvider = ({ children }) => {
             transition: { delay: i * 0.2, duration: 0.8, ease: 'easeOut' },
         }),
     };
+    const pageVariants = {
+        initial: {
+            opacity: 0,
+            scale: 0.9,
+        },
+        animate: {
+            opacity: 1,
+            scale: 1,
+            transition: {
+                duration: 0.4,
+                ease: 'easeOut',
+            },
+        },
+        exit: {
+            opacity: 0,
+            scale: 1.05,
+            transition: {
+                duration: 0.3,
+                ease: 'easeIn',
+            },
+        },
+    };
 
     return (
-        <VariantContext.Provider value={{ textVariants, iconVariants }}>
+        <VariantContext.Provider
+            value={{ textVariants, iconVariants, pageVariants }}
+        >
             {children}
         </VariantContext.Provider>
     );

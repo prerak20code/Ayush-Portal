@@ -24,7 +24,7 @@ const startupSchema = new mongoose.Schema(
         },
         User: {
             //user ka relation hoga startup or user ke sath
-            type: mongoose.Schema.Types.ObjectID,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
@@ -38,17 +38,14 @@ const startupSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        createdAt: { type: Date, default: Date.now },
         investment: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'investment',
+                ref: 'Investment',
             },
         ],
     },
     { timestamps: true }
 );
 
-const startup = mongoose.model('startup', startupSchema);
-
-export default startup;
+export const Startup = mongoose.model('Startup', startupSchema);

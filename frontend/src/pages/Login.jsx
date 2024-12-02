@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Small_Footer from '../components/layout/Small_Footer';
+import Small_Footer from '../components/layout/SmallFooter';
 import Owner_Type from '../components/LoginPage/Owner_Type';
 import Stakeholder_Type from '../components/LoginPage/Stakeholder_Type';
 import Government_Type from '../components/LoginPage/Government_Type';

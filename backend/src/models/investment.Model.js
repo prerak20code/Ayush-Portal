@@ -4,7 +4,7 @@ const investmentSchema = new mongoose.Schema(
     {
         startup: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'startup', //generating relation between inverster and which startup they have applied
+            ref: 'Startup', //generating relation between inverster and startup which they have applied for
             required: true,
         },
         invester: {
@@ -15,4 +15,4 @@ const investmentSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-export const investment = mongoose.model('investment', investmentSchema);
+export const Investment = mongoose.model('Investment', investmentSchema);

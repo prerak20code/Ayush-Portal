@@ -5,11 +5,13 @@ const govOfficialSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
+            trim: true,
         },
         email: {
             type: String,
             required: true,
             unique: true,
+            trim: true,
         },
         password: {
             type: String,
@@ -17,7 +19,7 @@ const govOfficialSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            default: 'GovernmentOfficial',
+            default: 'govOfficial',
         },
     },
     { timestamps: true }

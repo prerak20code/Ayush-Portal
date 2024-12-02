@@ -1,57 +1,63 @@
-import { investment } from '../models/investment.js';
+import {
+    BAD_REQUEST,
+    CREATED,
+    NOT_FOUND,
+    OK,
+} from '../constants/statusCodes.js';
+import { Investment } from '../models/index.js';
 
-export const applystartup = async (req, res) => {
+// apply to be a investor in a startup
+const applyStartup = async (req, res) => {
     try {
         const companyId = req.id;
-        const startupId = req.params.id;
+        const { startupId } = req.params;
+
         if (!startupId) {
-            return res.status(400).json({
+            return res.status(BAD_REQUEST).json({
                 message: 'Startup Id is required.',
-                success: false,
             });
         }
         // check if the company has already applied of that same startup
-        const existingInvestment = await investment.findOne({
+        const existingInvestment = await Investment.findOne({
             startup: startupId,
             invester: companyId,
         });
-        if (existingApplication) {
-            return res.status(400).json({
+        if (existingInvestment) {
+            return res.status(BAD_REQUEST).json({
                 message: 'You have already applied for this startup',
-                success: false,
             });
         }
 
         // check if the startups exist
         const startup = await startup.findById(startupId);
         if (!startup) {
-            return res.status(404).json({
+            return res.status(NOT_FOUND).json({
                 message: 'Startup not found',
-                success: false,
             });
         }
         // create a new investment
-        const newinvestment = await investment.create({
+        const newinvestment = await Investment.create({
             startup: startupId,
             invester: companyId,
         });
         startup.investments.push(newinvestment._id);
         await job.save();
-        return res.status(201).json({
+        return res.status(CREATED).json({
             message: 'Job applied successfully.',
-            success: true,
         });
     } catch (error) {
-        console.log(error);
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while applying for stakeholder.',
+            error: err.message,
+        });
     }
 };
 
-// company will get all its applied startups
-export const getAppliedstartups = async (req, res) => {
+// get all invested startuops by a company
+const getAppliedStartups = async (req, res) => {
     try {
         const companyId = req.id;
-        const investment = await investment
-            .find({ invester: companyId })
+        const investment = await Investment.find({ invester: companyId })
             .sort({ createdAt: -1 })
             .populated({
                 path: 'startup',
@@ -62,25 +68,26 @@ export const getAppliedstartups = async (req, res) => {
                 },
             });
         if (!investment) {
-            return res.status(404).json({
+            return res.status(NOT_FOUND).json({
                 message: 'No investment',
-                success: false,
             });
         }
-        return res.status(200).json({
+        return res.status(OK).json({
             investment,
-            success: true,
         });
     } catch (error) {
-        console.log(error);
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while getting invested startups.',
+            error: err.message,
+        });
     }
 };
 
-// user dekhega ki kitne logo ne interest dikhaya hai request ki hai
-export const getinvesters = async (req, res) => {
+// get investors of a particular startup
+const getInvesters = async (req, res) => {
     try {
-        const startupId = req.params.id;
-        const startup = await startup.findById(startupId).populated({
+        const { startupId } = req.params;
+        const startup = await Startup.findById(startupId).populated({
             path: 'investment',
             option: { sort: { createdAt: -1 } },
             populated: {
@@ -88,16 +95,19 @@ export const getinvesters = async (req, res) => {
             },
         });
         if (!startup) {
-            return res.status(404).json({
+            return res.status(NOT_FOUND).json({
                 message: 'Job not found.',
-                success: false,
             });
         }
-        return res.status(200).json({
+        return res.status(OK).json({
             startup,
-            success: true,
         });
     } catch (error) {
-        console.log(error);
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while getting investors.',
+            error: err.message,
+        });
     }
 };
+
+export { applyStartup, getAppliedStartups, getInvesters };
