@@ -1,7 +1,7 @@
 import express from 'express';
 export const app = express();
-import cors from "cors";
-import cookieParser from "cookie-parser";
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -32,7 +32,6 @@ import {
     govOfficialrouter,
     userRouter,
 } from './routes/index.js';
-
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/startups', startupRouter);

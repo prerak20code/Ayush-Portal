@@ -1,8 +1,8 @@
-import { Header, Footer } from '..';
+import { Footer, StartupHeader } from '..';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
-export default function LayoutOne() {
+export default function LayoutThree() {
     const location = useLocation();
 
     // Scroll to top on route change
@@ -13,7 +13,7 @@ export default function LayoutOne() {
     return (
         <div className="h-full w-full">
             <div className="fixed top-0 z-10 w-full">
-                <Header />
+                <StartupHeader />
             </div>
 
             <div className="mt-[110px] overflow-hidden">

@@ -2,14 +2,14 @@ import { v4 as uuid } from 'uuid';
 import { UserVerification } from '../models/index.js';
 import bcrypt from 'bcrypt';
 import { getTranporter } from './index.js';
-import { BAD_REQUEST, PENDING } from '../constants/statusCodes.js';
+import { PENDING } from '../constants/statusCodes.js';
 
-export const sendVerificationEmail = async ({ _id, email }, res) => {
+export const sendVerificationEmail = async (user, res) => {
     try {
-        // url
-        const currentUrl = 'http://localhost:4000/';
-
+        const { _id, email } = user;
         const uniqueString = uuid() + _id;
+        
+        const url = `http://localhost:${process.env.PORT}/users/verify/${_id}/${uniqueString}`;
 
         //mail options
         const mailOptions = {
@@ -17,17 +17,17 @@ export const sendVerificationEmail = async ({ _id, email }, res) => {
             to: email,
             subject: 'Verify your Email',
             html: `
-                <p>Verify your email address to complete the signup and login into your account.</p> 
-                <p>This link will <b>expire in an hour.</b></p> 
-                <p>Press <a href=${currentUrl + 'user/verify/' + _id + '/' + uniqueString}
-                > here </a> to proceed.</p>
-            `,
+                    <p>Verify your email address to complete the signup and login to your account.</p> 
+                    <p>This link will <b>expire in an hour.</b></p> 
+                    <p>Press <a href=${url}
+                    > here </a> to proceed.</p>
+                `,
         };
 
         //hash the unique string
         const hashedUniqueString = await bcrypt.hash(uniqueString, 10);
         if (hashedUniqueString) {
-            //set values in Userverification collection
+            //create userVerification record
             const newVerificaion = await UserVerification.create({
                 userId: _id,
                 uniqueString: hashedUniqueString,
@@ -36,30 +36,19 @@ export const sendVerificationEmail = async ({ _id, email }, res) => {
             });
             if (newVerificaion) {
                 const transporter = getTranporter();
-                transporter
-                    .sendMail(mailOptions)
-                    .then(() => {
-                        //email sent and verification record saved
-                        res.status(PENDING).json({
-                            message: 'EMAIL VERIFICATION SENT!',
-                        });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        res.status(BAD_REQUEST).json({
-                            message: 'Verification email failed!',
-                        });
-                    });
+                await transporter.sendMail(mailOptions);
+
+                //email sent and verification record saved
+                res.status(PENDING).json({
+                    message: 'verification email sent!',
+                });
             } else {
-                console.log(error);
-                throw new Error(
-                    `colud not save verification email data!, error:${error}`
-                );
+                throw new Error(`could not save verification record.`);
             }
         }
     } catch (err) {
         res.status(SERVER_ERROR).json({
-            message: 'An error occured while hashing email data !',
+            message: 'An error occured while verifying email.',
             error: err.message,
         });
     }

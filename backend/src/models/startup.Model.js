@@ -23,7 +23,6 @@ const startupSchema = new mongoose.Schema(
             required: true,
         },
         User: {
-            //user ka relation hoga startup or user ke sath
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,

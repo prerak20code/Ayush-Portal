@@ -43,11 +43,23 @@ const userSchema = new mongoose.Schema(
 
 export const User = mongoose.model('User', userSchema);
 
-// pre hook to hash password before save
+// pre hook to hash password before save & update
 userSchema.pre('save', async function (next) {
     try {
         if (this.isModified('password')) {
             this.password = await bcrypt.hash(this.password, 10);
+        }
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+userSchema.pre('updateOne', async function (next) {
+    try {
+        const update = this.getUpdate(); // Get the update object
+        if (update.password) {
+            update.password = await bcrypt.hash(update.password, 10);
         }
         next();
     } catch (err) {

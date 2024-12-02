@@ -17,13 +17,14 @@ export const validateRegex = async (fieldType, value) => {
                 }
             }
 
-            case 'password': {
+            case 'password':
+            case 'newPassword': {
                 if (value.length <= 8 && value.length >= 12) {
                     return 'Password length should be at least 8 characters';
                 }
             }
 
-            case 'DOB': {
+            case 'dateOfBirth': {
                 if (isNaN(new Date(dateOfBirth).getTime())) {
                     return 'Invalid DOB entered';
                 }
@@ -34,7 +35,5 @@ export const validateRegex = async (fieldType, value) => {
                 return;
             }
         }
-    } else {
-        return 'empty input field.';
     }
 };

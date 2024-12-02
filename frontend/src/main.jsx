@@ -21,9 +21,13 @@ import {
 import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
 import RegisterYourStartups from './pages/RegisterYourStartups.jsx';
 
-import { LayoutOne, LayoutTwo } from './components';
+import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
+import RegisterYourStartups from './pages/RegisterYourStartups.jsx';
 
-import { VariantContextProvider } from './contexts';
+import { LayoutOne, LayoutTwo, LayoutThree } from './components';
+
+import { VariantContextProvider, UserContextProvider } from './contexts';
+import ConnectedStartups from './pages/ConnectedStartups.jsx';
 import InvestorType from './Investor Connect/InvestorType.jsx';
 
 const router = createBrowserRouter(
@@ -48,14 +52,22 @@ const router = createBrowserRouter(
                 />
                 <Route path="InvestorType" element={<InvestorType />} />
             </Route>
+            <Route path="" element={<LayoutThree />}>
+                <Route
+                    path="connected-startups/:userId"
+                    element={<ConnectedStartups />}
+                />
+            </Route>
         </Route>
     )
 );
 
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
-    <VariantContextProvider>
-        <RouterProvider router={router} />
-    </VariantContextProvider>
+    <UserContextProvider>
+        <VariantContextProvider>
+            <RouterProvider router={router} />
+        </VariantContextProvider>
+    </UserContextProvider>
     // </StrictMode>
 );
