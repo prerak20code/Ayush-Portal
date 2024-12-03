@@ -128,7 +128,7 @@ export default function LoginPage() {
 
                         <div className="w-full">
                             <Button
-                                className="text-[#f9f9f9] rounded-md w-full from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                                className="text-[#f9f9f9] bg-gradient-to-r rounded-md w-full from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
                                 disabled={disabled}
                                 onMouseOver={onMouseOver}
                                 type="submit"

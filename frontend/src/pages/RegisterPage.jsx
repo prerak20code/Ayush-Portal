@@ -106,15 +106,15 @@ export default function RegisterPage() {
         {
             type: 'date',
             name: 'dateOfBirth',
-            label: 'dateOfBirth',
+            label: 'Date of Birth',
             placeholder: '',
             required: true,
         },
     ];
-    
+
     const inputElements = inputFields.map((field) => (
         <div key={field.name} className="w-full">
-            <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
+            <div className="bg-white z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
                 <label htmlFor={field.name}>
                     {field.required && <span className="text-red-500">* </span>}
                     {field.label} :
@@ -129,7 +129,7 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder={field.placeholder}
-                    className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
+                    className="py-[10px] placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md indent-3 w-full border-[0.01rem] border-[#858585] bg-transparent"
                 />
             </div>
             {errors[field.name] && (
@@ -144,17 +144,19 @@ export default function RegisterPage() {
     ));
 
     return (
-        <div className="p-8 text-[#040606] flex flex-col md:flex-row items-center md:items-start justify-start gap-8 bg-white">
-            <div className="bg-white w-full flex flex-col justify-center items-center">
-                <h2 className="text-4xl font-bold text-[#040606] mb-2">
-                    Ayush Startup
-                </h2>
-                <h3 className="text-xl font-semibold text-[#1a2424] mb-6">
-                    User Registration Portal
-                </h3>
+        <div className="py-6 px-8 text-[#040606] flex flex-col md:flex-row items-center justify-start gap-8 bg-white">
+            <div className="bg-white w-full flex flex-col justify-center items-center gap-8 md:gap-12">
+                <div className="flex flex-col items-center gap-1">
+                    <h2 className="text-[2rem] leading-9 md:text-[2.3rem] text-center font-bold text-[#040606]">
+                        AYUSH Startup
+                    </h2>
+                    <h3 className="text-[1.3rem] text-center font-semibold text-[#1a2424]">
+                        User Registration Portal
+                    </h3>
+                </div>
                 <Link
                     to="/"
-                    className="size-[150px] md:size-[200px] hover:brightness-75"
+                    className="drop-shadow-md size-[45%] min-w-[50px] transition-all ease-in hover:brightness-75"
                 >
                     <img
                         src={AYUSHLOGO}
@@ -164,20 +166,20 @@ export default function RegisterPage() {
                 </Link>
             </div>
 
-            <div className="flex-1 flex flex-col items-center gap-4">
+            <div className="p-4 px-6 w-[90%] md:w-full rounded-xl shadow-md shadow-gray-300 flex flex-col items-center gap-2">
                 <div className="w-fit">
-                    <p className="text-center text-3xl font-medium">
+                    <p className="text-center text-[1.6rem] font-medium">
                         Create a new Account
                     </p>
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: '100%' }}
                         transition={{ duration: 0.2 }}
-                        className="relative top-0 h-[0.1rem] bg-[#040606]"
+                        className="relative -top-1 h-[0.1rem] bg-[#040606]"
                     />
                 </div>
 
-                <div className="w-[400px] flex flex-col items-center justify-center gap-3">
+                <div className="w-full flex flex-col items-center justify-center gap-3">
                     {errors.root && (
                         <div className="text-red-500 w-full text-center">
                             {errors.root}
@@ -186,7 +188,7 @@ export default function RegisterPage() {
 
                     <form
                         onSubmit={handleSubmit}
-                        className="flex flex-col items-start justify-center gap-4 w-full"
+                        className="flex flex-col items-start justify-center gap-1 w-full"
                     >
                         {inputElements}
                         {/* Phone Number */}
@@ -217,7 +219,7 @@ export default function RegisterPage() {
 
                         <div className="w-full">
                             <Button
-                                className="text-[#f9f9f9] mt-4 rounded-md w-full from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                                className="text-[#f9f9f9] mt-4 rounded-md w-full bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
                                 disabled={disabled}
                                 onMouseOver={onMouseOver}
                                 type="submit"
@@ -225,11 +227,11 @@ export default function RegisterPage() {
                                     loading ? 'Registering...' : 'Register'
                                 }
                             />
-                            <p className="w-full text-center text-[16px]">
+                            <p className="w-full text-center text-md mt-2">
                                 already have an Account ?{' '}
                                 <Link
                                     to="/login"
-                                    className="text-[#355ab6] hover:underline"
+                                    className="text-[#2a4fae] hover:underline"
                                 >
                                     Login
                                 </Link>
