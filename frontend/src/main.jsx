@@ -63,6 +63,7 @@ const router = createBrowserRouter(
             </Route>
             <Route path="AdminDashboard" element={<AdminDashboard />} />
             <Route path="/startup/:id/documents" element={<DocumentsCheck />} />
+            <Route path="/server-error" element={<ServerErrorPage />} />
         </Route>
     )
 );

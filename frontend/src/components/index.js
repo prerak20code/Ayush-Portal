@@ -17,6 +17,7 @@ import InvestorType from './investorConnect/InvestorType';
 // import OwnerType from './LoginPage/OwnerType';
 // import GovernmentType from './LoginPage/GovernmentType';
 // import StakeHolderType from './LoginPage/StakeholderType';
+
 export {
     LayoutOne,
     LayoutTwo,

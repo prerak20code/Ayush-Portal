@@ -36,13 +36,6 @@ class UserService {
                 console.log('2');
                 throw new Error(data.message);
             }
-            // else if (res.status !== 400) {
-            //     console.log("3");
-            //     data = await this.login({
-            //         email: inputs.email,
-            //         password: inputs.password,
-            //     });
-            // }
             return data;
         } catch (err) {
             console.error(`error in register service: ${err.message}`);
@@ -66,8 +59,6 @@ class UserService {
             }
             return data;
         } catch (err) {
-            // setStatus('error');
-            // setMessage('An error occurred during verification.');
             console.error(
                 `error in email verification service: ${err.message}`
             );

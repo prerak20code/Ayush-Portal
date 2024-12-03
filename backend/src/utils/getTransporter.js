@@ -1,5 +1,4 @@
-//node mailer logics
-import nodemailer from 'nodemailer'; //email handler
+import nodemailer from 'nodemailer';
 
 export const getTranporter = async () => {
     try {
@@ -17,7 +16,6 @@ export const getTranporter = async () => {
 
         return transporter;
     } catch (err) {
-        console.error('Error in generating transporter:', err.message);
         throw new Error(`Error in generating transporter: ${err.message}`);
     }
 };

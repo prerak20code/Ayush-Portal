@@ -10,22 +10,23 @@ import { verifyRegex } from '../utils';
 import { motion } from 'framer-motion';
 
 export default function RegisterPage() {
-    const [inputs, setInputs] = useState({
+    const emptyInputs = {
         name: '',
         email: '',
         dateOfBirth: '',
         password: '',
         phone: '',
-    });
-
-    const [errors, setErrors] = useState({
+    };
+    const emptyErrors = {
         root: '',
         name: '',
         email: '',
         dateOfBirth: '',
         password: '',
         phone: '',
-    });
+    };
+    const [inputs, setInputs] = useState(emptyInputs);
+    const [errors, setErrors] = useState(emptyErrors);
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
     const { setUser } = useUserContext();
@@ -74,11 +75,12 @@ export default function RegisterPage() {
         } finally {
             setDisabled(false);
             setLoading(false);
+            setInputs(emptyInputs);
+            setErrors(emptyErrors);
         }
     }
 
-    /* creating the input fields */
-
+    // input fields
     const inputFields = [
         {
             type: 'text',
@@ -105,11 +107,11 @@ export default function RegisterPage() {
             type: 'date',
             name: 'dateOfBirth',
             label: 'dateOfBirth',
-            placeholder:"",
+            placeholder: '',
             required: true,
         },
     ];
-
+    
     const inputElements = inputFields.map((field) => (
         <div key={field.name} className="w-full">
             <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
@@ -151,7 +153,7 @@ export default function RegisterPage() {
                     User Registration Portal
                 </h3>
                 <Link
-                    to='/'
+                    to="/"
                     className="size-[150px] md:size-[200px] hover:brightness-75"
                 >
                     <img

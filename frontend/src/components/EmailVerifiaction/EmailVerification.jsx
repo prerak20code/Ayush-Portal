@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { userService } from '../../services';
 
-const EmailVerification = () => {
+export default function EmailVerification() {
     const { userId, uniqueString } = useParams();
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
@@ -15,10 +15,8 @@ const EmailVerification = () => {
                 const res = await userService.verifyEmail(userId, uniqueString);
                 if (res && res.message === 'email verified successfully') {
                     setSuccess(true);
-                    // alert('email verified successfully');
                     setMessage(res.message);
                 } else {
-                    // alert(res.message);
                     setMessage(res.message);
                     setSuccess(false);
                 }
@@ -89,6 +87,4 @@ const EmailVerification = () => {
             </div>
         </div>
     );
-};
-
-export default EmailVerification;
+}
