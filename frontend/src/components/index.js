@@ -2,6 +2,7 @@ import LayoutOne from './layout/LayoutOne';
 import LayoutTwo from './layout/LayoutTwo';
 import LayoutThree from './layout/LayoutThree';
 import Header from './layout/Header';
+// import Sidebar from './layout/ProfileDropdown';
 import Footer from './layout/Footer';
 import StartupHeader from './layout/StartupHeader';
 import SmallFooter from './layout/SmallFooter';
@@ -23,6 +24,7 @@ export {
     LayoutTwo,
     LayoutThree,
     Header,
+    // Sidebar,
     StartupHeader,
     SmallFooter,
     Footer,

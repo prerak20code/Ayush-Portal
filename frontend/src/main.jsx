@@ -27,7 +27,11 @@ import EmailVerification from './components/EmailVerifiaction/EmailVerification.
 
 import { LayoutOne, LayoutTwo, LayoutThree, InvestorType } from './components';
 
-import { VariantContextProvider, UserContextProvider } from './contexts';
+import {
+    ProfileDropdownContextProvider,
+    VariantContextProvider,
+    UserContextProvider,
+} from './contexts';
 // import ConnectedStartups from './pages/ConnectedStartups.jsx';
 // import InvestorType from './InvestorConnect/InvestorType.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
@@ -71,9 +75,11 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        <VariantContextProvider>
-            <RouterProvider router={router} />
-        </VariantContextProvider>
+        <ProfileDropdownContextProvider>
+            <VariantContextProvider>
+                <RouterProvider router={router} />
+            </VariantContextProvider>
+        </ProfileDropdownContextProvider>
     </UserContextProvider>
     // </StrictMode>
 );

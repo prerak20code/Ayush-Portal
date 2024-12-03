@@ -240,6 +240,23 @@ const logout = async (req, res) => {
     }
 };
 
+const deleteAccount = async (req, res) => {
+    try {
+        const { _id } = req.user;
+        await User.findByIdAndDelete(_id);
+        return res
+            .status(OK)
+            .clearCookie('accessToken', cookieOptions)
+            .clearCookie('refreshToken', cookieOptions)
+            .json({ message: 'user account deleted successfully' });
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while deleting user account',
+            err: err.message,
+        });
+    }
+};
+
 const getCurrentUser = async (req, res) => {
     try {
         const user = req.user;
@@ -428,6 +445,7 @@ export {
     verifyEmail,
     login,
     logout,
+    deleteAccount,
     getCurrentUser,
     resetPassword,
     requestResetPassword,

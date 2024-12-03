@@ -21,8 +21,41 @@ export const VariantContextProvider = ({ children }) => {
         }),
     };
 
+    const dropdownVariants = {
+        hidden: { opacity: 0, y: -10 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.3, ease: 'easeOut' },
+        },
+        exit: {
+            opacity: 0,
+            y: -10,
+            transition: { duration: 0.2, ease: 'easeIn' },
+        },
+    };
+
+    // const sideBarVariants = {
+    //     beginning: {
+    //         x: '100vw',
+    //     },
+    //     end: {
+    //         x: 0,
+    //         transition: {
+    //             type: 'tween',
+    //         },
+    //     },
+    //     exit: {
+    //         x: '100vw',
+    //         transition: {
+    //             type: 'tween',
+    //         },
+    //     },
+    // };
     return (
-        <VariantContext.Provider value={{ textVariants, iconVariants }}>
+        <VariantContext.Provider
+            value={{ textVariants, iconVariants, dropdownVariants }}
+        >
             {children}
         </VariantContext.Provider>
     );

@@ -4,6 +4,7 @@ import {
     register,
     login,
     logout,
+    deleteAccount,
     verifyEmail,
     getCurrentUser,
     resetPassword,
@@ -22,4 +23,7 @@ userRouter
 
 userRouter.route('/reset-password').post(verifyJWT, resetPassword);
 userRouter.route('/verify-email/:userId/:uniqueString').get(verifyEmail);
-userRouter.route('/current-user').get(verifyJWT, getCurrentUser);
+userRouter
+    .route('/')
+    .get(verifyJWT, getCurrentUser)
+    .delete(verifyJWT, deleteAccount);
