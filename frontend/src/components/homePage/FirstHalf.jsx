@@ -1,5 +1,5 @@
 import { Statistics } from '..';
-import { HOMEBG } from '../../assets/images';
+import { RajBhavan } from '../../assets/images';
 import { useVariantContext } from '../../contexts';
 import { motion } from 'framer-motion';
 
@@ -14,7 +14,7 @@ export default function FirstHalf() {
             <div
                 className="h-[calc(100vh-110px)] bg-cover bg-center bg-no-repeat"
                 style={{
-                    backgroundImage: `url(${HOMEBG})`,
+                    backgroundImage: `url(${RajBhavan})`,
                     opacity: 0.84,
                 }}
             />
