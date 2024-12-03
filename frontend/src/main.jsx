@@ -24,8 +24,10 @@ import RegisterYourStartups from './pages/RegisterYourStartups.jsx';
 import { LayoutOne, LayoutTwo, LayoutThree } from './components';
 
 import { VariantContextProvider, UserContextProvider } from './contexts';
-import ConnectedStartups from './pages/ConnectedStartups.jsx';
+// import ConnectedStartups from './pages/ConnectedStartups.jsx';
 import InvestorType from './Investor Connect/InvestorType.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import DocumentsCheck from './pages/DocumentsCheck.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -39,6 +41,7 @@ const router = createBrowserRouter(
                     path="user/RegisterYourStartup"
                     element={<RegisterYourStartups />}
                 />
+               
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
@@ -50,11 +53,13 @@ const router = createBrowserRouter(
                 <Route path="InvestorType" element={<InvestorType />} />
             </Route>
             <Route path="" element={<LayoutThree />}>
-                <Route
+                {/* <Route
                     path="connected-startups/:userId"
                     element={<ConnectedStartups />}
-                />
+                /> */}
             </Route>
+            <Route path ="AdminDashboard" element =  {<AdminDashboard/>} />
+            <Route path="/startup/:id/documents" element={<DocumentsCheck />} />
         </Route>
     )
 );

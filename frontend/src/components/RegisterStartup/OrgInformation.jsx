@@ -47,7 +47,9 @@ const OrganizationInformation = ({ onComplete }) => {
         // Fetch countries dynamically
         const fetchCountries = async () => {
             try {
-                const response = await axios.get('https://restcountries.com/v3.1/all');
+                const response = await axios.get(
+                    'https://restcountries.com/v3.1/all'
+                );
                 const countries = response.data.map((country) => ({
                     label: country.name.common,
                     value: country.name.common,
@@ -108,7 +110,7 @@ const OrganizationInformation = ({ onComplete }) => {
             'industry',
             'BusinessType',
             'country', // Add country to required fields
-            'website'
+            'website',
         ];
         const isComplete = requiredFields.every(
             (field) => formData[field]?.trim() !== ''
@@ -189,7 +191,10 @@ const OrganizationInformation = ({ onComplete }) => {
                         >
                             <option value="">Select Country</option>
                             {countryOptions.map((country) => (
-                                <option key={country.value} value={country.value}>
+                                <option
+                                    key={country.value}
+                                    value={country.value}
+                                >
                                     {country.label}
                                 </option>
                             ))}
@@ -211,10 +216,16 @@ const OrganizationInformation = ({ onComplete }) => {
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="">Select Business Type</option>
-                            <option value="Sole Partnership">Sole Partnership</option>
+                            <option value="Sole Partnership">
+                                Sole Partnership
+                            </option>
                             <option value="Partnership">Partnership</option>
-                            <option value="Corporation">Corporation (Private or Public)</option>
-                            <option value="LLC">Limited Liability Company (LLC)</option>
+                            <option value="Corporation">
+                                Corporation (Private or Public)
+                            </option>
+                            <option value="LLC">
+                                Limited Liability Company (LLC)
+                            </option>
                             <option value="Nonprofit">Nonprofit</option>
                         </select>
                     </div>
@@ -281,12 +292,17 @@ const OrganizationInformation = ({ onComplete }) => {
                             {isDropdownVisible && (
                                 <div
                                     className="absolute left-0 w-full bg-white border mt-1 rounded-md shadow-lg z-10"
-                                    style={{ maxHeight: '200px', overflowY: 'auto' }}
+                                    style={{
+                                        maxHeight: '200px',
+                                        overflowY: 'auto',
+                                    }}
                                 >
                                     {sectorOptions.map((sector, index) => (
                                         <div
                                             key={index}
-                                            onClick={() => handleSectorSelect(sector)}
+                                            onClick={() =>
+                                                handleSectorSelect(sector)
+                                            }
                                             className="p-2 cursor-pointer hover:bg-blue-500 hover:text-white"
                                         >
                                             {sector}
@@ -299,25 +315,24 @@ const OrganizationInformation = ({ onComplete }) => {
                 </div>
 
                 {/* Website */}
-             {/* Website */}
-<div className="flex items-center space-x-3">
-    <FaBuilding className="text-blue-500" />
-    <div className="w-full">
-        <label className="block text-sm font-medium text-gray-700">
-            Website
-        </label>
-        <input
-            type="url"
-            name="website"
-            placeholder="Enter website URL"
-            value={formData.website}
-            onChange={handleChange}
-            required // Make the field required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        />
-    </div>
-</div>
-
+                {/* Website */}
+                <div className="flex items-center space-x-3">
+                    <FaBuilding className="text-blue-500" />
+                    <div className="w-full">
+                        <label className="block text-sm font-medium text-gray-700">
+                            Website
+                        </label>
+                        <input
+                            type="url"
+                            name="website"
+                            placeholder="Enter website URL"
+                            value={formData.website}
+                            onChange={handleChange}
+                            required // Make the field required
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+                </div>
 
                 {/* PDF Upload */}
                 <div className="flex items-center space-x-3">
@@ -340,9 +355,10 @@ const OrganizationInformation = ({ onComplete }) => {
                 <div className="text-center">
                     <button
                         type="submit"
-                        className={`py-2 px-6 rounded-md font-semibold text-white ${isFormComplete
-                            ? 'bg-blue-500 hover:bg-blue-600'
-                            : 'bg-gray-400 cursor-not-allowed'
+                        className={`py-2 px-6 rounded-md font-semibold text-white ${
+                            isFormComplete
+                                ? 'bg-blue-500 hover:bg-blue-600'
+                                : 'bg-gray-400 cursor-not-allowed'
                         }`}
                         disabled={!isFormComplete}
                     >
