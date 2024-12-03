@@ -4,12 +4,13 @@ import bcrypt from 'bcrypt';
 import { getTranporter } from './index.js';
 import { PENDING, SERVER_ERROR } from '../constants/statusCodes.js';
 
-export const sendVerificationEmail = async (user, res) => {
+export const sendVerificationEmail = async (user, redirectURL, res) => {
     try {
         const { _id, email } = user;
         const uniqueString = uuid() + _id;
 
-        const url = `http://localhost:5173/user/verify/${_id}/${uniqueString}`; // frontend page
+        // const url = `http://localhost:5173/user/verify/${_id}/${uniqueString}`; // frontend page
+        const url = `${redirectURL}/${_id}/${uniqueString}`; // frontend page
 
         //mail options
         const mailOptions = {
@@ -39,7 +40,7 @@ export const sendVerificationEmail = async (user, res) => {
 
                 //email sent & verification record saved
                 res.status(PENDING).json({
-                    message: 'verification email sent !!',
+                    message: 'verification email sent',
                 });
             }
         }

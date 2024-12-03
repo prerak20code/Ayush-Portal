@@ -66,7 +66,7 @@ export default function FAQpage() {
                                 animate={{
                                     rotate: expanded === index ? 45 : 0,
                                 }}
-                                transition={{ duration: 0.3 }}
+                                transition={{ duration: 0.2 }}
                                 className="flex items-center justify-center"
                             >
                                 <div className="bg-white p-2 rounded-full w-fit drop-shadow-md hover:brightness-90">
@@ -85,8 +85,8 @@ export default function FAQpage() {
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{
-                                        opacity: { duration: 0.3 },
-                                        height: { duration: 0.5 },
+                                        opacity: { duration: 0.2 },
+                                        height: { duration: 0.2 },
                                     }}
                                 >
                                     <p className="mt-2 text-gray-600">

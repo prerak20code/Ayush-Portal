@@ -7,11 +7,6 @@ const passwordResetSchema = new mongoose.Schema({
     expiresAt: Date,
 });
 
-export const PasswordReset = mongoose.model(
-    'PasswordReset',
-    passwordResetSchema
-);
-
 // pre hook to hash resetString before save
 passwordResetSchema.pre('save', async function (next) {
     try {
@@ -23,3 +18,8 @@ passwordResetSchema.pre('save', async function (next) {
         next(err);
     }
 });
+
+export const PasswordReset = mongoose.model(
+    'PasswordReset',
+    passwordResetSchema
+);

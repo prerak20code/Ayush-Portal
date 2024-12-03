@@ -35,23 +35,6 @@ export const VariantContextProvider = ({ children }) => {
         },
     };
 
-    // const sideBarVariants = {
-    //     beginning: {
-    //         x: '100vw',
-    //     },
-    //     end: {
-    //         x: 0,
-    //         transition: {
-    //             type: 'tween',
-    //         },
-    //     },
-    //     exit: {
-    //         x: '100vw',
-    //         transition: {
-    //             type: 'tween',
-    //         },
-    //     },
-    // };
     return (
         <VariantContext.Provider
             value={{ textVariants, iconVariants, dropdownVariants }}

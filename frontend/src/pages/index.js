@@ -5,6 +5,7 @@ import FAQpage from './FAQPage';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ServerErrorPage from './ServerErrorPage';
+import NotFoundPage from './NotFoundPage';
 import ConnectedStartupsPage from './ConnectedStartupsPage';
 // import TargettedStartupsPage from './TargetedStartupsPage';
 import OwnerConnectPage from './OwnerConnectPage';
@@ -17,6 +18,7 @@ export {
     RegisterPage,
     LoginPage,
     ServerErrorPage,
+    NotFoundPage,
     ConnectedStartupsPage,
     // RegisterYourStartupPage,
     OwnerConnectPage,

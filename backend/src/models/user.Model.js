@@ -41,8 +41,6 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export const User = mongoose.model('User', userSchema);
-
 // pre hooks to hash password before save & update
 
 userSchema.pre('save', async function (next) {
@@ -52,7 +50,7 @@ userSchema.pre('save', async function (next) {
         }
         next();
     } catch (err) {
-        next(err);
+        throw err;
     }
 });
 
@@ -64,6 +62,9 @@ userSchema.pre('updateOne', async function (next) {
         }
         next();
     } catch (err) {
-        next(err);
+        throw err;
     }
 });
+
+// export is done after defining the hooks
+export const User = mongoose.model('User', userSchema);

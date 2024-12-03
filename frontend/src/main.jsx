@@ -20,18 +20,26 @@ import {
     // TargettedStartupsPage,
     OwnerConnectPage,
     ServerErrorPage,
+    NotFoundPage,
     // RegisterYourStartupPage,
 } from './pages';
 
-import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
-
-import { LayoutOne, LayoutTwo, LayoutThree, InvestorType } from './components';
+import {
+    LayoutOne,
+    LayoutTwo,
+    LayoutThree,
+    InvestorType,
+    EmailVerification,
+    ResetPassword,
+} from './components';
 
 import {
     ProfileDropdownContextProvider,
     VariantContextProvider,
     UserContextProvider,
+    PopupContextProvider,
 } from './contexts';
+
 // import ConnectedStartups from './pages/ConnectedStartups.jsx';
 // import InvestorType from './InvestorConnect/InvestorType.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
@@ -57,6 +65,10 @@ const router = createBrowserRouter(
                     path="user/verify/:userId/:uniqueString"
                     element={<EmailVerification />}
                 />
+                <Route
+                    path="user/reset-password/:userId/:resetString"
+                    element={<ResetPassword />}
+                />
                 {/* <Route path="InvestorType" element={<InvestorType />} /> */}
             </Route>
             <Route path="" element={<LayoutThree />}>
@@ -68,6 +80,7 @@ const router = createBrowserRouter(
             <Route path="AdminDashboard" element={<AdminDashboard />} />
             <Route path="/startup/:id/documents" element={<DocumentsCheck />} />
             <Route path="/server-error" element={<ServerErrorPage />} />
+            <Route path="*" element={<NotFoundPage />} />
         </Route>
     )
 );
@@ -75,11 +88,13 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        <ProfileDropdownContextProvider>
-            <VariantContextProvider>
-                <RouterProvider router={router} />
-            </VariantContextProvider>
-        </ProfileDropdownContextProvider>
+        <PopupContextProvider>
+            <ProfileDropdownContextProvider>
+                <VariantContextProvider>
+                    <RouterProvider router={router} />
+                </VariantContextProvider>
+            </ProfileDropdownContextProvider>
+        </PopupContextProvider>
     </UserContextProvider>
     // </StrictMode>
 );

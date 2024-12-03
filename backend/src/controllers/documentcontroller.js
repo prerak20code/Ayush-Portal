@@ -47,11 +47,9 @@ const deleteFileController = async (req, res) => {
         });
 
         if (!document) {
-            return res
-                .status(404)
-                .json({
-                    message: 'File not found or not authorized to delete',
-                });
+            return res.status(404).json({
+                message: 'File not found or not authorized to delete',
+            });
         }
 
         // Delete file from S3

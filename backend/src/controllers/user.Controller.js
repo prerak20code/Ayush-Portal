@@ -15,7 +15,7 @@ import {
     PENDING,
 } from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
-import mongoose from 'mongoose';
+
 // verify email
 const verifyEmail = async (req, res) => {
     try {
@@ -84,13 +84,14 @@ const verifyEmail = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        let { name, email, password, dateOfBirth, phone } = req.body;
+        let { name, email, password, dateOfBirth, phone, redirectURL } =
+            req.body;
         name = name.trim();
         email = email.trim();
         dateOfBirth = dateOfBirth.trim();
         phone = phone.trim();
 
-        if (!name || !email || !password || !dateOfBirth) {
+        if (!name || !email || !password || !dateOfBirth || !phone) {
             return res.status(BAD_REQUEST).json({
                 message: 'Empty input fields!',
             });
@@ -128,12 +129,11 @@ const register = async (req, res) => {
 
         //check if user already exists
         const user = await User.findOne({ email });
-        console.log(user.id);
+
         if (user) {
             //Already exists
             return res.status(BAD_REQUEST).json({
                 message: 'user already exists with this email',
-                id: '$user.id',
             });
         } else {
             //create new user
@@ -144,16 +144,12 @@ const register = async (req, res) => {
                 password,
                 dateOfBirth,
                 phone,
-                verified: false,
             });
-            await newuser.save();
+
             // send mail
             if (newUser) {
-                await sendVerificationEmail(newUser, res);
+                return await sendVerificationEmail(newUser, redirectURL, res);
             }
-            return res.status(200).json({
-                message: 'registered',
-            });
         }
     } catch (err) {
         res.status(SERVER_ERROR).json({
@@ -196,6 +192,10 @@ const login = async (req, res) => {
                     const { accessToken, refreshToken } =
                         await generateTokens(user);
 
+                    // update user's refreshToken
+                    user.refreshToken = refreshToken;
+                    await user.save();
+
                     // send cookies
                     res.status(OK)
                         .cookie('accessToken', accessToken, {
@@ -209,7 +209,7 @@ const login = async (req, res) => {
                         .json(user);
                 } else {
                     res.status(BAD_REQUEST).json({
-                        message: 'invalid credentials !!',
+                        message: 'invalid credentials.',
                     });
                 }
             }
@@ -291,41 +291,33 @@ const requestResetPassword = async (req, res) => {
             } else {
                 //user is verified so we can proceed with reset email
                 //Clear existing reset records
-                const deletedResetRecords = await PasswordReset.deleteMany({
+                await PasswordReset.deleteMany({
                     userId: user._id,
                 });
-                if (deletedResetRecords) {
-                    //reset records deleted successfully
-                    // hash the reset string (auto done using pre hook)
-                    const newPasswordResetRecord = await PasswordReset.create({
-                        userId: _id,
-                        resetString,
-                        createdAt: Date.now(),
-                        expiresAt: Date.now() + 3600000,
-                    });
-                    if (newPasswordResetRecord) {
-                        // send the email
-                        await sendPasswordResetEmail(user, redirectUrl, res);
-                    } else {
-                        throw new Error(
-                            'error occured while creating new reset record'
-                        );
-                    }
-                } else {
-                    throw new Error(
-                        'error occured while deleting existing reset records'
-                    );
-                }
+                await sendPasswordResetEmail(user, redirectUrl, res);
+                // if (deletedResetRecords) {
+                //reset records deleted successfully
+                // hash the reset string (auto done using pre hook)
+                // const newPasswordResetRecord = await PasswordReset.create({
+                //     userId: _id,
+                //     resetString,
+                //     createdAt: Date.now(),
+                //     expiresAt: Date.now() + 3600000,
+                // });
+                // if (newPasswordResetRecord) {
+                //     // send the email
+                // }
+                // }
             }
         } else {
             res.status(BAD_REQUEST).json({
                 message: 'user not found',
             });
         }
-    } catch (error) {
+    } catch (err) {
         res.status(SERVER_ERROR).json({
             message: 'error occured while requesting for reset password',
-            error,
+            error: err.message,
         });
     }
 };
@@ -334,7 +326,7 @@ const sendPasswordResetEmail = async (user, redirectUrl, res) => {
     try {
         const { _id, email } = user;
         const resetString = uuid() + _id;
-        const url = `${redirectUrl}/users/verify/${_id}/${resetString}`;
+        const url = `${redirectUrl}/${_id}/${resetString}`;
 
         const mailOptions = {
             from: process.env.AUTH_EMAIL,
@@ -346,12 +338,23 @@ const sendPasswordResetEmail = async (user, redirectUrl, res) => {
                     <p>Press <a href=${url}> here</a> to proceed.</p>
                 `,
         };
-        const transporter = await getTranporter();
-        await transporter.sendMail(mailOptions);
-        //reset email sent and password reset record saved
-        res.status(PENDING).json({
-            message: 'Password reset email sent!',
+
+        const newPasswordResetRecord = await PasswordReset.create({
+            userId: _id,
+            resetString,
+            createdAt: Date.now(),
+            expiresAt: Date.now() + 3600000,
         });
+
+        if (newPasswordResetRecord) {
+            // send the email
+            const transporter = await getTranporter();
+            await transporter.sendMail(mailOptions);
+            //reset email sent and password reset record saved
+            res.status(PENDING).json({
+                message: 'Password reset email sent!',
+            });
+        }
     } catch (err) {
         res.status(SERVER_ERROR).json({
             message: 'error occured while sending password reset email',
@@ -380,11 +383,6 @@ const resetPassword = async (req, res) => {
                     res.status(BAD_REQUEST).json({
                         message: 'Password reset link has expired',
                     });
-                } else {
-                    //deletion failed
-                    throw new Error(
-                        'string is expired, but deleting password reset record failed'
-                    );
                 }
             } else {
                 //valid reset record exists so we validate the reset string
@@ -413,21 +411,12 @@ const resetPassword = async (req, res) => {
                             res.status(OK).json({
                                 message: 'Password has been reset successfully',
                             });
-                        } else {
-                            // deletion failed
-                            throw new Error(
-                                'password reset successfully, but error occured while deleting reset record'
-                            );
                         }
-                    } else {
-                        throw new Error(
-                            'error occured while updating user password'
-                        );
                     }
                 } else {
                     //existing record but incorrect reset string
                     res.status(BAD_REQUEST).json({
-                        message: 'invalid reset string.',
+                        message: 'invalid reset credentials provided.',
                     });
                 }
             }

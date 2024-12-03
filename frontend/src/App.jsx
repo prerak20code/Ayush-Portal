@@ -28,7 +28,7 @@ export default function App() {
     }, []);
 
     return loading ? (
-        <div className="text-[#040606] h-screen  flex flex-col items-center justify-center gap-2">
+        <div className="text-[#040606] h-screen w-screen flex flex-col items-center justify-center gap-2">
             <div className="fill-[#f68533] text-white size-[50px]">
                 {icons.loading}
             </div>

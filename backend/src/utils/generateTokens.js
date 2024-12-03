@@ -5,9 +5,6 @@ const generateTokens = async (user) => {
         const accessToken = await generateAccessToken(user);
         const refreshToken = await generateRefreshToken(user._id);
 
-        user.refreshToken = refreshToken;
-        await user.save({ validateBeforeSave: false });
-
         return { accessToken, refreshToken };
     } catch (err) {
         throw new Error(`error occured while generating tokens, error: ${err}`);
@@ -15,8 +12,10 @@ const generateTokens = async (user) => {
 };
 
 const generateAccessToken = async (user) => {
+    const { _id, email, name, phone, dateOfBirth } = user;
+    
     return jwt.sign(
-        { user }, // saving complete user in access token
+        { _id, email, name, phone, dateOfBirth }, // saving complete user in access token
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );

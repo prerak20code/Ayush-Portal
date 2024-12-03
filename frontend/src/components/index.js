@@ -15,6 +15,9 @@ import Button from './general/Button';
 import Card from './homePage/Card';
 import StartupCard from './investorConnect/StartupCard';
 import InvestorType from './investorConnect/InvestorType';
+import EmailVerification from './EmailVerification/EmailVerification';
+import ResetPassword from './ResetPassword/ResetPassword';
+import Popup from './popups/Popup';
 // import OwnerType from './LoginPage/OwnerType';
 // import GovernmentType from './LoginPage/GovernmentType';
 // import StakeHolderType from './LoginPage/StakeholderType';
@@ -37,6 +40,9 @@ export {
     Card,
     StartupCard,
     InvestorType,
+    EmailVerification,
+    ResetPassword,
+    Popup,
     // StakeHolderType,
     // OwnerType,
     // GovernmentType,
