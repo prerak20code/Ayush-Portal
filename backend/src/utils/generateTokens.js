@@ -1,5 +1,4 @@
-import { SERVER_ERROR } from '../constants/statusCodes.js';
-
+import jwt from 'jsonwebtoken';
 const generateTokens = async (user) => {
     try {
         const accessToken = await generateAccessToken(user);
@@ -14,7 +13,7 @@ const generateTokens = async (user) => {
     }
 };
 
-const generateAccessToken = (user) => {
+const generateAccessToken = async (user) => {
     return jwt.sign(
         {
             user, // saving complete user in access token
@@ -24,7 +23,7 @@ const generateAccessToken = (user) => {
     );
 };
 
-const generateRefreshToken = (userId) => {
+const generateRefreshToken = async (userId) => {
     return jwt.sign(
         {
             userId, // just saving the _id in refresh token in db

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 
 export default function DocumentsUpload() {
     const { id } = useParams();
@@ -13,39 +13,64 @@ export default function DocumentsUpload() {
                 // Simulated startup-specific data
                 const dummyStartups = {
                     1: {
-                        name: "Ayurveda Solutions",
-                        headquarters: "Pune, India",
-                        valuation: "$2M",
-                        sector: "Ayurveda",
+                        name: 'Ayurveda Solutions',
+                        headquarters: 'Pune, India',
+                        valuation: '$2M',
+                        sector: 'Ayurveda',
                         documents: [
-                            { id: 1, name: "Business_Plan_Ayurveda.pdf", type: "PDF", size: "2 MB" },
-                            { id: 2, name: "License_Cert.pdf", type: "PDF", size: "1.2 MB" },
+                            {
+                                id: 1,
+                                name: 'Business_Plan_Ayurveda.pdf',
+                                type: 'PDF',
+                                size: '2 MB',
+                            },
+                            {
+                                id: 2,
+                                name: 'License_Cert.pdf',
+                                type: 'PDF',
+                                size: '1.2 MB',
+                            },
                         ],
                     },
                     2: {
-                        name: "Yoga Harmony",
-                        headquarters: "Bangalore, India",
-                        valuation: "$1.5M",
-                        sector: "Yoga and Naturopathy",
+                        name: 'Yoga Harmony',
+                        headquarters: 'Bangalore, India',
+                        valuation: '$1.5M',
+                        sector: 'Yoga and Naturopathy',
                         documents: [
-                            { id: 3, name: "Yoga_Naturopathy_Report.pdf", type: "PDF", size: "3.5 MB" },
+                            {
+                                id: 3,
+                                name: 'Yoga_Naturopathy_Report.pdf',
+                                type: 'PDF',
+                                size: '3.5 MB',
+                            },
                         ],
                     },
                     3: {
-                        name: "Unani CureTech",
-                        headquarters: "Hyderabad, India",
-                        valuation: "$800K",
-                        sector: "Unani",
+                        name: 'Unani CureTech',
+                        headquarters: 'Hyderabad, India',
+                        valuation: '$800K',
+                        sector: 'Unani',
                         documents: [],
                     },
                     4: {
-                        name: "Startup 1",
-                        headquarters: "Mumbai, India",
-                        valuation: "$5M",
-                        sector: "Tech",
+                        name: 'Startup 1',
+                        headquarters: 'Mumbai, India',
+                        valuation: '$5M',
+                        sector: 'Tech',
                         documents: [
-                            { id: 4, name: "Startup_1_Financials.pdf", type: "PDF", size: "4.2 MB" },
-                            { id: 5, name: "Startup_1_LegalDocs.pdf", type: "PDF", size: "2.8 MB" },
+                            {
+                                id: 4,
+                                name: 'Startup_1_Financials.pdf',
+                                type: 'PDF',
+                                size: '4.2 MB',
+                            },
+                            {
+                                id: 5,
+                                name: 'Startup_1_LegalDocs.pdf',
+                                type: 'PDF',
+                                size: '2.8 MB',
+                            },
                         ],
                     },
                 };
@@ -55,7 +80,7 @@ export default function DocumentsUpload() {
                 setStartupInfo(startupData);
                 setDocuments(startupData ? startupData.documents : []);
             } catch (error) {
-                console.error("Error fetching startup data:", error);
+                console.error('Error fetching startup data:', error);
             } finally {
                 setLoading(false);
             }
@@ -101,13 +126,17 @@ export default function DocumentsUpload() {
                                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
                                     Valuation
                                 </h3>
-                                <p className="text-gray-600">{startupInfo.valuation}</p>
+                                <p className="text-gray-600">
+                                    {startupInfo.valuation}
+                                </p>
                             </div>
                             <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
                                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
                                     Sector
                                 </h3>
-                                <p className="text-gray-600">{startupInfo.sector}</p>
+                                <p className="text-gray-600">
+                                    {startupInfo.sector}
+                                </p>
                             </div>
                         </div>
                         <div className="bg-white rounded-lg shadow-lg p-6">

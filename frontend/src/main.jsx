@@ -28,13 +28,10 @@ import EmailVerification from './components/EmailVerifiaction/EmailVerification.
 import { LayoutOne, LayoutTwo, LayoutThree, InvestorType } from './components';
 
 import { VariantContextProvider, UserContextProvider } from './contexts';
-<<<<<<< HEAD
-=======
 // import ConnectedStartups from './pages/ConnectedStartups.jsx';
-import InvestorType from './Investor Connect/InvestorType.jsx';
+// import InvestorType from './InvestorConnect/InvestorType.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import DocumentsCheck from './pages/DocumentsCheck.jsx';
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -47,12 +44,7 @@ const router = createBrowserRouter(
                 {/* <Route
                     path="user/RegisterYourStartup"
                     element={<RegisterYourStartups />}
-<<<<<<< HEAD
-                /> */}
-=======
-                />
-               
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
+                />*/}
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
@@ -61,23 +53,16 @@ const router = createBrowserRouter(
                     path="user/verify/:userId/:uniqueString"
                     element={<EmailVerification />}
                 />
-                <Route path="InvestorType" element={<InvestorType />} />
+                {/* <Route path="InvestorType" element={<InvestorType />} /> */}
             </Route>
             <Route path="" element={<LayoutThree />}>
                 {/* <Route
                     path="connected-startups/:userId"
-<<<<<<< HEAD
-                    element={<ConnectedStartupsPage />}
-                />
-            </Route>
-            <Route path="/server-error" element={<ServerErrorPage />} />
-=======
                     element={<ConnectedStartups />}
                 /> */}
             </Route>
-            <Route path ="AdminDashboard" element =  {<AdminDashboard/>} />
+            <Route path="AdminDashboard" element={<AdminDashboard />} />
             <Route path="/startup/:id/documents" element={<DocumentsCheck />} />
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
         </Route>
     )
 );

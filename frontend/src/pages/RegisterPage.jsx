@@ -66,6 +66,7 @@ export default function RegisterPage() {
                 setUser(res);
                 navigate('/');
             } else {
+                setUser(null);
                 setErrors((prev) => ({ ...prev, root: res.message }));
             }
         } catch (err) {
@@ -104,6 +105,7 @@ export default function RegisterPage() {
             type: 'date',
             name: 'dateOfBirth',
             label: 'dateOfBirth',
+            placeholder:"",
             required: true,
         },
     ];
@@ -149,7 +151,7 @@ export default function RegisterPage() {
                     User Registration Portal
                 </h3>
                 <Link
-                    to={'/'}
+                    to='/'
                     className="size-[150px] md:size-[200px] hover:brightness-75"
                 >
                     <img
@@ -224,7 +226,7 @@ export default function RegisterPage() {
                             <p className="w-full text-center text-[16px]">
                                 already have an Account ?{' '}
                                 <Link
-                                    to={'/login'}
+                                    to="/login"
                                     className="text-[#355ab6] hover:underline"
                                 >
                                     Login

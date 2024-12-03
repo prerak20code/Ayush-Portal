@@ -21,7 +21,7 @@ import { cookieOptions } from '../constants/cookie.js';
 const verifyEmail = async (req, res) => {
     try {
         let { userId, uniqueString } = req.params;
-        const verificationRecord = await UserVerification.find({ userId });
+        const verificationRecord = await UserVerification.findOne({ userId });
         if (verificationRecord) {
             //user verification record exists
             const { expiresAt } = verificationRecord;
@@ -35,29 +35,35 @@ const verifyEmail = async (req, res) => {
                 if (deletedVerificationRecord) {
                     const deletedUser = await User.deleteOne({ _id: userId });
                     if (deletedUser) {
-                        let message = 'Link has expired please sign up again.';
-                        res.redirect(
-                            `/users/verified/error=true&message=${message}`
-                        );
-                    } else {
-                        let message =
-                            'Clearing user with existing record failed';
-                        res.redirect(
-                            `/users/verified/error=true&message=${message}`
-                        );
+                        // let message = 'Link has expired please sign up again.';
+                        // res.redirect(
+                        //     `/users/verified/error=true&message=${message}`
+                        // );
+                        res.status(BAD_REQUEST).json({
+                            message:
+                                'your verification link has expired please sign up again',
+                        });
                     }
-                } else {
-                    let message =
-                        'An error occured while clearing expired user verification record';
-                    res.redirect(
-                        `/users/verified/error=true&message=${message}`
-                    );
+                    // else {
+                    //     let message =
+                    //         'Clearing user with existing record failed';
+                    //     res.redirect(
+                    //         `/users/verified/error=true&message=${message}`
+                    //     );
+                    // }
                 }
+                // else {
+                //     let message =
+                //         'An error occured while clearing expired user verification record';
+                //     res.redirect(
+                //         `/users/verified/error=true&message=${message}`
+                //     );
+                // }
             } else {
                 //valid record exists (link is not expired) validate user string
                 //first compare the hashed unique string
 
-                const doesStringsMatch = bcrypt.compare(
+                const doesStringsMatch = await bcrypt.compare(
                     uniqueString,
                     hashedUniqueString
                 );
@@ -71,40 +77,56 @@ const verifyEmail = async (req, res) => {
                         const deletedVerificationRecord =
                             await UserVerification.deleteOne({ userId });
                         if (deletedVerificationRecord) {
-                            res.redirect('/users/verified');
-                        } else {
-                            let message =
-                                'An error occured while finalizing successful verification.';
-                            res.redirect(
-                                `/users/verified/error=true&message=${message}`
-                            );
+                            // res.redirect('/users/verified');
+                            res.status(OK).json({
+                                message: 'email verified successfully',
+                            });
                         }
-                    } else {
-                        let message =
-                            'An error occured while updating user record to show verified.';
-                        res.redirect(
-                            `/users/verified/error=true&message=${message}`
-                        );
+                        // else {
+                        //     let message =
+                        //         'An error occured while finalizing successful verification.';
+                        //     res.redirect(
+                        //         `/users/verified/error=true&message=${message}`
+                        //     );
+                        // }
                     }
+                    // else {
+                    //     let message =
+                    //         'An error occured while updating user record to show verified.';
+                    //     res.redirect(
+                    //         `/users/verified/error=true&message=${message}`
+                    //     );
+                    // }
                 } else {
                     // existing record but incorrect verification details (strings doesn't match)
-                    let message = 'Invalid verification details passed';
-                    res.redirect(
-                        `/users/verified/error=true&message=${message}`
-                    );
+                    // let message = 'Invalid verification details passed';
+                    // res.redirect(
+                    //     `/users/verified/error=true&message=${message}`
+                    // );
+                    res.status(BAD_REQUEST).json({
+                        message: 'invalid verification details provided.',
+                    });
                 }
             }
         } else {
             //user verification record doesnt exist
-            let message =
-                'Account record doesnt exist or has been verified already. Please sign up or login';
-            res.redirect(`/users/verified/error=true&message=${message}`);
+            // let message =
+            //     'Account record doesnt exist or has been verified already. Please sign up or login';
+            // res.redirect(`/users/verified/error=true&message=${message}`);
+            res.status(BAD_REQUEST).json({
+                message:
+                    "account record doesn't exits or has been verified already, please sign up or login",
+            });
         }
-    } catch (error) {
-        console.log(error);
-        let message =
-            'An error occured while checking for existing user verification record';
-        res.redirect(`/users/verified/error=true&message=${message}`);
+    } catch (err) {
+        console.log(err);
+        // let message =
+        //     'An error occured while checking for existing user verification record';
+        // res.redirect(`/users/verified/error=true&message=${message}`);
+        res.status(SERVER_ERROR).json({
+            message: 'error occured while email verification.',
+            error: err.message,
+        });
     }
 };
 
@@ -115,6 +137,8 @@ const register = async (req, res) => {
         email = email.trim();
         dateOfBirth = dateOfBirth.trim();
         phone = phone.trim();
+        console.log(name, email, password, dateOfBirth, phone);
+        console.log('1');
 
         if (!name || !email || !password || !dateOfBirth) {
             return res.status(BAD_REQUEST).json({
@@ -123,42 +147,45 @@ const register = async (req, res) => {
         }
 
         // regex validation
-        let regexError = validateRegex('name', name);
-        if (regexError) {
+        let isValid = validateRegex('name', name);
+        if (!isValid) {
             return res.status(BAD_REQUEST).json({
-                message: regexError,
+                message:
+                    'only letters are allowed and should not exceed 15 characters.',
             });
         }
 
-        regexError = validateRegex('email', email);
-        if (regexError) {
+        isValid = validateRegex('email', email);
+        if (!isValid) {
             return res.status(BAD_REQUEST).json({
-                message: regexError,
+                message: 'please enter a valid email.',
             });
         }
 
-        regexError = validateRegex('password', password);
-        if (regexError) {
+        isValid = validateRegex('password', password);
+        if (!isValid) {
             return res.status(BAD_REQUEST).json({
-                message: regexError,
+                message: 'Password length should be at least 8 characters',
             });
         }
 
-        regexError = validateRegex('dateOfBirth', dateOfBirth);
-        if (regexError) {
+        isValid = validateRegex('dateOfBirth', dateOfBirth);
+        if (!isValid) {
             return res.status(BAD_REQUEST).json({
-                message: regexError,
+                message: 'Invalid DOB entered',
             });
         }
-
+        console.log('2');
         //check if user already exists
         const user = await User.findOne({ email });
         if (user) {
             //Already exists
+            console.log('3');
             res.status(BAD_REQUEST).json({
                 message: 'user already exists with this email',
             });
         } else {
+            console.log('4');
             //create new user
 
             //password hashing ( auto done using pre hook )
@@ -167,7 +194,7 @@ const register = async (req, res) => {
             const newUser = await User.create({
                 name,
                 email,
-                password: hashedPassword,
+                password,
                 dateOfBirth,
                 phone,
                 verified: false,
@@ -175,9 +202,11 @@ const register = async (req, res) => {
 
             // send mail
             if (newUser) {
+                console.log('5');
                 await sendVerificationEmail(newUser, res);
             }
         }
+        console.log('6');
     } catch (err) {
         res.status(SERVER_ERROR).json({
             message: 'An error occured while registering user !',
@@ -191,8 +220,9 @@ const login = async (req, res) => {
         let { email, password } = req.body;
         email = email.trim();
         password = password.trim();
+        console.log('login:', email, password);
 
-        if (email === '' || password === '') {
+        if (!email || !password) {
             res.status(BAD_REQUEST).json({
                 message: 'Empty credentials provided !',
             });

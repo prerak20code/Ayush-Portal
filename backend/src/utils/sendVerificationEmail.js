@@ -2,14 +2,15 @@ import { v4 as uuid } from 'uuid';
 import { UserVerification } from '../models/index.js';
 import bcrypt from 'bcrypt';
 import { getTranporter } from './index.js';
-import { PENDING } from '../constants/statusCodes.js';
+import { PENDING, SERVER_ERROR } from '../constants/statusCodes.js';
 
 export const sendVerificationEmail = async (user, res) => {
     try {
+        console.log('7');
         const { _id, email } = user;
         const uniqueString = uuid() + _id;
 
-        const url = `http://localhost:${process.env.PORT}/users/verify/${_id}/${uniqueString}`;
+        const url = `http://localhost:5173/user/verify/${_id}/${uniqueString}`;
 
         //mail options
         const mailOptions = {
@@ -27,6 +28,7 @@ export const sendVerificationEmail = async (user, res) => {
         //hash the unique string
         const hashedUniqueString = await bcrypt.hash(uniqueString, 10);
         if (hashedUniqueString) {
+            console.log('8');
             //create userVerification record
             const newVerificaion = await UserVerification.create({
                 userId: _id,
@@ -35,7 +37,8 @@ export const sendVerificationEmail = async (user, res) => {
                 expiresAt: Date.now() + 3600000,
             });
             if (newVerificaion) {
-                const transporter = getTranporter();
+                console.log('9');
+                const transporter = await getTranporter();
                 await transporter.sendMail(mailOptions);
 
                 //email sent and verification record saved

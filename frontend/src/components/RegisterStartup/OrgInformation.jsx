@@ -44,7 +44,6 @@
 //             setFormData(JSON.parse(savedData));
 //         }
 
-<<<<<<< HEAD
 //         // Fetch countries dynamically
 //         const fetchCountries = async () => {
 //             try {
@@ -61,24 +60,6 @@
 //                 console.error('Error fetching country data:', error);
 //             }
 //         };
-=======
-        // Fetch countries dynamically
-        const fetchCountries = async () => {
-            try {
-                const response = await axios.get(
-                    'https://restcountries.com/v3.1/all'
-                );
-                const countries = response.data.map((country) => ({
-                    label: country.name.common,
-                    value: country.name.common,
-                }));
-                countries.sort((a, b) => a.label.localeCompare(b.label)); // Sort countries alphabetically
-                setCountryOptions(countries);
-            } catch (error) {
-                console.error('Error fetching country data:', error);
-            }
-        };
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
 
 //         fetchCountries(); // Fetch countries on component mount
 //     }, []);
@@ -119,7 +100,6 @@
 //         setIsDropdownVisible(false); // Hide dropdown after selection
 //     };
 
-<<<<<<< HEAD
 //     // Validate form completeness
 //     const validateForm = () => {
 //         const requiredFields = [
@@ -137,25 +117,6 @@
 //         );
 //         setIsFormComplete(isComplete);
 //     };
-=======
-    // Validate form completeness
-    const validateForm = () => {
-        const requiredFields = [
-            'startupName',
-            'dateOfEstablishment',
-            'evaluation',
-            'address',
-            'industry',
-            'BusinessType',
-            'country', // Add country to required fields
-            'website',
-        ];
-        const isComplete = requiredFields.every(
-            (field) => formData[field]?.trim() !== ''
-        );
-        setIsFormComplete(isComplete);
-    };
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
 
 //     // Call validateForm on every change
 //     useEffect(() => {
@@ -215,7 +176,6 @@
 //                     </div>
 //                 </div>
 
-<<<<<<< HEAD
 //                 {/* Country Dropdown */}
 //                 <div className="flex items-center space-x-3">
 //                     <FaMapMarkerAlt className="text-blue-500" />
@@ -270,62 +230,6 @@
 //                         </select>
 //                     </div>
 //                 </div>
-=======
-                {/* Country Dropdown */}
-                <div className="flex items-center space-x-3">
-                    <FaMapMarkerAlt className="text-blue-500" />
-                    <div className="w-full relative">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Country
-                        </label>
-                        <select
-                            name="country"
-                            value={formData.country}
-                            onChange={handleChange} // Use handleChange to update formData
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="">Select Country</option>
-                            {countryOptions.map((country) => (
-                                <option
-                                    key={country.value}
-                                    value={country.value}
-                                >
-                                    {country.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-                {/* Business Type */}
-                <div className="flex items-center space-x-3">
-                    <FaBuilding className="text-blue-500" />
-                    <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Type of Business Entity
-                        </label>
-                        <select
-                            name="BusinessType"
-                            value={formData.BusinessType} // Bind to BusinessType
-                            onChange={handleChange} // Directly use handleChange to update formData
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="">Select Business Type</option>
-                            <option value="Sole Partnership">
-                                Sole Partnership
-                            </option>
-                            <option value="Partnership">Partnership</option>
-                            <option value="Corporation">
-                                Corporation (Private or Public)
-                            </option>
-                            <option value="LLC">
-                                Limited Liability Company (LLC)
-                            </option>
-                            <option value="Nonprofit">Nonprofit</option>
-                        </select>
-                    </div>
-                </div>
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
 
 //                 {/* Evaluation */}
 //                 <div className="flex items-center space-x-3">
@@ -363,7 +267,6 @@
 //                     </div>
 //                 </div>
 
-<<<<<<< HEAD
 //                 {/* Industry Dropdown */}
 //                 <div className="flex items-center space-x-3">
 //                     <FaBuilding className="text-blue-500" />
@@ -447,74 +350,6 @@
 //                         />
 //                     </div>
 //                 </div>
-=======
-                {/* Industry Dropdown */}
-                <div className="flex items-center space-x-3">
-                    <FaBuilding className="text-blue-500" />
-                    <div className="w-full relative">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Industry
-                        </label>
-                        <div className="relative">
-                            <select
-                                name="industry"
-                                value={formData.industry}
-                                onChange={handleIndustryChange}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            >
-                                <option value="">Select Industry</option>
-                                {sectorOptions.map((option, index) => (
-                                    <option key={index} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                            {/* Dropdown Custom Styling */}
-                            {isDropdownVisible && (
-                                <div
-                                    className="absolute left-0 w-full bg-white border mt-1 rounded-md shadow-lg z-10"
-                                    style={{
-                                        maxHeight: '200px',
-                                        overflowY: 'auto',
-                                    }}
-                                >
-                                    {sectorOptions.map((sector, index) => (
-                                        <div
-                                            key={index}
-                                            onClick={() =>
-                                                handleSectorSelect(sector)
-                                            }
-                                            className="p-2 cursor-pointer hover:bg-blue-500 hover:text-white"
-                                        >
-                                            {sector}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Website */}
-                {/* Website */}
-                <div className="flex items-center space-x-3">
-                    <FaBuilding className="text-blue-500" />
-                    <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Website
-                        </label>
-                        <input
-                            type="url"
-                            name="website"
-                            placeholder="Enter website URL"
-                            value={formData.website}
-                            onChange={handleChange}
-                            required // Make the field required
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                </div>
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
 
 //                 {/* Submit Button */}
 //                 <div className="text-center">
@@ -535,27 +370,4 @@
 //     );
 // };
 
-<<<<<<< HEAD
 // export default OrganizationInformation;
-=======
-                {/* Submit Button */}
-                <div className="text-center">
-                    <button
-                        type="submit"
-                        className={`py-2 px-6 rounded-md font-semibold text-white ${
-                            isFormComplete
-                                ? 'bg-blue-500 hover:bg-blue-600'
-                                : 'bg-gray-400 cursor-not-allowed'
-                        }`}
-                        disabled={!isFormComplete}
-                    >
-                        Save Information
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
-};
-
-export default OrganizationInformation;
->>>>>>> 05e8d532690256bde70d9f4f32dd6a1b664f24bf
