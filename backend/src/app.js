@@ -31,9 +31,13 @@ import {
     investmentRouter,
     govOfficialrouter,
     userRouter,
+    documentrouter,
 } from './routes/index.js';
-
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/startups', startupRouter);
 app.use('/api/v1/investments', investmentRouter);
 app.use('/api/v1/gov-officials', govOfficialrouter);
+app.use('/api/v1/gov-officials', govOfficialrouter);
+app.use('/api/documents', documentrouter);
+export default app;
