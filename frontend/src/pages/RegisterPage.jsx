@@ -18,7 +18,7 @@ export default function RegisterPage() {
         phone: '',
     });
 
-    const [error, setError] = useState({
+    const [errors, setErrors] = useState({
         root: '',
         name: '',
         email: '',
@@ -39,14 +39,14 @@ export default function RegisterPage() {
     const handleBlur = (e) => {
         let { name, value } = e.target;
         if (value) {
-            verifyRegex(name, value, setError);
+            verifyRegex(name, value, setErrors);
         }
     };
 
     function onMouseOver() {
         if (
             Object.values(inputs).some((value) => !value) ||
-            Object.entries(error).some(
+            Object.entries(errors).some(
                 ([key, value]) => value !== '' && key !== 'root'
             )
         ) {
@@ -66,7 +66,7 @@ export default function RegisterPage() {
                 setUser(res);
                 navigate('/');
             } else {
-                setError((prev) => ({ ...prev, root: res.message }));
+                setErrors((prev) => ({ ...prev, root: res.message }));
             }
         } catch (err) {
             navigate('/server-error');
@@ -100,6 +100,12 @@ export default function RegisterPage() {
             placeholder: 'Create a strong password',
             required: true,
         },
+        {
+            type: 'date',
+            name: 'dateOfBirth',
+            label: 'dateOfBirth',
+            required: true,
+        },
     ];
 
     const inputElements = inputFields.map((field) => (
@@ -122,12 +128,12 @@ export default function RegisterPage() {
                     className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
                 />
             </div>
-            {error[field.name] && (
+            {errors[field.name] && (
                 <div className="mt-1 text-red-500 text-sm font-medium">
-                    {error[field.name]}
+                    {errors[field.name]}
                 </div>
             )}
-            {field.name === 'password' && !error.password && (
+            {field.name === 'password' && !errors.password && (
                 <div className="text-xs">password must be 8-12 characters.</div>
             )}
         </div>
@@ -168,9 +174,9 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="w-[400px] flex flex-col items-center justify-center gap-3">
-                    {error.root && (
+                    {errors.root && (
                         <div className="text-red-500 w-full text-center">
-                            {error.root}
+                            {errors.root}
                         </div>
                     )}
 
@@ -210,6 +216,7 @@ export default function RegisterPage() {
                                 className="text-[#f9f9f9] mt-4 rounded-md w-full from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
                                 disabled={disabled}
                                 onMouseOver={onMouseOver}
+                                type="submit"
                                 btnText={
                                     loading ? 'Registering...' : 'Register'
                                 }

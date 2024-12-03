@@ -16,13 +16,18 @@ import {
     HomePage,
     RegisterPage,
     LoginPage,
+    ConnectedStartupsPage,
+    // TargettedStartupsPage,
+    OwnerConnectPage,
+    ServerErrorPage,
+    // RegisterYourStartupPage,
 } from './pages';
 
-import { LayoutOne, LayoutTwo, LayoutThree } from './components';
+import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
+
+import { LayoutOne, LayoutTwo, LayoutThree, InvestorType } from './components';
 
 import { VariantContextProvider, UserContextProvider } from './contexts';
-import ConnectedStartups from './pages/ConnectedStartups.jsx';
-// import InvestorType from './Investor Connect/InvestorType.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -32,18 +37,27 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
+                {/* <Route
+                    path="user/RegisterYourStartup"
+                    element={<RegisterYourStartups />}
+                /> */}
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
+                <Route
+                    path="user/verify/:userId/:uniqueString"
+                    element={<EmailVerification />}
+                />
+                <Route path="InvestorType" element={<InvestorType />} />
             </Route>
             <Route path="" element={<LayoutThree />}>
                 <Route
                     path="connected-startups/:userId"
-                    element={<ConnectedStartups />}
+                    element={<ConnectedStartupsPage />}
                 />
             </Route>
-            {/* <Route path="InvestorType" element={<InvestorType />} /> */}
+            <Route path="/server-error" element={<ServerErrorPage />} />
         </Route>
     )
 );

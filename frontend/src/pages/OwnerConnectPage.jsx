@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function OwnerConnect() {
+export default function OwnerConnectPage() {
     const [selectedChat, setSelectedChat] = useState(null); // Track selected chat
     const [messages, setMessages] = useState([]); // Track messages for the chat
     const [newMessage, setNewMessage] = useState(''); // Input field for new message

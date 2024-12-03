@@ -243,7 +243,7 @@ const login = async (req, res) => {
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'error occured while logging the user.',
-            error: error.message,
+            error: err.message,
         });
     }
 };

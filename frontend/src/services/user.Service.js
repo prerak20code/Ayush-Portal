@@ -1,14 +1,11 @@
 class UserService {
-    async login(inputs) {
+    async login(inputs, role) {
         try {
-            const res = await fetch(
-                'http://localhost:4000/api/v1/users/login',
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(inputs),
-                }
-            );
+            const res = await fetch('/api/v1/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(inputs),
+            });
 
             const data = await res.json();
             console.log(data);
@@ -25,14 +22,11 @@ class UserService {
 
     async register(inputs) {
         try {
-            const res = await fetch(
-                'http://localhost:4000/api/api/v1/users/register',
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(inputs),
-                }
-            );
+            const res = await fetch('/api/v1/users/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(inputs),
+            });
 
             let data = await res.json();
             console.log(data);
@@ -55,7 +49,7 @@ class UserService {
     // async logout() {
     //     try {
     //         const res = await fetch(
-    //             'http://localhost:4000/api/api/v1/users/logout',
+    //             '/api/v1/users/logout',
     //             {
     //                 method: 'PATCH',
     //                 credentials: 'include',
@@ -77,7 +71,7 @@ class UserService {
 
     async getCurrentUser() {
         try {
-            const res = await fetch('http://localhost:4000/api/api/v1/users', {
+            const res = await fetch('/api/v1/users', {
                 method: 'GET',
                 credentials: 'include',
             });

@@ -10,10 +10,7 @@ const generateTokens = async (user) => {
 
         return { accessToken, refreshToken };
     } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'error occured while generating tokens.',
-            erorr: err.message,
-        });
+        throw new Error(`error occured while generating tokens, error: ${err}`);
     }
 };
 

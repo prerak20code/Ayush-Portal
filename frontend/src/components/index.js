@@ -12,7 +12,11 @@ import ThirdHalf from './homePage/ThirdHalf';
 import FourthHalf from './homePage/FourthHalf';
 import Button from './general/Button';
 import Card from './homePage/Card';
-
+import StartupCard from './investorConnect/StartupCard';
+import InvestorType from './investorConnect/InvestorType';
+// import OwnerType from './LoginPage/OwnerType';
+// import GovernmentType from './LoginPage/GovernmentType';
+// import StakeHolderType from './LoginPage/StakeholderType';
 export {
     LayoutOne,
     LayoutTwo,
@@ -28,4 +32,9 @@ export {
     FourthHalf,
     Button,
     Card,
+    StartupCard,
+    InvestorType,
+    // StakeHolderType,
+    // OwnerType,
+    // GovernmentType,
 };
