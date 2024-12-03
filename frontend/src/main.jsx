@@ -16,16 +16,22 @@ import {
     HomePage,
     RegisterPage,
     LoginPage,
+    ConnectedStartupsPage,
+    // TargettedStartupsPage,
+    OwnerConnectPage,
+    ServerErrorPage,
+    // RegisterYourStartupPage,
 } from './pages';
 
 import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
-import RegisterYourStartups from './pages/RegisterYourStartups.jsx';
 
-import { LayoutOne, LayoutTwo, LayoutThree } from './components';
+import { LayoutOne, LayoutTwo, LayoutThree, InvestorType } from './components';
 
 import { VariantContextProvider, UserContextProvider } from './contexts';
-import ConnectedStartups from './pages/ConnectedStartups.jsx';
-import InvestorType from './Investor Connect/InvestorType.jsx';
+// import ConnectedStartups from './pages/ConnectedStartups.jsx';
+// import InvestorType from './InvestorConnect/InvestorType.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import DocumentsCheck from './pages/DocumentsCheck.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -35,10 +41,10 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
-                <Route
+                {/* <Route
                     path="user/RegisterYourStartup"
                     element={<RegisterYourStartups />}
-                />
+                />*/}
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
@@ -47,14 +53,17 @@ const router = createBrowserRouter(
                     path="user/verify/:userId/:uniqueString"
                     element={<EmailVerification />}
                 />
-                <Route path="InvestorType" element={<InvestorType />} />
+                {/* <Route path="InvestorType" element={<InvestorType />} /> */}
             </Route>
             <Route path="" element={<LayoutThree />}>
-                <Route
+                {/* <Route
                     path="connected-startups/:userId"
                     element={<ConnectedStartups />}
-                />
+                /> */}
             </Route>
+            <Route path="AdminDashboard" element={<AdminDashboard />} />
+            <Route path="/startup/:id/documents" element={<DocumentsCheck />} />
+            <Route path="/server-error" element={<ServerErrorPage />} />
         </Route>
     )
 );

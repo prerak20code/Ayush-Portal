@@ -1,4 +1,4 @@
-import { SERVER_ERROR } from '../constants/statusCodes.js';
+import jwt from 'jsonwebtoken';
 
 const generateTokens = async (user) => {
     try {
@@ -10,24 +10,19 @@ const generateTokens = async (user) => {
 
         return { accessToken, refreshToken };
     } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'error occured while generating tokens.',
-            erorr: err.message,
-        });
+        throw new Error(`error occured while generating tokens, error: ${err}`);
     }
 };
 
-const generateAccessToken = (user) => {
+const generateAccessToken = async (user) => {
     return jwt.sign(
-        {
-            user, // saving complete user in access token
-        },
+        { user }, // saving complete user in access token
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );
 };
 
-const generateRefreshToken = (userId) => {
+const generateRefreshToken = async (userId) => {
     return jwt.sign(
         {
             userId, // just saving the _id in refresh token in db

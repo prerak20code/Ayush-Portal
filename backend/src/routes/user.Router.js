@@ -3,6 +3,7 @@ export const userRouter = express.Router();
 import {
     register,
     login,
+    logout,
     verifyEmail,
     getCurrentUser,
     resetPassword,
@@ -13,16 +14,12 @@ import { verifyJWT } from '../middlewares/index.js';
 
 userRouter.route('/register').post(register);
 userRouter.route('/login').post(login);
+userRouter.route('/logout').patch(verifyJWT, logout);
 
 userRouter
     .route('/request-reset-password')
     .post(verifyJWT, requestResetPassword);
 
-userRouter.route('/reset-password').post(resetPassword);
-
+userRouter.route('/reset-password').post(verifyJWT, resetPassword);
 userRouter.route('/verify-email/:userId/:uniqueString').get(verifyEmail);
-userRouter.route('/verified').get((req, res) => {
-    res.sendFile(path.join(__dirname, '../views/verified.html'));
-});
-
-userRouter.route('/').get(getCurrentUser);
+userRouter.route('/current-user').get(verifyJWT, getCurrentUser);

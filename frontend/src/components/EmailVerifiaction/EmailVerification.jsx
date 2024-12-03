@@ -1,39 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { userService } from '../../services';
 
-const EmailVerification = () => {
-    const { userId, uniqueString } = useParams(); // Get parameters from the URL
-    const [status, setStatus] = useState('loading'); // Tracks the verification state
+export default function EmailVerification() {
+    const { userId, uniqueString } = useParams();
+    const [loading, setLoading] = useState(true);
+    const [success, setSuccess] = useState(false);
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const verifyEmail = async () => {
+        (async function verifyEmail() {
             try {
-                const response = await axios.get(
-                    `http://localhost:5173/user/verify/${userId}/${uniqueString}`
-                );
-                if (response.data.status === 'SUCCESS') {
-                    setStatus('success');
-                    setMessage(response.data.message);
+                const res = await userService.verifyEmail(userId, uniqueString);
+                if (res && res.message === 'email verified successfully') {
+                    setSuccess(true);
+                    setMessage(res.message);
                 } else {
-                    setStatus('error');
-                    setMessage(response.data.message);
+                    setMessage(res.message);
+                    setSuccess(false);
                 }
             } catch (err) {
-                setStatus('error');
-                setMessage('An error occurred during verification.');
+                navigate('/server-error');
+            } finally {
+                setLoading(false);
             }
-        };
-
-        verifyEmail();
+        })();
     }, [userId, uniqueString]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-                {status === 'loading' && (
+                {loading ? (
                     <div className="text-center">
                         <svg
                             className="animate-spin h-10 w-10 text-blue-500 mx-auto"
@@ -59,9 +57,7 @@ const EmailVerification = () => {
                             Verifying your email...
                         </p>
                     </div>
-                )}
-
-                {status === 'success' && (
+                ) : success ? (
                     <div className="text-center">
                         <h1 className="text-2xl font-bold text-green-500">
                             Email Verified!
@@ -74,9 +70,7 @@ const EmailVerification = () => {
                             Go to Login
                         </button>
                     </div>
-                )}
-
-                {status === 'error' && (
+                ) : (
                     <div className="text-center">
                         <h1 className="text-2xl font-bold text-red-500">
                             Verification Failed
@@ -93,6 +87,4 @@ const EmailVerification = () => {
             </div>
         </div>
     );
-};
-
-export default EmailVerification;
+}

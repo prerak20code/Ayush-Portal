@@ -8,6 +8,11 @@ export default function SmallFooter() {
             url: '/contact-us',
         },
         {
+            name: 'About Us',
+            url: '/about-us',
+            className: 'hidden xs:block',
+        },
+        {
             name: 'Privacy Policy',
             url: 'privacy-policies',
         },
@@ -18,20 +23,23 @@ export default function SmallFooter() {
     ];
 
     const linkElements = links.map((link) => (
-        <Link key={link.name} to={link.url} className="underline">
+        <Link
+            key={link.name}
+            to={link.url}
+            className={`underline ${link.className}`}
+        >
             {link.name}
         </Link>
     ));
 
     return (
-        <footer className="bg-[#f9f9f9] drop-shadow-md border-[0.01rem] border-[#dadada] text-[#1b36b2] py-2 sm:px-4 font-medium flex flex-col sm:flex-row-reverse justify-between items-center gap-1">
-            <div className="flex justify-evenly gap-4 text-sm">
+        <footer className="overflow-x-scroll bg-[#f9f9f9] drop-shadow-md border-[0.01rem] border-[#dadada] text-[#1b36b2] py-2 px-2 sm:px-4 font-medium flex flex-col sm:flex-row-reverse justify-between items-center gap-2 transition-all ease-in">
+            <div className="flex justify-evenly text-center gap-2 xs:gap-4 sm:gap-6 lg:gap-8 text-[10px] xxs:text-xs">
                 {linkElements}
             </div>
 
-            <div className="text-xs md:text-sm text-center">
-                © 2024 Ministry of AYUSH, Government of India. All rights
-                reserved.
+            <div className="text-[8px] xxs:text-[10px] xs:text-[11px] sm:text-xs text-center">
+                © 2024 Ministry of AYUSH, Government of India.
             </div>
         </footer>
     );
