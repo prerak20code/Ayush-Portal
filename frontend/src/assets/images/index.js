@@ -14,7 +14,7 @@ import AYUSHLOGOWHITE from './ayushLogoWhite.png';
 import GOVINDIAIMAGE from './govIndiaLogo.png';
 import AYUSHSTARTUPLOGO from './AyushStartupLogo.png';
 import HASHTAG from './hashtag.png';
-import RajBhavan from './RajBhavan.png'
+import RajBhavan from './RajBhavan.png';
 
 export {
     // first half

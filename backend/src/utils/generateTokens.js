@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+
 const generateTokens = async (user) => {
     try {
         const accessToken = await generateAccessToken(user);
@@ -15,9 +16,7 @@ const generateTokens = async (user) => {
 
 const generateAccessToken = async (user) => {
     return jwt.sign(
-        {
-            user, // saving complete user in access token
-        },
+        { user }, // saving complete user in access token
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );

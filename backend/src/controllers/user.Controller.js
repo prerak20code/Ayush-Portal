@@ -188,7 +188,8 @@ const login = async (req, res) => {
                 );
                 if (isPasswordVerified) {
                     // generate tokens
-                    const { accessToken, refreshToken } = generateTokens(user);
+                    const { accessToken, refreshToken } =
+                        await generateTokens(user);
 
                     // send cookies
                     res.status(OK)
@@ -220,11 +221,31 @@ const login = async (req, res) => {
     }
 };
 
-const getCurrentUser = async (req, res) => {
+const logout = async (req, res) => {
     try {
-        return res.status(OK).json(req.user);
+        const { _id } = req.user;
+        await User.findByIdAndUpdate(_id, {
+            $set: { refreshToken: '' },
+        });
+        return res
+            .status(OK)
+            .clearCookie('accessToken', cookieOptions)
+            .clearCookie('refreshToken', cookieOptions)
+            .json({ message: 'user logged out successfully' });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
+            message: 'error occured while logging out user',
+            err: err.message,
+        });
+    }
+};
+
+const getCurrentUser = async (req, res) => {
+    try {
+        const user = req.user;
+        res.status(OK).json(user);
+    } catch (err) {
+        res.status(SERVER_ERROR).json({
             message: 'error occured while fetching the current logged in user',
             err: err.message,
         });
@@ -303,7 +324,7 @@ const sendPasswordResetEmail = async (user, redirectUrl, res) => {
                     <p>Press <a href=${url}> here</a> to proceed.</p>
                 `,
         };
-        const transporter = getTranporter();
+        const transporter = await getTranporter();
         await transporter.sendMail(mailOptions);
         //reset email sent and password reset record saved
         res.status(PENDING).json({
@@ -406,6 +427,7 @@ export {
     register,
     verifyEmail,
     login,
+    logout,
     getCurrentUser,
     resetPassword,
     requestResetPassword,

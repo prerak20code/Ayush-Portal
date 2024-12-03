@@ -1,12 +1,17 @@
 import { AYUSHLOGO, GOVINDIAIMAGE } from '../../assets/images';
 import { icons } from '../../assets/icons';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useUserContext } from '../../contexts';
+import { userService } from '../../services/user.Service';
 
 export default function Header() {
     const [showDropdown, setShowDropdown] = useState(false);
+    const [showSideBar, setShowSideBar] = useState(false);
     const location = useLocation();
+    const { user, setUser } = useUserContext();
+    const navigate = useNavigate();
 
     // Close dropdown
     useEffect(() => {
@@ -34,26 +39,33 @@ export default function Header() {
     };
 
     const tabs = [
-        { url: '', name: 'Home' },
-        { url: 'register', name: 'Register Now' },
-        { url: 'login', name: 'Login' },
-        { url: 'track-application', name: 'Track your Application' },
-        { url: 'faqs', name: 'FAQs' },
-        { url: 'about-us', name: 'About Us' },
+        { url: '', name: 'Home', show: true },
+        { url: 'register', name: 'Register Now', show: !user },
+        { url: 'login', name: 'Login', show: !user },
+        {
+            url: 'track-application',
+            name: 'Track your Application',
+            show: true,
+        },
+        { url: 'faqs', name: 'FAQs', show: true },
+        { url: 'about-us', name: 'About Us', show: true },
     ];
 
-    const tabElements = tabs.map((tab) => (
-        <NavLink
-            to={tab.url}
-            end
-            key={tab.name}
-            className={({ isActive }) =>
-                `${isActive && 'underline'} hover:underline text-[#f9f9f9] font-medium text-md`
-            }
-        >
-            {tab.name}
-        </NavLink>
-    ));
+    const tabElements = tabs.map(
+        (tab) =>
+            tab.show && (
+                <NavLink
+                    to={tab.url}
+                    end
+                    key={tab.name}
+                    className={({ isActive }) =>
+                        `${isActive && 'underline'} hover:underline text-[#f9f9f9] font-medium text-md`
+                    }
+                >
+                    {tab.name}
+                </NavLink>
+            )
+    );
 
     const hamburgurElements = tabs.map((tab) => (
         <NavLink
@@ -69,6 +81,17 @@ export default function Header() {
             {tab.name}
         </NavLink>
     ));
+
+    async function handleLogout() {
+        try {
+            const res = await userService.logout();
+            if (res && res.message === 'user logged out successfully') {
+                setUser(null);
+            }
+        } catch (err) {
+            navigate('/server-error');
+        }
+    }
 
     return (
         <div className="h-[110px]">
@@ -90,11 +113,28 @@ export default function Header() {
                     {tabElements}
                 </div>
 
+                {user && (
+                    <div
+                        className="hover:underline text-[#f9f9f9] font-medium text-md"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </div>
+                )}
+
                 {/* Icons */}
                 <div className="flex items-center justify-end gap-x-6">
                     <div className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]">
                         {icons.search}
                     </div>
+                    {user && (
+                        <div
+                            className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
+                            onClick={() => setShowSideBar((prev) => !prev)}
+                        >
+                            {icons.profile}
+                        </div>
+                    )}
                     <div
                         className="md:hidden hover:scale-125 transition-all ease-in size-[20px] fill-[#f9f9f9] cursor-pointer"
                         onClick={() => setShowDropdown((prev) => !prev)}

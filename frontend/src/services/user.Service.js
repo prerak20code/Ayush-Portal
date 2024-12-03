@@ -65,32 +65,29 @@ class UserService {
         }
     }
 
-    // async logout() {
-    //     try {
-    //         const res = await fetch(
-    //             '/api/v1/users/logout',
-    //             {
-    //                 method: 'PATCH',
-    //                 credentials: 'include',
-    //             }
-    //         );
+    async logout() {
+        try {
+            const res = await fetch('/api/v1/users/logout', {
+                method: 'PATCH',
+                credentials: 'include',
+            });
 
-    //         const data = await res.json();
-    //         console.log(data);
+            const data = await res.json();
+            console.log(data);
 
-    //         if (res.status === 500) {
-    //             throw new Error(data.message);
-    //         }
-    //         return data;
-    //     } catch (err) {
-    //         console.error(`error in logout service: ${err.message}`);
-    //         throw err;
-    //     }
-    // }
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error(`error in logout service: ${err.message}`);
+            throw err;
+        }
+    }
 
     async getCurrentUser() {
         try {
-            const res = await fetch('/api/v1/users', {
+            const res = await fetch('/api/v1/users/current-user', {
                 method: 'GET',
                 credentials: 'include',
             });
