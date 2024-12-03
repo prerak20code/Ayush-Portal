@@ -16,7 +16,7 @@ import {
     PENDING,
 } from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
-
+import mongoose from 'mongoose';
 // verify email
 const verifyEmail = async (req, res) => {
     try {
@@ -153,10 +153,12 @@ const register = async (req, res) => {
 
         //check if user already exists
         const user = await User.findOne({ email });
+        console.log(user.id);
         if (user) {
             //Already exists
-            res.status(BAD_REQUEST).json({
+            return res.status(BAD_REQUEST).json({
                 message: 'user already exists with this email',
+                id: '$user.id',
             });
         } else {
             //create new user
@@ -164,7 +166,7 @@ const register = async (req, res) => {
             //password hashing ( auto done using pre hook )
 
             // create user
-            const newUser = await User.create({
+            const newUser = new User({
                 name,
                 email,
                 password: hashedPassword,
@@ -172,11 +174,14 @@ const register = async (req, res) => {
                 phone,
                 verified: false,
             });
-
+            await newuser.save();
             // send mail
             if (newUser) {
                 await sendVerificationEmail(newUser, res);
             }
+            return res.status(200).json({
+                message: 'registered',
+            });
         }
     } catch (err) {
         res.status(SERVER_ERROR).json({
