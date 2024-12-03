@@ -28,12 +28,10 @@ class UserService {
                 body: JSON.stringify(inputs),
             });
 
-            console.log('1');
             let data = await res.json();
             console.log(data);
 
             if (res.status === 500) {
-                console.log('2');
                 throw new Error(data.message);
             }
             return data;

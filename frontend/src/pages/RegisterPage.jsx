@@ -133,7 +133,7 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder={field.placeholder}
-                    className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] bg-transparent"
+                    className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
                 />
             </div>
             {errors[field.name] && (
