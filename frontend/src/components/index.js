@@ -18,6 +18,7 @@ import InvestorType from './investorConnect/InvestorType';
 import EmailVerification from './EmailVerification/EmailVerification';
 import ResetPassword from './ResetPassword/ResetPassword';
 import Popup from './popups/Popup';
+import Redirect from './layout/Redirect';
 // import OwnerType from './LoginPage/OwnerType';
 // import GovernmentType from './LoginPage/GovernmentType';
 // import StakeHolderType from './LoginPage/StakeholderType';
@@ -43,6 +44,7 @@ export {
     EmailVerification,
     ResetPassword,
     Popup,
+    Redirect,
     // StakeHolderType,
     // OwnerType,
     // GovernmentType,

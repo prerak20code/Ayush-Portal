@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { userService } from '../../services';
+import { Button, Popup } from '..';
+import { icons } from '../../assets/icons';
+// import { usePopupContext } from '../../contexts';
+import { verifyRegex } from '../../utils';
 
 export default function ResetPassword() {
     const { userId, resetString } = useParams();
     const [loading, setLoading] = useState(false);
-    const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(true);
     const [inputs, setInputs] = useState({
         newPassword: '',
         confirmPassword: '',
@@ -13,19 +17,27 @@ export default function ResetPassword() {
     const [success, setSuccess] = useState(false);
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
+    const [showPopup, setShowPopup] = useState();
+    const [errors, setErrors] = useState({
+        newPassword: '',
+        confirmPassword: '',
+    });
 
-    async function handleResetPassword() {
+    async function handleResetPassword(e) {
         try {
+            e.preventDefault();
             setLoading(true);
             setDisabled(true);
+
             const res = await userService.resetPassword(
-                userId,
+                // userId,
                 resetString,
                 inputs.newPassword
             );
-            if (res && res.message === 'Password has been reset successfully') {
+            setShowPopup(true);
+            if (res?.message === 'password has been reset successfully') {
                 setSuccess(true);
-                setMessage(res.message);
+                setMessage('Your password has been updated successfully');
             } else {
                 setMessage(res.message);
                 setSuccess(false);
@@ -40,10 +52,24 @@ export default function ResetPassword() {
 
     function handleChange(e) {
         const { name, value } = e.target;
+
         setInputs((prev) => ({
             ...prev,
             [name]: value,
         }));
+
+        if (
+            name === 'confirmPassword' &&
+            value &&
+            inputs.newPassword !== value // can't check state cause it may take time to update
+        ) {
+            setErrors((prev) => ({
+                ...prev,
+                confirmPassword: 'confirm password should match new password',
+            }));
+        } else {
+            setErrors((prev) => ({ ...prev, confirmPassword: '' }));
+        }
     }
 
     function onMouseOver() {
@@ -57,93 +83,105 @@ export default function ResetPassword() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-                <form onSubmit={handleResetPassword}>
-                    <div>
-                        <input
-                            type="password"
-                            className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
-                            id="newPassword"
-                            name="newPassword"
-                            value={inputs.newPassword}
-                            onchange={handleChange}
-                            placeholder="Create a strong password"
-                        />
-                        <div className="text-xs">
-                            password must be 8-12 characters.
+                <form
+                    onSubmit={handleResetPassword}
+                    className="w-full flex flex-col items-center"
+                >
+                    <div className="w-full">
+                        <div className="bg-white z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="newPassword">
+                                <span className="text-red-500">* </span>
+                                New Password
+                            </label>
                         </div>
+                        <div>
+                            <input
+                                type="password"
+                                className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
+                                id="newPassword"
+                                name="newPassword"
+                                value={inputs.newPassword}
+                                onBlur={(e) => {
+                                    verifyRegex(
+                                        'newPassword',
+                                        e.target.value,
+                                        setErrors
+                                    );
+                                }}
+                                onChange={handleChange}
+                                placeholder="Create a strong password"
+                            />
+                        </div>
+
+                        {errors.newPassword ? (
+                            <div className="mt-1 text-red-500 text-sm font-medium">
+                                {errors.newPassword}
+                            </div>
+                        ) : (
+                            <div className="text-xs">
+                                password must be 8-12 characters.
+                            </div>
+                        )}
                     </div>
-                    <div>
-                        <input
-                            type="password"
-                            className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
-                            id="newPassword"
-                            name="newPassword"
-                            value={inputs.newPassword}
-                            onchange={handleChange}
-                            placeholder="Create a strong password"
-                        />
+
+                    <div className="w-full">
+                        <div className="bg-white z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="confirmPassword">
+                                <span className="text-red-500">* </span>
+                                Confirm Password
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                type="password"
+                                className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={inputs.confirmPassword}
+                                onChange={handleChange}
+                                placeholder="Confirm your password"
+                            />
+                        </div>
+                        {errors.confirmPassword && (
+                            <div className="mt-1 text-red-500 text-sm font-medium">
+                                {errors.confirmPassword}
+                            </div>
+                        )}
                     </div>
                     <Button
-                        className="text-[#f9f9f9] mt-4 rounded-md w-full bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                        className="text-[#f9f9f9] mt-4 rounded-md w-fit bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
                         disabled={disabled}
                         type="submit"
                         onMouseOver={onMouseOver}
-                        btnText={loading ? 'Updating' : 'Update password'}
+                        btnText={
+                            loading ? (
+                                <div className="fill-[#f9f9f9] text-white size-[50px]">
+                                    {icons.loading}
+                                </div>
+                            ) : (
+                                'Update'
+                            )
+                        }
                     />
                 </form>
-                {loading ? (
-                    <div className="text-center">
-                        <svg
-                            className="animate-spin h-10 w-10 text-blue-500 mx-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                            ></circle>
-                            <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"
-                            ></path>
-                        </svg>
-                        <p className="text-blue-500 mt-4">
-                            Verifying your email...
-                        </p>
-                    </div>
-                ) : success ? (
-                    <div className="text-center">
-                        <h1 className="text-2xl font-bold text-green-500">
-                            Email Verified!
-                        </h1>
-                        <p className="mt-4 text-gray-600">{message}</p>
-                        <button
+
+                {showPopup &&
+                    (success ? (
+                        <Popup
+                            btnText="Try Login"
                             onClick={() => navigate('/login')}
-                            className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        >
-                            Go to Login
-                        </button>
-                    </div>
-                ) : (
-                    <div className="text-center">
-                        <h1 className="text-2xl font-bold text-red-500">
-                            Verification Failed
-                        </h1>
-                        <p className="mt-4 text-gray-600">{message}</p>
-                        <button
-                            onClick={() => navigate('/register')}
-                            className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                        >
-                            Sign Up Again
-                        </button>
-                    </div>
-                )}
+                            className="text-[#f9f9f9] mt-2 py-[5px] rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                            header="Password Updated"
+                            description={message}
+                        />
+                    ) : (
+                        <Popup
+                            className="text-[#f9f9f9] mt-2 py-[5px] rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                            header="Password Updation Failed"
+                            description={message}
+                            onClick={() => setShowPopup(false)}
+                        />
+                    ))}
             </div>
         </div>
     );

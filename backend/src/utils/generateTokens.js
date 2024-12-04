@@ -13,7 +13,7 @@ const generateTokens = async (user) => {
 
 const generateAccessToken = async (user) => {
     const { _id, email, name, phone, dateOfBirth } = user;
-    
+
     return jwt.sign(
         { _id, email, name, phone, dateOfBirth }, // saving complete user in access token
         process.env.ACCESS_TOKEN_SECRET,

@@ -155,13 +155,16 @@ class UserService {
         }
     }
 
-    async resetPassword({ newPassword }) {
+    async resetPassword(resetString, newPassword) {
         try {
+
             const res = await fetch('/api/v1/users/reset-password', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    // userId,
+                    resetString,
                     newPassword,
                 }),
             });

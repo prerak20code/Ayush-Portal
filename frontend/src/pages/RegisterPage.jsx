@@ -8,7 +8,7 @@ import {
 } from '../assets/images';
 import { useState } from 'react';
 import { userService } from '../services';
-import { useVariantContext, usePopupContext } from '../contexts';
+import { useVariantContext } from '../contexts';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Popup } from '../components';
 import { verifyRegex } from '../utils';
@@ -34,7 +34,7 @@ export default function RegisterPage() {
     const [errors, setErrors] = useState(emptyErrors);
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { showPopup, setShowPopup } = usePopupContext();
+    const [showPopup, setShowPopup] = useState();
     const navigate = useNavigate();
 
     async function handleChange(e) {
@@ -44,9 +44,7 @@ export default function RegisterPage() {
 
     const handleBlur = (e) => {
         let { name, value } = e.target;
-        if (value) {
-            verifyRegex(name, value, setErrors);
-        }
+        verifyRegex(name, value, setErrors);
     };
 
     function onMouseOver() {
@@ -175,8 +173,8 @@ export default function RegisterPage() {
             {/* email verification popup */}
             {showPopup && (
                 <Popup
-                    className="text-[#f9f9f9] mt-4 rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
                     onClick={() => setShowPopup(false)}
+                    className="text-[#f9f9f9] mt-4 rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
                     header="Verification Email"
                     description="A verification email has been sent on your provided email, check it out to proceed with the registeration process"
                 />

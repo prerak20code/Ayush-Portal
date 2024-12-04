@@ -31,13 +31,14 @@ import {
     InvestorType,
     EmailVerification,
     ResetPassword,
+    Redirect,
 } from './components';
 
 import {
     ProfileDropdownContextProvider,
     VariantContextProvider,
     UserContextProvider,
-    PopupContextProvider,
+    // PopupContextProvider,
 } from './contexts';
 
 // import ConnectedStartups from './pages/ConnectedStartups.jsx';
@@ -63,11 +64,19 @@ const router = createBrowserRouter(
                 <Route path="login" element={<LoginPage />} />
                 <Route
                     path="user/verify/:userId/:uniqueString"
-                    element={<EmailVerification />}
+                    element={
+                        <Redirect path="/" ifLoggedIn={true}>
+                            <EmailVerification />
+                        </Redirect>
+                    }
                 />
                 <Route
                     path="user/reset-password/:userId/:resetString"
-                    element={<ResetPassword />}
+                    element={
+                        <Redirect path="/login">
+                            <ResetPassword />
+                        </Redirect>
+                    }
                 />
                 {/* <Route path="InvestorType" element={<InvestorType />} /> */}
             </Route>
@@ -77,8 +86,22 @@ const router = createBrowserRouter(
                     element={<ConnectedStartups />}
                 /> */}
             </Route>
-            <Route path="AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/startup/:id/documents" element={<DocumentsCheck />} />
+            <Route
+                path="AdminDashboard"
+                element={
+                    <Redirect path="/login">
+                        <AdminDashboard />
+                    </Redirect>
+                }
+            />
+            <Route
+                path="/startup/:id/documents"
+                element={
+                    <Redirect path="/login">
+                        <DocumentsCheck />
+                    </Redirect>
+                }
+            />
             <Route path="/server-error" element={<ServerErrorPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Route>
@@ -88,13 +111,13 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        <PopupContextProvider>
+        {/* <PopupContextProvider> */}
             <ProfileDropdownContextProvider>
                 <VariantContextProvider>
                     <RouterProvider router={router} />
                 </VariantContextProvider>
             </ProfileDropdownContextProvider>
-        </PopupContextProvider>
+        {/* </PopupContextProvider> */}
     </UserContextProvider>
     // </StrictMode>
 );

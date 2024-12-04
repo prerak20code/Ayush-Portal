@@ -3,6 +3,7 @@ import { UserVerification } from '../models/index.js';
 import bcrypt from 'bcrypt';
 import { getTranporter } from './index.js';
 import { PENDING, SERVER_ERROR } from '../constants/statusCodes.js';
+import { getEmailVerificationMailLayout } from '../constants/mails.js';
 
 export const sendVerificationEmail = async (user, redirectURL, res) => {
     try {
@@ -17,11 +18,7 @@ export const sendVerificationEmail = async (user, redirectURL, res) => {
             from: process.env.AUTH_EMAIL,
             to: email,
             subject: 'Verify your Email',
-            html: `
-                    <p>Verify your email address to complete the signup process and login to your account.</p> 
-                    <p>This link will <b>expire in an hour.</b></p> 
-                    <p>Press <a href=${url}> here </a> to proceed.</p>
-                `,
+            html: getEmailVerificationMailLayout(url),
         };
 
         //hash the unique string

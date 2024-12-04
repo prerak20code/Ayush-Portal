@@ -2,12 +2,13 @@ import { AYUSHLOGO, GOVINDIAIMAGE } from '../../assets/images';
 import { icons } from '../../assets/icons';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Button } from '..';
+import { Button, Popup } from '..';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     useProfileDropdownContext,
     useUserContext,
     useVariantContext,
+    // usePopupContext,
 } from '../../contexts';
 import { userService } from '../../services/user.Service';
 
@@ -19,15 +20,22 @@ export default function Header() {
     const location = useLocation();
     const { user, setUser } = useUserContext();
     const navigate = useNavigate();
+    const [showPopup, setShowPopup] = useState();
+    const [resetMessage, setResetMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     // Close dropdown
     useEffect(() => {
-        const handleResize = () => setShowDropdown(false);
+        const handleResize = () => {
+            setShowDropdown(false);
+            setShowProfileDropdown(false);
+        };
         // Listen for window resize
         window.addEventListener('resize', handleResize);
 
         // Close dropdown when location changes
         setShowDropdown(false);
+        setShowProfileDropdown(false);
         return () => window.removeEventListener('resize', handleResize);
     }, [location]);
 
@@ -82,25 +90,34 @@ export default function Header() {
             name: 'Applied Startups',
         },
         {
-            path: '/reset-password',
+            onClick: handleRequestResetPassword,
             name: 'Reset Password',
         },
     ];
 
-    const profileElements = profileItems.map((item) => (
-        <NavLink
-            key={item.name}
-            className={({ isActive }) =>
-                `hover:bg-[#f68533] hover:text-[#ffffff] px-2 py-[5px] text-[#040606] font-medium text-md rounded-md ${
-                    isActive && 'bg-[#f68533] text-white'
-                }`
-            }
-            to={item.path}
-            onClick={() => setShowProfileDropdown(false)}
-        >
-            {item.name}
-        </NavLink>
-    ));
+    const profileElements = profileItems.map((item) =>
+        item.path ? (
+            <NavLink
+                key={item.name}
+                className={({ isActive }) =>
+                    `hover:bg-[#f68533] hover:text-[#ffffff] px-2 py-[5px] text-[#040606] font-medium text-md rounded-md ${
+                        isActive && 'bg-[#f68533] text-white'
+                    }`
+                }
+                to={item.path}
+            >
+                {item.name}
+            </NavLink>
+        ) : (
+            <div
+                key={item.name}
+                onClick={item.onClick}
+                className="cursor-pointer hover:bg-[#f68533] hover:text-[#ffffff] px-2 py-[5px] text-[#040606] font-medium text-md rounded-md"
+            >
+                {item.name}
+            </div>
+        )
+    );
 
     async function handleLogout() {
         try {
@@ -108,6 +125,7 @@ export default function Header() {
             if (res && res.message === 'user logged out successfully') {
                 setUser(null);
                 setShowProfileDropdown(false);
+                navigate('/');
             }
         } catch (err) {
             navigate('/server-error');
@@ -120,14 +138,34 @@ export default function Header() {
             if (res && res.message === 'user account deleted successfully') {
                 setUser(null);
                 setShowProfileDropdown(false);
+                navigate('/');
             }
         } catch (err) {
             navigate('/server-error');
         }
     }
 
+    async function handleRequestResetPassword() {
+        try {
+            setShowPopup(true);
+            setShowProfileDropdown(false);
+            setLoading(true);
+            const res = await userService.requestResetPassword(user.email);
+            if (res?.message === 'password reset email sent') {
+                setResetMessage();
+            } else {
+                setResetMessage(res?.message);
+            }
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <div className="h-[110px]">
+            {/* logo header */}
             <div className="overflow-x-scroll drop-shadow-md h-[70px] bg-[#f9f9f9] flex items-center justify-between w-full px-2 sm:px-4 py-[5px]">
                 <img
                     src={GOVINDIAIMAGE}
@@ -140,6 +178,8 @@ export default function Header() {
                     className="object-contain rounded-full size-[50px] sm:size-[60px]"
                 />
             </div>
+
+            {/* tabs header */}
             <div className="relative drop-shadow-md bg-[#f68533] flex items-center justify-end h-[40px] gap-x-8 px-4">
                 {/* Tabs */}
                 <div className="hidden h-full md:flex items-center justify-end gap-x-8">
@@ -225,6 +265,35 @@ export default function Header() {
                     )}
                 </AnimatePresence>
             </div>
+
+            {/* popups */}
+            {showPopup &&
+                (loading ? (
+                    <Popup
+                        header="Sending Password Reset Email"
+                        className="text-[#f9f9f9] mt-4 py-[5px] rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                        description={
+                            <div className="fill-[#f68533] mt-2 text-white size-[35px]">
+                                {icons.loading}
+                            </div>
+                        }
+                        onClick={() => setShowPopup(false)}
+                    />
+                ) : resetMessage ? (
+                    <Popup
+                        header="Reset Password Failed !!"
+                        className="text-[#f9f9f9] mt-2 py-[5px] rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                        description={resetMessage}
+                        onClick={() => setShowPopup(false)}
+                    />
+                ) : (
+                    <Popup
+                        header="Reset Password Email"
+                        onClick={() => setShowPopup(false)}
+                        className="text-[#f9f9f9] mt-2 py-[5px] rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                        description="reset mail has been sent on your registered email, please proceed with the reset process as indicated."
+                    />
+                ))}
         </div>
     );
 }
