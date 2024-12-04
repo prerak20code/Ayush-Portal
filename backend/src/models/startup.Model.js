@@ -2,29 +2,46 @@ import mongoose from 'mongoose';
 
 const startupSchema = new mongoose.Schema(
     {
-        title: {
+        startupName: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        businessType: {
             type: String,
             required: true,
         },
-        startuptype: {
+        industry: {
             type: String,
             required: true,
         },
-        description: {
+        pdf: {
+            type: String,
+        },
+        address: {
             type: String,
             required: true,
         },
-        startupage: {
+        country: {
+            type: String,
+            required: true,
+        },
+        website: {
             type: Number,
             required: true,
         },
-        Ask: {
+        valuation: {
             type: Number,
             required: true,
         },
-        User: {
+        dateOfEstablishment: {
+            type: Date,
+            required: true,
+            default: Date.now(),
+        },
+        owner: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'startupOwner',
             required: true,
         },
         status: {
@@ -32,12 +49,7 @@ const startupSchema = new mongoose.Schema(
             enum: ['pending', 'approved', 'rejected'],
             default: 'pending',
         },
-        created_by: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true,
-        },
-        investment: [
+        investors: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Investment',

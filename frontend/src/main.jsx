@@ -16,29 +16,34 @@ import {
     HomePage,
     RegisterPage,
     LoginPage,
-    ConnectedStartupsPage,
+    // ConnectedStartupsPage,
     // TargettedStartupsPage,
-    OwnerConnectPage,
+    // OwnerConnectPage,
     ServerErrorPage,
     NotFoundPage,
-    // RegisterYourStartupPage,
+    RegisterYourStartupPage,
 } from './pages';
 
 import {
     LayoutOne,
     LayoutTwo,
     LayoutThree,
-    InvestorType,
+    // InvestorType,
     EmailVerification,
     ResetPassword,
     Redirect,
+    FinancialInformation,
+    BankingInformation,
+    PersonalInformation,
+    OrganizationInformation,
+    Review,
 } from './components';
 
 import {
     ProfileDropdownContextProvider,
     VariantContextProvider,
     UserContextProvider,
-    // PopupContextProvider,
+    RegisterStartupContextProvider,
 } from './contexts';
 
 // import ConnectedStartups from './pages/ConnectedStartups.jsx';
@@ -54,10 +59,26 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
-                {/* <Route
-                    path="user/RegisterYourStartup"
-                    element={<RegisterYourStartups />}
-                />*/}
+                <Route
+                    path="user/register-startup"
+                    element={
+                        <RegisterStartupContextProvider>
+                            <RegisterYourStartupPage />
+                        </RegisterStartupContextProvider>
+                    }
+                >
+                    <Route path="personal" element={<PersonalInformation />} />
+                    <Route
+                        path="organization"
+                        element={<OrganizationInformation />}
+                    />
+                    <Route
+                        path="financial"
+                        element={<FinancialInformation />}
+                    />
+                    <Route path="banking" element={<BankingInformation />} />
+                    <Route path="review" element={<Review />} />
+                </Route>
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
@@ -111,13 +132,11 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        {/* <PopupContextProvider> */}
-            <ProfileDropdownContextProvider>
-                <VariantContextProvider>
-                    <RouterProvider router={router} />
-                </VariantContextProvider>
-            </ProfileDropdownContextProvider>
-        {/* </PopupContextProvider> */}
+        <ProfileDropdownContextProvider>
+            <VariantContextProvider>
+                <RouterProvider router={router} />
+            </VariantContextProvider>
+        </ProfileDropdownContextProvider>
     </UserContextProvider>
     // </StrictMode>
 );

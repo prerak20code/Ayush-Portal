@@ -72,7 +72,7 @@ const verifyEmail = async (req, res) => {
         } else {
             res.status(BAD_REQUEST).json({
                 message:
-                    "account record doesn't exits or has been verified already, please sign up or login",
+                    "Account doesn't exit or has been verified already, Please sign up or login",
             });
         }
     } catch (err) {

@@ -20,7 +20,8 @@ export default function Header() {
     const location = useLocation();
     const { user, setUser } = useUserContext();
     const navigate = useNavigate();
-    const [showPopup, setShowPopup] = useState();
+    const [showPopup, setShowPopup] = useState(false);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [resetMessage, setResetMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -134,6 +135,7 @@ export default function Header() {
 
     async function handleDelete() {
         try {
+            setShowDeletePopup(true);
             const res = await userService.delete();
             if (res && res.message === 'user account deleted successfully') {
                 setUser(null);
@@ -294,6 +296,19 @@ export default function Header() {
                         description="reset mail has been sent on your registered email, please proceed with the reset process as indicated."
                     />
                 ))}
+
+            {showDeletePopup && (
+                <Popup
+                    header="Reset Password Email"
+                    onClick={() => setShowPopup(false)}
+                    className="text-[#f9f9f9] mt-2 py-[5px] rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                    description={
+                        <div>
+                            <input type="checkbox" />
+                        </div>
+                    }
+                />
+            )}
         </div>
     );
 }

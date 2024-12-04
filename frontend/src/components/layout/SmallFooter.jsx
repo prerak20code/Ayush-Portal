@@ -33,7 +33,7 @@ export default function SmallFooter() {
     ));
 
     return (
-        <footer className="overflow-x-scroll bg-[#f9f9f9] drop-shadow-md border-[0.01rem] border-[#dadada] text-[#1b36b2] h-[35px] px-2 sm:px-4 font-medium flex flex-col sm:flex-row-reverse justify-between items-center gap-2 transition-all ease-in">
+        <footer className="overflow-x-scroll bg-[#f9f9f9] drop-shadow-md border-[0.01rem] border-[#dadada] text-[#1b36b2] p-2 sm:px-4 font-medium flex flex-col sm:flex-row-reverse justify-between items-center gap-2 transition-all ease-in">
             <div className="flex justify-evenly text-center gap-2 xs:gap-4 sm:gap-6 lg:gap-8 text-[10px] xxs:text-xs">
                 {linkElements}
             </div>

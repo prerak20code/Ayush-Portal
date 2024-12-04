@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const userSchema = new mongoose.Schema(
+const startupOwnerSchema = new mongoose.Schema(
     {
+        startupId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Startup',
+            // required: true,
+            unique: true,
+        },
         name: {
             type: String,
             required: true,
@@ -33,19 +39,23 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        address: { type: String, required: true },
         refreshToken: {
             type: String,
             default: '',
         },
+        nationality: { type: String, required: true },
+        linkedinURL: { type: String, default: '' },
     },
     { timestamps: true }
 );
 
 // pre hooks to hash password before save
-userSchema.pre('save', async function (next) {
+
+startupOwnerSchema.pre('save', async function (next) {
     try {
         if (this.isModified('password')) {
-            this.password = await bcrypt.hash(this.password, 10);
+            this.password = bcrypt.hashSync(this.password, 10);
         }
         next();
     } catch (err) {
@@ -54,4 +64,4 @@ userSchema.pre('save', async function (next) {
 });
 
 // export is done after defining the hooks
-export const User = mongoose.model('User', userSchema);
+export const StartupOwner = mongoose.model('StartupOwner', startupOwnerSchema);

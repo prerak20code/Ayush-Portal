@@ -18,6 +18,7 @@ import RajBhavan from './RajBhavan.png';
 
 export {
     // first half
+    HOMEBG,
     RajBhavan,
     // second half
     AYUSHLOGO,

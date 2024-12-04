@@ -4,7 +4,10 @@ import {
     ProfileDropdownContextProvider,
     useProfileDropdownContext,
 } from './profileDropdownContext';
-// import { PopupContextProvider, usePopupContext } from './PopupContext';
+import {
+    RegisterStartupContextProvider,
+    useRegisterStartupContext,
+} from './registerStartupContext';
 
 export {
     useVariantContext,
@@ -13,6 +16,6 @@ export {
     UserContextProvider,
     ProfileDropdownContextProvider,
     useProfileDropdownContext,
-    // PopupContextProvider,
-    // usePopupContext,
+    useRegisterStartupContext,
+    RegisterStartupContextProvider,
 };
