@@ -1,10 +1,4 @@
 import { useState } from 'react';
-// import {
-//     FaBuilding,
-//     FaMoneyBill,
-//     FaCreditCard,
-//     FaFileInvoice,
-// } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterStartupContext } from '../../contexts';
 import { icons } from '../../assets/icons';
@@ -87,6 +81,7 @@ export default function BankingInformation() {
             label: 'Bank Name',
             placeholder: 'Enter your Bank Name',
             required: true,
+            icon: icons.bank,
         },
         {
             type: 'text',
@@ -94,6 +89,7 @@ export default function BankingInformation() {
             label: 'Account Number',
             placeholder: 'Enter Account Number',
             required: true,
+            icon: icons.user,
         },
         {
             type: 'text',
@@ -101,6 +97,7 @@ export default function BankingInformation() {
             required: true,
             placeholder: 'Enter Account Type (e.g., Checking, Savings)',
             label: 'Account Type',
+            icon: icons.money,
         },
         {
             type: 'text',
@@ -108,6 +105,7 @@ export default function BankingInformation() {
             placeholder: 'Enter IFSC code',
             label: 'IFSC Code',
             required: true,
+            icon: icons.card,
         },
         {
             type: 'text',
@@ -115,6 +113,7 @@ export default function BankingInformation() {
             placeholder: 'Enter Branch Name',
             label: 'Branch Name ',
             required: true,
+            icon: icons.building,
         },
         {
             type: 'text',
@@ -122,12 +121,14 @@ export default function BankingInformation() {
             placeholder: 'Enter Swift Code',
             label: 'Swift Code',
             required: true,
+            icon: icons.card,
         },
         {
             type: 'file',
             name: 'balanceStatement',
             required: false,
             accept: '.pdf',
+            icon: icons.file,
             label: 'Upload Balance Statement (Optional)',
         },
     ];
@@ -140,7 +141,12 @@ export default function BankingInformation() {
                     {field.label}
                 </label>
             </div>
-            <div className="shadow-md shadow-[#f8f0eb]">
+            <div className="shadow-md shadow-[#f8f0eb] relative">
+                {field.icon && (
+                    <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
+                        {field.icon}
+                    </div>
+                )}
                 {field.type !== 'file' ? (
                     <input
                         type={field.type}
@@ -150,7 +156,7 @@ export default function BankingInformation() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder={field.placeholder}
-                        className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-green-600 bg-transparent"
+                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-green-600 bg-transparent`}
                     />
                 ) : (
                     <input
@@ -159,7 +165,7 @@ export default function BankingInformation() {
                         id={field.name}
                         accept={field.accept}
                         onChange={handleChange}
-                        className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] bg-transparent"
+                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] bg-transparent`}
                     />
                 )}
             </div>

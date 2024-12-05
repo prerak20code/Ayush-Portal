@@ -7,15 +7,14 @@ import { useRegisterStartupContext } from '../../contexts';
 export default function Review() {
     const [disabled, setDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
-    const { currentStep, setCurrentStep, setTotalData,setCompletedSteps } =
+    const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterStartupContext();
     const navigate = useNavigate();
 
     async function handleFinalSubmit() {
         try {
             e.preventDefault();
-            setCompletedSteps(prev=>[...prev,"reviewd"])
-
+            setCompletedSteps((prev) => [...prev, 'reviewd']);
         } catch (err) {
             navigate('/server-error');
         }

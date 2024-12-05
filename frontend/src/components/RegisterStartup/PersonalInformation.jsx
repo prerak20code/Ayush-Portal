@@ -1,29 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { icons } from '../../assets/icons';
 import PhoneInput from 'react-phone-input-2';
 import { Button } from '..';
 import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
-import { countryList } from '../../constants/countryList';
 import { useRegisterStartupContext } from '../../contexts';
-// import {
-//     FaUser,
-//     FaPhone,
-//     FaEnvelope,
-//     FaMapMarkerAlt,
-//     FaCalendarAlt,
-//     FaLinkedin,
-// } from 'react-icons/fa';
-import Select from 'react-select'; // React Select for nationality dropdown
 
 export default function PersonalInformation() {
-    const handleNationalityChange = (selectedOption) => {
-        setInputs((prev) => ({
-            ...prev,
-            nationality: selectedOption ? selectedOption.value : '',
-        }));
-    };
-
     const initialInputs = {
         name: '',
         email: '',
@@ -50,10 +33,42 @@ export default function PersonalInformation() {
     const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterStartupContext();
     const navigate = useNavigate();
+    const [countryList, setCountryList] = useState([]);
+    const [flag, setFlag] = useState('');
+
+    useEffect(() => {
+        (async function fetchCountryList() {
+            try {
+                const res = await fetch(
+                    'https://countriesnow.space/api/v0.1/countries/flag/images',
+                    {
+                        method: 'GET',
+                    }
+                );
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await res.json();
+                const countries = result.data;
+
+                countries.sort((a, b) => a.name.localeCompare(b.name));
+                setCountryList(countries);
+            } catch (error) {
+                console.error('Error fetching country data:', error);
+            }
+        })();
+    }, []);
 
     function handleChange(e) {
         const { value, name } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
+        // update flag
+        if (name === 'nationality') {
+            const selectedCountry = countryList.find(
+                (countryObject) => countryObject.name === value
+            );
+            setFlag(selectedCountry.flag);
+        }
     }
 
     function handleBlur(e) {
@@ -97,12 +112,14 @@ export default function PersonalInformation() {
             name: 'name',
             label: 'Full Name',
             placeholder: 'Enter your Full Name',
+            icon: icons.user,
             required: true,
         },
         {
             type: 'email',
             name: 'email',
             label: 'Email',
+            icon: icons.mailUnfill,
             placeholder: 'Enter your Email',
             required: true,
         },
@@ -116,6 +133,7 @@ export default function PersonalInformation() {
             type: 'password',
             name: 'password',
             label: 'Password',
+            icon: icons.password,
             placeholder: 'Create a strong Password',
             required: true,
         },
@@ -129,7 +147,12 @@ export default function PersonalInformation() {
                     {field.label}
                 </label>
             </div>
-            <div className="shadow-md shadow-[#f8f0eb]">
+            <div className="shadow-md shadow-[#f8f0eb] relative">
+                {field.icon && (
+                    <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
+                        {field.icon}
+                    </div>
+                )}
                 <input
                     type={field.type}
                     name={field.name}
@@ -138,7 +161,7 @@ export default function PersonalInformation() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder={field.placeholder}
-                    className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
+                    className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent`}
                 />
             </div>
             {errors[field.name] && (
@@ -153,35 +176,6 @@ export default function PersonalInformation() {
             )}
         </div>
     ));
-
-    const customStyles = {
-        control: (provided) => ({
-            ...provided,
-            width: '100%',
-            padding: '5px',
-            border: '0.01rem solid #858585',
-            borderRadius: '0.375rem',
-            backgroundColor: 'transparent',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)',
-            '&:hover': {
-                borderColor: '#f68533',
-            },
-        }),
-        placeholder: (provided) => ({
-            ...provided,
-            fontSize: '0.9rem',
-            color: '#a6a6a6',
-        }),
-        menu: (provided) => ({
-            ...provided,
-            zIndex: 9999,
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-        }),
-        menuPortal: (provided) => ({
-            ...provided,
-            zIndex: 9999,
-        }),
-    };
 
     return (
         <div className="p-6 w-full bg-[#fff7f2] overflow-x-scroll rounded-lg shadow-md border border-gray-200">
@@ -208,64 +202,72 @@ export default function PersonalInformation() {
 
                     {/* Phone Number */}
                     <div className="w-full shadow-md shadow-[#f8f0eb]">
-                        <label
-                            htmlFor="phone"
-                            className="bg-[#fff7f2] z-[2] ml-3 px-2 w-fit relative top-3 font-medium"
-                        >
-                            <span className="text-red-500">* </span>
-                            Phone Number
-                        </label>
-                        <PhoneInput
-                            country="in"
-                            value={inputs.phone}
-                            onChange={(value) =>
-                                setInputs((prev) => ({
-                                    ...prev,
-                                    phone: value,
-                                }))
-                            }
-                            inputProps={{
-                                name: 'phone',
-                                required: true,
-                                id: 'phone',
-                            }}
-                            inputClass="!w-full !h-[45px] !indent-2 !rounded-md !shadow-sm !border-[0.01rem] !border-[#858585] !outline-[#f68533] !bg-transparent"
-                            buttonClass="!h-[45px] !w-[45px] !bg-[#fff7f2] !hover:bg-[#fff7f2] !z-[1] !rounded-r-none !rounded-md !border-[0.01rem] !border-[#858585] !outline-[#f68533]"
-                        />
+                        <div className="bg-[#fff7f2] z-[10] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="phone">
+                                <span className="text-red-500">* </span>
+                                Phone Number
+                            </label>
+                        </div>
+                        <div className="w-full relative">
+                            <div className="size-[16px] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
+                                {icons.callUnfill}
+                            </div>
+                            <PhoneInput
+                                country="in"
+                                value={inputs.phone}
+                                onChange={(value) =>
+                                    setInputs((prev) => ({
+                                        ...prev,
+                                        phone: value,
+                                    }))
+                                }
+                                inputProps={{
+                                    name: 'phone',
+                                    required: true,
+                                    id: 'phone',
+                                }}
+                                inputClass="!w-full !h-[45px] !indent-2 !rounded-md !shadow-sm !border-[0.01rem] !border-[#858585] !outline-[#f68533] !bg-transparent"
+                                buttonClass="!h-[45px] !w-[45px] !bg-[#fff7f2] !hover:bg-[#fff7f2] !z-[1] !rounded-r-none !rounded-md !border-[0.01rem] !border-[#858585] !outline-[#f68533]"
+                            />
+                        </div>
                     </div>
 
                     {/* Nationality */}
                     <div className="w-full">
                         <div className="bg-[#fff7f2] z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
-                            <label
-                                htmlFor="nationality"
-                                className="bg-transparent z-[1] w-fit relative top-0 font-medium"
-                            >
-                                <span className="text-red-500">* </span>{' '}
-                                Nationality
+                            <label htmlFor="nationality">
+                                <span className="text-red-500">* </span>
+                                Ntionality
                             </label>
                         </div>
-                        <Select
-                            options={countryList}
-                            value={
-                                countryList.find(
-                                    (option) =>
-                                        option.value === inputs.nationality
-                                ) || null
-                            }
-                            onChange={handleNationalityChange}
-                            placeholder="Select your nationality"
-                            isClearable
-                            filterOption={(candidate, input) =>
-                                candidate.label
-                                    .toLowerCase()
-                                    .includes(input.toLowerCase())
-                            }
-                            styles={customStyles}
-                            menuPortalTarget={document.body}
-                            menuPosition="absolute"
-                            className="w-full"
-                        />
+                        <div className="w-full relative">
+                            {flag && (
+                                <div className="h-[18px] w-[28px] rounded-sm overflow-hidden absolute top-[50%] translate-y-[-50%] left-3">
+                                    <img
+                                        src={flag}
+                                        alt={`${inputs.nationality} flag`}
+                                        className="object-cover h-full w-full"
+                                    />
+                                </div>
+                            )}
+                            <select
+                                name="nationality"
+                                id="nationality"
+                                value={inputs.nationality}
+                                onChange={handleChange}
+                                className={`py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${flag ? 'pl-12 pr-3' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
+                            >
+                                <option value="">Select Nationality</option>
+                                {countryList.map((country) => (
+                                    <option
+                                        key={country.name}
+                                        value={country.name}
+                                    >
+                                        {country.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
                     {/* Address */}
@@ -276,7 +278,10 @@ export default function PersonalInformation() {
                                 Current Address
                             </label>
                         </div>
-                        <div className="w-full">
+                        <div className="w-full relative">
+                            <div className="size-[16px] fill-[#323232] absolute top-2 right-3">
+                                {icons.locationPinPoint}
+                            </div>
                             <textarea
                                 id="address"
                                 name="address"

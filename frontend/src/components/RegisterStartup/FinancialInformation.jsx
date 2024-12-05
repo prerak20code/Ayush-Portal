@@ -1,11 +1,4 @@
 import { useState } from 'react';
-// import {
-//     FaDollarSign,
-//     FaChartLine,
-//     FaBuilding,
-//     FaCalendarAlt,
-//     FaFilePdf,
-// } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterStartupContext } from '../../contexts';
 import { icons } from '../../assets/icons';
@@ -90,6 +83,7 @@ export default function FinancialInformation() {
             type: 'text',
             name: 'startupName',
             label: 'Startup Name',
+            icon: icons.building,
             placeholder: 'Enter your Startup Name',
             required: true,
         },
@@ -97,12 +91,14 @@ export default function FinancialInformation() {
             type: 'number',
             name: 'revenue',
             label: 'Net Revenue',
+            icon: icons.rupee,
             placeholder: 'Enter Revenue (in crores)',
             required: true,
         },
         {
             type: 'number',
             name: 'profitMargin',
+            icon: icons.progress,
             required: true,
             placeholder: 'Enter profit margin percentage',
             label: 'Profit Margin (%)',
@@ -110,6 +106,7 @@ export default function FinancialInformation() {
         {
             type: 'number',
             name: 'fundingReceived',
+            icon: icons.money,
             placeholder: 'Enter funding received in crores',
             label: 'Funding Recieved (in crores)',
             required: true,
@@ -117,6 +114,7 @@ export default function FinancialInformation() {
         {
             type: 'number',
             name: 'valuation',
+            icon: icons.progress,
             placeholder: 'Enter valuation in crores',
             label: 'Current Valuation (in crores)',
             required: true,
@@ -124,6 +122,7 @@ export default function FinancialInformation() {
         {
             type: 'text',
             name: 'financialYear',
+            icon: icons.calender,
             placeholder: 'Enter Financial Year',
             label: 'Financial Year',
             required: true,
@@ -132,6 +131,7 @@ export default function FinancialInformation() {
             type: 'file',
             name: 'balanceSheet',
             required: false,
+            icon: icons.file,
             accept: '.pdf',
             label: 'Upload Balance Sheet (Optional)',
         },
@@ -145,7 +145,12 @@ export default function FinancialInformation() {
                     {field.label}
                 </label>
             </div>
-            <div className="shadow-md shadow-[#f8f0eb]">
+            <div className="shadow-md shadow-[#f8f0eb] relative">
+                {field.icon && (
+                    <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
+                        {field.icon}
+                    </div>
+                )}
                 {field.type !== 'file' ? (
                     <input
                         type={field.type}
@@ -155,7 +160,7 @@ export default function FinancialInformation() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder={field.placeholder}
-                        className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-blue-600 bg-transparent"
+                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-blue-600 bg-transparent`}
                     />
                 ) : (
                     <input
@@ -164,7 +169,7 @@ export default function FinancialInformation() {
                         id={field.name}
                         accept={field.accept}
                         onChange={handleChange}
-                        className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] bg-transparent"
+                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] bg-transparent`}
                     />
                 )}
             </div>

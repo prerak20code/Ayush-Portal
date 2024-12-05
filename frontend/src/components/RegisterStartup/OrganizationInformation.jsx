@@ -1,11 +1,4 @@
-import { useState } from 'react';
-// import {
-//     FaBuilding,
-//     FaCalendarAlt,
-//     FaMoneyBillWave,
-//     FaMapMarkerAlt,
-//     FaFilePdf,
-// } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterStartupContext } from '../../contexts';
 import { icons } from '../../assets/icons';
@@ -39,9 +32,35 @@ export default function OrganizationInformation() {
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
-    const { currentStep, setCurrentStep, setTotalData,setCompletedSteps } =
+    const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterStartupContext();
     const navigate = useNavigate();
+
+    const [countryList, setCountryList] = useState([]);
+    const [flag, setFlag] = useState('');
+
+    useEffect(() => {
+        (async function fetchCountryList() {
+            try {
+                const res = await fetch(
+                    'https://countriesnow.space/api/v0.1/countries/flag/images',
+                    {
+                        method: 'GET',
+                    }
+                );
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await res.json();
+                const countries = result.data;
+
+                countries.sort((a, b) => a.name.localeCompare(b.name));
+                setCountryList(countries);
+            } catch (error) {
+                console.error('Error fetching country data:', error);
+            }
+        })();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
@@ -49,6 +68,13 @@ export default function OrganizationInformation() {
             ...prevData,
             [name]: type === 'file' ? files[0] : value,
         }));
+        // update flag
+        if (name === 'country') {
+            const selectedCountry = countryList.find(
+                (countryObject) => countryObject.name === value
+            );
+            setFlag(selectedCountry.flag);
+        }
     };
 
     function handleBlur(e) {
@@ -91,6 +117,7 @@ export default function OrganizationInformation() {
             type: 'text',
             name: 'startupName',
             label: 'Startup Name',
+            icon: icons.building,
             placeholder: 'Enter your Startup Name',
             required: true,
         },
@@ -103,6 +130,7 @@ export default function OrganizationInformation() {
         {
             type: 'number',
             name: 'valuation',
+            icon: icons.progress,
             placeholder: 'Enter valuation in crores',
             label: 'Current Valuation (in crores)',
             required: true,
@@ -111,6 +139,7 @@ export default function OrganizationInformation() {
             type: 'url',
             name: 'website',
             label: 'Website URL',
+            icon: icons.link,
             placeholder: 'Enter website URL',
             required: true,
         },
@@ -119,6 +148,7 @@ export default function OrganizationInformation() {
             name: 'pdf',
             required: false,
             accept: '.pdf',
+            icon: icons.file,
             label: 'Attach Documents (Optional)',
         },
     ];
@@ -131,7 +161,12 @@ export default function OrganizationInformation() {
                     {field.label}
                 </label>
             </div>
-            <div className="shadow-md shadow-[#f8f0eb]">
+            <div className="shadow-md shadow-[#f8f0eb] relative">
+                {field.icon && (
+                    <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
+                        {field.icon}
+                    </div>
+                )}
                 {field.type !== 'file' ? (
                     <input
                         type={field.type}
@@ -141,7 +176,7 @@ export default function OrganizationInformation() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder={field.placeholder}
-                        className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent"
+                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
                     />
                 ) : (
                     <input
@@ -150,7 +185,7 @@ export default function OrganizationInformation() {
                         id={field.name}
                         accept={field.accept}
                         onChange={handleChange}
-                        className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] bg-transparent"
+                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] bg-transparent`}
                     />
                 )}
             </div>
@@ -171,7 +206,6 @@ export default function OrganizationInformation() {
     ));
 
     const bussinessOptions = [
-        { name: 'Select Business Type', value: '' },
         {
             name: 'Sole Partnership',
             value: 'Sole Partnership',
@@ -192,6 +226,14 @@ export default function OrganizationInformation() {
             name: 'Nonprofit',
             value: 'Nonprofit',
         },
+    ];
+
+    const industoryOptions = [
+        { name: 'Ayurveda', value: 'Ayurveda' },
+        { name: 'Yoga and Naturopathy', value: 'Yoga and Naturopathy' },
+        { name: 'Unani', value: 'Unani' },
+        { name: 'Siddha', value: 'Siddha' },
+        { name: 'Homoeopathy', value: 'Homoeopathy' },
     ];
 
     return (
@@ -217,30 +259,94 @@ export default function OrganizationInformation() {
                     onSubmit={handleSubmit}
                 >
                     {inputElements}
-
                     {/* Business Type */}
-                    {/* <FaBuilding className="text-blue-500" /> */}
                     <div className="w-full">
                         <div className="bg-violet-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
-                            <label htmlFor="address">
+                            <label htmlFor="businessType">
                                 <span className="text-red-500">* </span>
                                 Bussiness Type
                             </label>
                         </div>
                         <select
                             name="businessType"
+                            id="businessType"
                             value={inputs.businessType}
                             onChange={handleChange}
                             className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent"
                         >
+                            <option value="">Select Business Type</option>
                             {bussinessOptions.map((option) => (
-                                <option value={option.value}>
+                                <option key={option.value} value={option.value}>
                                     {option.name}
                                 </option>
                             ))}
                         </select>
                     </div>
-
+                    {/* Country Dropdown */}
+                    <div className="w-full">
+                        <div className="bg-violet-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="country">
+                                <span className="text-red-500">* </span>
+                                Country
+                            </label>
+                        </div>
+                        <div className="w-full relative">
+                            {flag && (
+                                <div className="h-[18px] w-[28px] rounded-sm overflow-hidden absolute top-[50%] translate-y-[-50%] left-3">
+                                    <img
+                                        src={flag}
+                                        alt={`${inputs.country} flag`}
+                                        className="object-cover h-full w-full"
+                                    />
+                                </div>
+                            )}
+                            <select
+                                name="country"
+                                id="country"
+                                value={inputs.country}
+                                onChange={handleChange}
+                                className={`py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${flag ? 'pl-12 pr-3' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
+                            >
+                                <option value="">Select Country</option>
+                                {countryList.map((country) => (
+                                    <option
+                                        key={country.name}
+                                        value={country.name}
+                                    >
+                                        {country.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                    {/* Industry Dropdown */}
+                    <div className="w-full">
+                        <div className="bg-violet-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="industory">
+                                <span className="text-red-500">* </span>
+                                Industory
+                            </label>
+                        </div>
+                        <div className="w-full">
+                            <select
+                                id="industory"
+                                name="industry"
+                                value={inputs.industry}
+                                onChange={handleChange}
+                                className="py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent"
+                            >
+                                <option value="">Select Industry</option>
+                                {industoryOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.value}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
                     {/* Address */}
                     <div className="w-full">
                         <div className="bg-violet-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
@@ -249,7 +355,10 @@ export default function OrganizationInformation() {
                                 Address (Headquarter)
                             </label>
                         </div>
-                        <div className="w-full">
+                        <div className="w-full relative">
+                            <div className="size-[16px] fill-[#323232] absolute top-2 right-3">
+                                {icons.locationPinPoint}
+                            </div>
                             <textarea
                                 id="address"
                                 name="address"
@@ -274,7 +383,6 @@ export default function OrganizationInformation() {
                             </div>
                         )}
                     </div>
-
                     {/* buttons */}
                     <div className="w-full flex items-center justify-end gap-4 mt-4">
                         <Button
@@ -317,294 +425,4 @@ export default function OrganizationInformation() {
             </div>
         </div>
     );
-}
-
-// PENDING ***************************************************************
-// {
-//     /* Country Dropdown */
-// }
-// <div className="flex items-center space-x-3">
-//     {/* <FaMapMarkerAlt className="text-blue-500" /> */}
-//     <div className="w-full relative">
-//         <label className="block text-sm font-medium text-gray-700">
-//             Country
-//         </label>
-//         <select
-//             name="country"
-//             value={formData.country}
-//             onChange={handleChange} // Use handleChange to update formData
-//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-//         >
-//             <option value="">Select Country</option>
-//             {countryOptions.map((country) => (
-//                 <option key={country.value} value={country.value}>
-//                     {country.label}
-//                 </option>
-//             ))}
-//         </select>
-//     </div>
-// </div>;
-
-// {
-//     /* Industry Dropdown */
-// }
-// <div className="flex items-center space-x-3">
-//     {/* <FaBuilding className="text-blue-500" /> */}
-//     <div className="w-full relative">
-//         <label className="block text-sm font-medium text-gray-700">
-//             Industry
-//         </label>
-//         <div className="relative">
-//             <select
-//                 name="industry"
-//                 value={formData.industry}
-//                 onChange={handleIndustryChange}
-//                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-//             >
-//                 <option value="">Select Industry</option>
-//                 {sectorOptions.map((option, index) => (
-//                     <option key={index} value={option}>
-//                         {option}
-//                     </option>
-//                 ))}
-//             </select>
-//             {/* Dropdown Custom Styling */}
-//             {isDropdownVisible && (
-//                 <div
-//                     className="absolute left-0 w-full bg-white border mt-1 rounded-md shadow-lg z-10"
-//                     style={{
-//                         maxHeight: '200px',
-//                         overflowY: 'auto',
-//                     }}
-//                 >
-//                     {sectorOptions.map((sector, index) => (
-//                         <div
-//                             key={index}
-//                             onClick={() => handleSectorSelect(sector)}
-//                             className="p-2 cursor-pointer hover:bg-blue-500 hover:text-white"
-//                         >
-//                             {sector}
-//                         </div>
-//                     ))}
-//                 </div>
-//             )}
-//         </div>
-//     </div>
-// </div>;
-
-{
-    /* // State for sector dropdown visibility and options
-//     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-//     const sectorOptions = [
-//         'Ayurveda',
-//         'Yoga and Naturopathy',
-//         'Unani',
-//         'Siddha',
-//         'Homoeopathy',
-//     ];
-
-//     // State for country options
-//     const [countryOptions, setCountryOptions] = useState([]);
-
-//     // Load saved data from localStorage on component mount
-//     useEffect(() => {
-//         const savedData = localStorage.getItem('organizationInformation');
-//         if (savedData) {
-//             setFormData(JSON.parse(savedData));
-//         }
-//     })
-
-// // Fetch countries dynamically
-// const fetchCountries = async () => {
-//     try {
-//         const response = await axios.get('https://restcountries.com/v3.1/all');
-//         const countries = response.data.map((country) => ({
-//             label: country.name.common,
-//             value: country.name.common,
-//         }));
-//         countries.sort((a, b) => a.label.localeCompare(b.label)); // Sort countries alphabetically
-//         setCountryOptions(countries);
-//     } catch (error) {
-//         console.error('Error fetching country data:', error);
-//     }
-// };
-
-//         fetchCountries(); // Fetch countries on component mount
-//     }, []);
-
-//     // Save form data to localStorage whenever it changes
-//     useEffect(() => {
-//         localStorage.setItem(
-//             'organizationInformation',
-//             JSON.stringify(formData)
-//         );
-//     }, [formData]);
-
-    
-//     // Handle industry input change
-//     const handleIndustryChange = (e) => {
-//         const value = e.target.value;
-//         setFormData((prevData) => ({
-//             ...prevData,
-//             industry: value,
-//         }));
-//         setIsDropdownVisible(value.trim() !== '');
-//     };
-
-//     // Handle selection from dropdown
-//     const handleSectorSelect = (sector) => {
-//         setFormData((prevData) => ({
-//             ...prevData,
-//             industry: sector,
-//         }));
-//         setIsDropdownVisible(false); // Hide dropdown after selection
-//     }; */
-}
-
-// DONE*****************************************************************
-
-// {
-//     /* Date of Establishment */
-// }
-// <div className="flex items-center space-x-3">
-//     {/* <FaCalendarAlt className="text-blue-500" /> */}
-//     <div className="w-full">
-//         <label className="block text-sm font-medium text-gray-700">
-//             Date of Establishment
-//         </label>
-//         <input
-//             type="date"
-//             name="dateOfEstablishment"
-//             value={formData.dateOfEstablishment}
-//             onChange={handleChange}
-//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-//         />
-//     </div>
-// </div>;
-
-// {
-//     /* Business Type */
-// }
-// <div className="flex items-center space-x-3">
-//     {/* <FaBuilding className="text-blue-500" /> */}
-//     <div className="w-full">
-//         <label className="block text-sm font-medium text-gray-700">
-//             Type of Business Entity
-//         </label>
-//         <select
-//             name="BusinessType"
-//             value={formData.BusinessType} // Bind to BusinessType
-//             onChange={handleChange} // Directly use handleChange to update formData
-//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-//         >
-//             <option value="">Select Business Type</option>
-//             <option value="Sole Partnership">Sole Partnership</option>
-//             <option value="Partnership">Partnership</option>
-//             <option value="Corporation">Corporation (Private or Public)</option>
-//             <option value="LLC">Limited Liability Company (LLC)</option>
-//             <option value="Nonprofit">Nonprofit</option>
-//         </select>
-//     </div>
-// </div>;
-
-{
-    /* Startup Name */
-}
-{
-    /* <div className="flex items-center space-x-3">
-                    <FaBuilding className="text-blue-500" />
-                    <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Startup Name
-                        </label>
-                        <input
-                            type="text"
-                            name="startupName"
-                            placeholder="Enter startup name"
-                            value={formData.startupName}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                </div> */
-}
-
-{
-    /* Evaluation */
-}
-{
-    /* <div className="flex items-center space-x-3">
-                     <FaMoneyBillWave className="text-blue-500" />
-                     <div className="w-full">
-                         <label className="block text-sm font-medium text-gray-700">
-                             Evaluation (in Crores)
-                         </label>
-                      <input
-                            type="number"
-                            name="evaluation"
-                            placeholder="Enter evaluation in crores"
-                            value={formData.evaluation}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                </div> */
-}
-
-{
-    /* Address */
-}
-{
-    /* <div className="flex items-center space-x-3">
-                    <FaMapMarkerAlt className="text-blue-500" />
-                    <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Address (Headquarter)
-                        </label>
-                        <textarea
-                            name="address"
-                            placeholder="Enter complete address"
-                            rows="3"
-                            value={formData.address}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                </div> */
-}
-
-{
-    /* <div className="flex items-center space-x-3">
-    <FaBuilding className="text-blue-500" />
-    <div className="w-full">
-        <label className="block text-sm font-medium text-gray-700">
-            Website
-        </label>
-        <input
-            type="url"
-            name="website"
-            placeholder="Enter website URL"
-            value={formData.website}
-            onChange={handleChange}
-            required // Make the field required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        />
-    </div>
-</div>;
-
-<div className="flex items-center space-x-3">
-    <FaFilePdf className="text-blue-500" />
-    <div className="w-full">
-        <label className="block text-sm font-medium text-gray-700">
-            Upload PDF (Optional)
-        </label>
-        <input
-            type="file"
-            name="pdf"
-            accept=".pdf"
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        />
-    </div>
-</div>; */
 }

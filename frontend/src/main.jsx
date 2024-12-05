@@ -67,6 +67,8 @@ const router = createBrowserRouter(
                         </RegisterStartupContextProvider>
                     }
                 >
+                    {/* Default to PersonalInformation for empty path */}
+                    <Route index element={<PersonalInformation />} />
                     <Route path="personal" element={<PersonalInformation />} />
                     <Route
                         path="organization"

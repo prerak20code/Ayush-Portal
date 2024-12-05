@@ -9,11 +9,6 @@ export default function RegisterYourStartupPage() {
     const { currentStep, setCurrentStep, totalData } =
         useRegisterStartupContext();
 
-    useEffect(() => {
-        const step = steps.filter((step) => step.path === currentURL);
-        step[0].onClick();
-    }, [currentURL]);
-
     const steps = [
         {
             name: 'Personal Information',
@@ -46,6 +41,13 @@ export default function RegisterYourStartupPage() {
             status: totalData.reviewd.status,
         },
     ];
+
+    useEffect(() => {
+        const step = steps.find(
+            (step) => step.path === (currentURL || 'personal')
+        );
+        step?.onClick();
+    }, [currentURL]);
 
     const stepElements = steps.map((step, index) => (
         <NavLink
@@ -88,7 +90,7 @@ export default function RegisterYourStartupPage() {
                             ? 'bg-green-400'
                             : 'bg-gray-300'
                     }`}
-                ></div>
+                />
             )}
         </NavLink>
     ));
