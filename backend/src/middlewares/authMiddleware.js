@@ -11,11 +11,13 @@ export const verifyJWT = async (req, res, next) => {
     try {
         const accessToken =
             req.cookies?.accessToken ||
-            req.headers['Authorization']?.split(' ')[1];
-        if (!accessToken)
+            req.headers['authorization']?.split(' ')[1];
+
+        if (!accessToken) {
             return res
                 .status(NOT_FOUND)
                 .json({ message: 'access token missing' }); //user was logged out
+        }
 
         const decodedToken = jwt.verify(
             accessToken,
@@ -30,6 +32,7 @@ export const verifyJWT = async (req, res, next) => {
 
         //since token is valid but is this id user in oue db or not
         const user = await User.findById(decodedToken._id);
+
         if (!user) {
             return res
                 .status(NOT_FOUND)
@@ -41,10 +44,9 @@ export const verifyJWT = async (req, res, next) => {
 
         next();
     } catch (err) {
-        console.log(err.message);
         return res
             .status(SERVER_ERROR)
             .clearCookie('accessToken', cookieOptions)
-            .json({ message: 'expired access token' });
+            .json({ message: 'expired access token', error: err.message });
     }
 };

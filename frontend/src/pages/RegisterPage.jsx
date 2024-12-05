@@ -8,9 +8,9 @@ import {
 } from '../assets/images';
 import { useState } from 'react';
 import { userService } from '../services';
-import { useUserContext, useVariantContext } from '../contexts';
+import { useVariantContext } from '../contexts';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../components';
+import { Button, Popup } from '../components';
 import { verifyRegex } from '../utils';
 import { motion } from 'framer-motion';
 
@@ -34,7 +34,7 @@ export default function RegisterPage() {
     const [errors, setErrors] = useState(emptyErrors);
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { setUser } = useUserContext();
+    const [showPopup, setShowPopup] = useState();
     const navigate = useNavigate();
 
     async function handleChange(e) {
@@ -44,9 +44,7 @@ export default function RegisterPage() {
 
     const handleBlur = (e) => {
         let { name, value } = e.target;
-        if (value) {
-            verifyRegex(name, value, setErrors);
-        }
+        verifyRegex(name, value, setErrors);
     };
 
     function onMouseOver() {
@@ -66,13 +64,13 @@ export default function RegisterPage() {
         e.preventDefault();
         setLoading(true);
         setDisabled(true);
+        setErrors(emptyErrors);
         try {
             const res = await userService.register(inputs);
-            if (res && !res.message) {
-                setUser(res);
-                navigate('/');
+            if (res && res.message === 'verification email sent') {
+                setShowPopup(true);
             } else {
-                setUser(null);
+                setShowPopup(false);
                 setErrors((prev) => ({ ...prev, root: res.message }));
             }
         } catch (err) {
@@ -80,7 +78,6 @@ export default function RegisterPage() {
         } finally {
             setDisabled(false);
             setLoading(false);
-            setInputs(emptyInputs);
         }
     }
 
@@ -152,7 +149,7 @@ export default function RegisterPage() {
 
     // logos array
     const logos = [
-        { image: AYUSHSTARTUPLOGO, className: '' },
+        { image: AYUSHLOGO, className: '' },
         { image: ASHOKACHAKAR, className: 'slow-spin' },
         { image: ASHOKAPILLAR, className: '' },
     ];
@@ -172,31 +169,43 @@ export default function RegisterPage() {
     ));
 
     return (
-        <div className="py-6 px-[5%] text-[#040606] flex flex-col md:flex-row items-center justify-start gap-8 bg-white">
-            <div className="w-full flex flex-col justify-center items-center gap-8">
+        <div className="py-6 px-[5%] text-[#040606] flex flex-col md:flex-row items-center justify-start gap-14 bg-white">
+            {/* email verification popup */}
+            {showPopup && (
+                <Popup
+                    onClick={() => setShowPopup(false)}
+                    className="text-[#f9f9f9] mt-4 rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                    header="Verification Email"
+                    description="A verification email has been sent on your provided email, check it out to proceed with the registeration process"
+                />
+            )}
+
+            {/* logo section */}
+            <div className="w-full flex flex-col self-start h-full items-center gap-10 pt-10">
                 <div className="flex flex-col items-center gap-1">
-                    <div className="flex items-center justify-between w-[90%] gap-4 mb-6">
+                    <div className="hidden md:flex items-center justify-between w-[90%] gap-4 mb-10">
                         {logoElements}
                     </div>
                     <h2 className="text-[2rem] leading-9 md:text-[2.3rem] text-center font-bold text-[#040606]">
                         AYUSH Startup Connect
                     </h2>
                     <h3 className="text-[1.3rem] text-center font-semibold text-[#1a2424]">
-                        User Registration Portal
+                        Registration Portal
                     </h3>
                 </div>
                 <Link
                     to="/"
-                    className="drop-shadow-md size-[45%] xs:size-[40%] max-w-[200px] min-w-[50px] transition-all ease-in hover:brightness-75"
+                    className="drop-shadow-md size-[45%] xs:size-[40%] sm:max-w-[220px] md:w-[250px] min-w-[50px] transition-all ease-in hover:brightness-75"
                 >
                     <img
-                        src={AYUSHLOGO}
+                        src={AYUSHSTARTUPLOGO}
                         alt="Ayush Logo"
                         className="size-full object-contain"
                     />
                 </Link>
             </div>
 
+            {/* form section */}
             <div className="w-full flex items-center justify-center">
                 <div className="py-4 px-[5%] w-[90%] max-w-[500px] md:w-full rounded-xl shadow-md shadow-gray-300 flex flex-col items-center gap-2">
                     <div className="w-fit">

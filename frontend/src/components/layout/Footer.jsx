@@ -135,7 +135,7 @@ export default function Footer() {
                     <AnimatePresence>
                         {showDropdown && (
                             <motion.div
-                                className="text-nowrap z-10 h-[190px] overflow-scroll absolute top-[32px] bg-[#f9f9f9] rounded-lg py-2 flex flex-col gap-y-[2px] px-[5px] drop-shadow-md"
+                                className="text-nowrap z-10 h-[160px] overflow-scroll absolute top-[32px] bg-[#f9f9f9] rounded-lg py-2 flex flex-col gap-y-[2px] px-[5px] drop-shadow-md"
                                 initial="hidden"
                                 animate="visible"
                                 exit="exit"

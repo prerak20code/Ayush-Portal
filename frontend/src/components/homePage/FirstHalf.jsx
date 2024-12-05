@@ -4,10 +4,8 @@ import { useVariantContext } from '../../contexts';
 import { motion } from 'framer-motion';
 
 export default function FirstHalf() {
-    // variants
     const { textVariants } = useVariantContext();
 
-    // HTML
     return (
         <div className="h-[calc(100vh-110px)] w-full relative">
             {/* Background Image */}

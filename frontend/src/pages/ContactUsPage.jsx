@@ -71,7 +71,7 @@ export default function ContactUsPage() {
                 animate="visible"
                 className="w-full"
             >
-                <h1 className="text-3xl font-bold text-center mb-10 w-full">
+                <h1 className="text-3xl font-bold text-center mb-6 w-full">
                     Contact Us
                 </h1>
                 <p className="text-justify">
@@ -222,7 +222,7 @@ export default function ContactUsPage() {
 
                         <Button
                             btnText={'Submit'}
-                            className="text-[#f9f9f9] mt-4 rounded-md w-[90%] self-center from-[#f1924f] to-[#f68533] hover:from-[#f68533] hover:to-[#e08748]"
+                            className="text-[#f9f9f9] mt-4 rounded-md w-[90%] self-center bg-gradient-to-r from-[#f1924f] to-[#f68533] hover:from-green-600 hover:to-green-700"
                         />
                     </form>
                 </motion.div>

@@ -16,7 +16,7 @@ export default function LayoutOne() {
                 <Header />
             </div>
 
-            <div className="mt-[110px] overflow-hidden">
+            <div className="pt-[110px]">
                 <div className="min-h-[calc(100vh-110px)]">
                     <Outlet />
                 </div>

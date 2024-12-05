@@ -1,16 +1,12 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const passwordResetSchema = new mongoose.Schema({
-    userId: String,
+    userId: mongoose.Schema.Types.ObjectId,
     resetString: String,
     createdAt: Date,
     expiresAt: Date,
 });
-
-export const PasswordReset = mongoose.model(
-    'PasswordReset',
-    passwordResetSchema
-);
 
 // pre hook to hash resetString before save
 passwordResetSchema.pre('save', async function (next) {
@@ -20,6 +16,11 @@ passwordResetSchema.pre('save', async function (next) {
         }
         next();
     } catch (err) {
-        next(err);
+        throw err;
     }
 });
+
+export const PasswordReset = mongoose.model(
+    'PasswordReset',
+    passwordResetSchema
+);

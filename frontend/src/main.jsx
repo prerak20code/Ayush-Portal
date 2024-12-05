@@ -16,18 +16,36 @@ import {
     HomePage,
     RegisterPage,
     LoginPage,
-    ConnectedStartupsPage,
+    // ConnectedStartupsPage,
     // TargettedStartupsPage,
-    OwnerConnectPage,
+    // OwnerConnectPage,
     ServerErrorPage,
-    // RegisterYourStartupPage,
+    NotFoundPage,
+    RegisterYourStartupPage,
 } from './pages';
 
-import EmailVerification from './components/EmailVerifiaction/EmailVerification.jsx';
+import {
+    LayoutOne,
+    LayoutTwo,
+    LayoutThree,
+    // InvestorType,
+    EmailVerification,
+    ResetPassword,
+    Redirect,
+    FinancialInformation,
+    BankingInformation,
+    PersonalInformation,
+    OrganizationInformation,
+    Review,
+} from './components';
 
-import { LayoutOne, LayoutTwo, LayoutThree, InvestorType } from './components';
+import {
+    ProfileDropdownContextProvider,
+    VariantContextProvider,
+    UserContextProvider,
+    RegisterStartupContextProvider,
+} from './contexts';
 
-import { VariantContextProvider, UserContextProvider } from './contexts';
 // import ConnectedStartups from './pages/ConnectedStartups.jsx';
 // import InvestorType from './InvestorConnect/InvestorType.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
@@ -41,17 +59,45 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
-                {/* <Route
-                    path="user/RegisterYourStartup"
-                    element={<RegisterYourStartups />}
-                /> */}
+                <Route
+                    path="user/register-startup"
+                    element={
+                        <RegisterStartupContextProvider>
+                            <RegisterYourStartupPage />
+                        </RegisterStartupContextProvider>
+                    }
+                >
+                    <Route path="personal" element={<PersonalInformation />} />
+                    <Route
+                        path="organization"
+                        element={<OrganizationInformation />}
+                    />
+                    <Route
+                        path="financial"
+                        element={<FinancialInformation />}
+                    />
+                    <Route path="banking" element={<BankingInformation />} />
+                    <Route path="review" element={<Review />} />
+                </Route>
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route
                     path="user/verify/:userId/:uniqueString"
-                    element={<EmailVerification />}
+                    element={
+                        <Redirect path="/" ifLoggedIn={true}>
+                            <EmailVerification />
+                        </Redirect>
+                    }
+                />
+                <Route
+                    path="user/reset-password/:userId/:resetString"
+                    element={
+                        <Redirect path="/login">
+                            <ResetPassword />
+                        </Redirect>
+                    }
                 />
                 {/* <Route path="InvestorType" element={<InvestorType />} /> */}
             </Route>
@@ -61,13 +107,24 @@ const router = createBrowserRouter(
                     element={<ConnectedStartups />}
                 /> */}
             </Route>
-            <Route path="AdminDashboard" element={<AdminDashboard />} />
             <Route
-                path="/document-check/:tab/:id"
-                element={<DocumentsCheck />}
+                path="AdminDashboard"
+                element={
+                    <Redirect path="/login">
+                        <AdminDashboard />
+                    </Redirect>
+                }
             />
-
+            <Route
+                path="/startup/:id/documents"
+                element={
+                    <Redirect path="/login">
+                        <DocumentsCheck />
+                    </Redirect>
+                }
+            />
             <Route path="/server-error" element={<ServerErrorPage />} />
+            <Route path="*" element={<NotFoundPage />} />
         </Route>
     )
 );
@@ -75,9 +132,11 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        <VariantContextProvider>
-            <RouterProvider router={router} />
-        </VariantContextProvider>
+        <ProfileDropdownContextProvider>
+            <VariantContextProvider>
+                <RouterProvider router={router} />
+            </VariantContextProvider>
+        </ProfileDropdownContextProvider>
     </UserContextProvider>
     // </StrictMode>
 );
