@@ -44,7 +44,7 @@ const router = createBrowserRouter(
                 {/* <Route
                     path="user/RegisterYourStartup"
                     element={<RegisterYourStartups />}
-                />*/}
+                /> */}
             </Route>
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
@@ -62,7 +62,11 @@ const router = createBrowserRouter(
                 /> */}
             </Route>
             <Route path="AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/startup/:id/documents" element={<DocumentsCheck />} />
+            <Route
+                path="/document-check/:tab/:id"
+                element={<DocumentsCheck />}
+            />
+
             <Route path="/server-error" element={<ServerErrorPage />} />
         </Route>
     )

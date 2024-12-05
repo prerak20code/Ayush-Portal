@@ -1,179 +1,189 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
+import { Header } from '../components';
 
-export default function DocumentsUpload() {
+export default function DocumentsCheck() {
     const { id } = useParams();
+    const location = useLocation();
     const [documents, setDocuments] = useState([]);
-    const [startupInfo, setStartupInfo] = useState(null);
+    const [entityInfo, setEntityInfo] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [decisions, setDecisions] = useState({});
+    const [rejectionMessages, setRejectionMessages] = useState({});
+    const [checked, setChecked] = useState(false);
+    const [showActions, setShowActions] = useState({}); // Track visibility for actions per document
+
+    const isStartup = location.pathname.includes('startups');
 
     useEffect(() => {
-        const fetchStartupData = async () => {
+        const fetchEntityData = async () => {
             try {
-                // Simulated startup-specific data
                 const dummyStartups = {
                     1: {
                         name: 'Ayurveda Solutions',
+                        logo: 'https://st2.depositphotos.com/1810600/5838/v/450/depositphotos_58387439-stock-illustration-abstract-vector-logo.jpg',
+                        founder: 'Ramesh Kumar',
                         headquarters: 'Pune, India',
                         valuation: '$2M',
                         sector: 'Ayurveda',
+                        totalFunding: '$500K',
+                        annualRevenue: '$1M',
+                        employees: 50,
+                        industry: 'Health & Wellness',
                         documents: [
-                            {
-                                id: 1,
-                                name: 'Business_Plan_Ayurveda.pdf',
-                                type: 'PDF',
-                                size: '2 MB',
-                            },
-                            {
-                                id: 2,
-                                name: 'License_Cert.pdf',
-                                type: 'PDF',
-                                size: '1.2 MB',
-                            },
-                        ],
-                    },
-                    2: {
-                        name: 'Yoga Harmony',
-                        headquarters: 'Bangalore, India',
-                        valuation: '$1.5M',
-                        sector: 'Yoga and Naturopathy',
-                        documents: [
-                            {
-                                id: 3,
-                                name: 'Yoga_Naturopathy_Report.pdf',
-                                type: 'PDF',
-                                size: '3.5 MB',
-                            },
-                        ],
-                    },
-                    3: {
-                        name: 'Unani CureTech',
-                        headquarters: 'Hyderabad, India',
-                        valuation: '$800K',
-                        sector: 'Unani',
-                        documents: [],
-                    },
-                    4: {
-                        name: 'Startup 1',
-                        headquarters: 'Mumbai, India',
-                        valuation: '$5M',
-                        sector: 'Tech',
-                        documents: [
-                            {
-                                id: 4,
-                                name: 'Startup_1_Financials.pdf',
-                                type: 'PDF',
-                                size: '4.2 MB',
-                            },
-                            {
-                                id: 5,
-                                name: 'Startup_1_LegalDocs.pdf',
-                                type: 'PDF',
-                                size: '2.8 MB',
-                            },
+                            { id: 1, name: 'Business_Plan_Ayurveda.pdf', type: 'PDF', size: '2 MB' },
+                            { id: 2, name: 'Financial_Report_2023.pdf', type: 'PDF', size: '3 MB' },
+                            { id: 3, name: 'Compliance_Documents.pdf', type: 'PDF', size: '1.5 MB' },
                         ],
                     },
                 };
 
-                await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated API delay
-                const startupData = dummyStartups[id] || null;
-                setStartupInfo(startupData);
-                setDocuments(startupData ? startupData.documents : []);
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                const data = isStartup ? dummyStartups[id] : null;
+                setEntityInfo(data);
+                setDocuments(data ? data.documents : []);
             } catch (error) {
-                console.error('Error fetching startup data:', error);
+                console.error('Error fetching data:', error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchStartupData();
-    }, [id]);
+        fetchEntityData();
+    }, [id, isStartup]);
+
+    const handleAcceptReject = (docId, decision) => {
+        setDecisions((prev) => ({ ...prev, [docId]: decision }));
+    };
+
+    const handleRejectionMessageChange = (docId, message) => {
+        setRejectionMessages((prev) => ({ ...prev, [docId]: message }));
+    };
+
+    const handleFinalCheck = () => {
+        setChecked(true);
+        alert('Documents have been reviewed and final decision has been made.');
+    };
+
+    const toggleDocumentActions = (docId) => {
+        setShowActions((prev) => ({ ...prev, [docId]: !prev[docId] }));
+    };
+
+    const handleViewDocument = (docName) => {
+        alert(`Viewing ${docName}`); // This could open a modal or preview functionality
+    };
+
+    const handleDownloadDocument = (docName) => {
+        alert(`Downloading ${docName}`); // This could trigger a download action
+    };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
-            <header className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-6 shadow-lg">
-                <div className="container mx-auto px-6 flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">Startup Documents</h1>
-                    <Link
-                        to="/AdminDashboard"
-                        className="text-white bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition"
-                    >
-                        Back to Dashboard
-                    </Link>
+        <div className="min-h-screen bg-gray-100">
+            <Header />
+            <header className="bg-gradient-to-r from-indigo-600 to-blue-500 py-8 shadow-lg">
+                <div className="container mx-auto px-6 flex items-center justify-center md:justify-start">
+                    {entityInfo?.logo && (
+                        <img
+                            src={entityInfo.logo}
+                            alt={`${entityInfo.name} Logo`}
+                            className="w-16 h-16 rounded-full border-4 border-white mr-4 shadow-md"
+                        />
+                    )}
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-white">{entityInfo?.name}</h1>
                 </div>
             </header>
 
-            <main className="container mx-auto px-6 py-8">
+            <main className="container mx-auto px-6 py-10">
                 {loading ? (
-                    <div className="text-center text-blue-600 font-medium text-lg">
-                        Loading startup details...
+                    <div className="text-center text-blue-600 font-semibold text-xl animate-pulse">
+                        Loading {isStartup ? 'startup' : 'investor'} details...
                     </div>
-                ) : startupInfo ? (
-                    <div className="bg-white shadow-lg rounded-lg p-6">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                            {startupInfo.name}
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                                <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                    Headquarters
-                                </h3>
-                                <p className="text-gray-600">
-                                    {startupInfo.headquarters}
-                                </p>
-                            </div>
-                            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                                <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                    Valuation
-                                </h3>
-                                <p className="text-gray-600">
-                                    {startupInfo.valuation}
-                                </p>
-                            </div>
-                            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                                <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                    Sector
-                                </h3>
-                                <p className="text-gray-600">
-                                    {startupInfo.sector}
-                                </p>
-                            </div>
+                ) : entityInfo ? (
+                    <div className="bg-white text-gray-800 shadow-xl rounded-lg p-8">
+                        <h3 className="text-3xl font-extrabold text-blue-700 mb-6 text-center uppercase tracking-wide">
+                            General Information
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                            {[
+                                ['Founder', entityInfo.founder],
+                                ['Headquarters', entityInfo.headquarters],
+                                ['Valuation', entityInfo.valuation],
+                                ['Sector', entityInfo.sector],
+                                ['Total Funding', entityInfo.totalFunding],
+                                ['Annual Revenue', entityInfo.annualRevenue],
+                                ['Employees', entityInfo.employees],
+                                ['Industry', entityInfo.industry],
+                            ].map(([title, value], index) => (
+                                <div
+                                    key={index}
+                                    className="p-6 bg-white border-2 border-blue-200 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-xl"
+                                >
+                                    <h3 className="text-lg font-semibold text-blue-600 mb-2">{title}</h3>
+                                    <p className="text-blue-800 font-medium">{value || 'Unknown'}</p>
+                                </div>
+                            ))}
                         </div>
-                        <div className="bg-white rounded-lg shadow-lg p-6">
-                            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+
+                        <div className="bg-white rounded-lg shadow-lg p-8">
+                            <h3 className="text-3xl font-extrabold text-blue-700 mb-6 text-center uppercase tracking-wide">
                                 Uploaded Documents
                             </h3>
                             {documents.length > 0 ? (
-                                <ul>
-                                    {documents.map((doc) => (
-                                        <li
-                                            key={doc.id}
-                                            className="border-b py-3 flex justify-between items-center"
-                                        >
-                                            <div>
-                                                <p className="text-gray-800 font-medium">
-                                                    {doc.name}
-                                                </p>
-                                                <p className="text-sm text-gray-500">
-                                                    {doc.type} - {doc.size}
-                                                </p>
-                                            </div>
-                                            <button className="text-blue-600 underline hover:text-blue-800">
+                                <ul className="divide-y divide-gray-300">
+                                {documents.map((doc) => (
+                                    <li
+                                        key={doc.id}
+                                        className="flex flex-wrap justify-between items-center py-4"
+                                    >
+                                        {/* Document Info */}
+                                        <div className="w-full sm:w-auto flex-1">
+                                            <p className="font-semibold text-gray-900">{doc.name}</p>
+                                            <p className="text-sm text-gray-600">
+                                                {doc.type} - {doc.size}
+                                            </p>
+                                        </div>
+                            
+                                        {/* Actions */}
+                                        <div className="w-full sm:w-auto flex justify-end sm:justify-center mt-4 sm:mt-0 space-x-4">
+                                            <a
+                                                href={doc.name}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 hover:text-blue-700 underline"
+                                            >
+                                                View
+                                            </a>
+                                            <a
+                                                href={doc.name}
+                                                download
+                                                className="text-blue-500 hover:text-blue-700 underline"
+                                            >
                                                 Download
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
+                                            </a>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                            
                             ) : (
-                                <p className="text-gray-500">
-                                    No documents uploaded for this startup.
-                                </p>
+                                <p className="text-center text-lg font-semibold text-blue-800">No documents available.</p>
                             )}
                         </div>
+
+                        {!checked && (
+                            <div className="mt-6 text-center">
+                                <button
+                                    onClick={handleFinalCheck}
+                                    className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-800 transition duration-300"
+                                >
+                                    Final Check
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ) : (
-                    <div className="text-center text-red-500 font-medium">
-                        Startup not found.
+                    <div className="text-center text-red-500 font-bold text-xl">
+                        {isStartup ? 'Startup' : 'Investor'} not found.
                     </div>
                 )}
             </main>
