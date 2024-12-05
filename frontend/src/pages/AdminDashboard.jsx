@@ -134,9 +134,6 @@ export default function AdminDashboard() {
                         registeredDate: '2023-12-03',
                         status: 'Rejected',
                     },
-
-
-
                 ];
 
                 const dummyInvestors = [
@@ -354,9 +351,7 @@ export default function AdminDashboard() {
                             <tr
                                 key={index}
                                 className={`${
-                                    index % 2 === 0
-                                        ? 'bg-gray-100'
-                                        : 'bg-white'
+                                    index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
                                 } hover:bg-gray-200`}
                             >
                                 <td className="px-6 py-4 border">
@@ -382,8 +377,8 @@ export default function AdminDashboard() {
                                             item.status === 'Approved'
                                                 ? 'bg-green-500 text-white'
                                                 : item.status === 'Pending'
-                                                ? 'bg-yellow-500 text-black'
-                                                : 'bg-red-500 text-white'
+                                                  ? 'bg-yellow-500 text-black'
+                                                  : 'bg-red-500 text-white'
                                         }`}
                                     >
                                         {item.status}

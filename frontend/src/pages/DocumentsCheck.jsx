@@ -31,9 +31,24 @@ export default function DocumentsCheck() {
                         employees: 50,
                         industry: 'Health & Wellness',
                         documents: [
-                            { id: 1, name: 'Business_Plan_Ayurveda.pdf', type: 'PDF', size: '2 MB' },
-                            { id: 2, name: 'Financial_Report_2023.pdf', type: 'PDF', size: '3 MB' },
-                            { id: 3, name: 'Compliance_Documents.pdf', type: 'PDF', size: '1.5 MB' },
+                            {
+                                id: 1,
+                                name: 'Business_Plan_Ayurveda.pdf',
+                                type: 'PDF',
+                                size: '2 MB',
+                            },
+                            {
+                                id: 2,
+                                name: 'Financial_Report_2023.pdf',
+                                type: 'PDF',
+                                size: '3 MB',
+                            },
+                            {
+                                id: 3,
+                                name: 'Compliance_Documents.pdf',
+                                type: 'PDF',
+                                size: '1.5 MB',
+                            },
                         ],
                     },
                 };
@@ -89,7 +104,9 @@ export default function DocumentsCheck() {
                             className="w-16 h-16 rounded-full border-4 border-white mr-4 shadow-md"
                         />
                     )}
-                    <h1 className="text-3xl md:text-4xl font-extrabold text-white">{entityInfo?.name}</h1>
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-white">
+                        {entityInfo?.name}
+                    </h1>
                 </div>
             </header>
 
@@ -118,8 +135,12 @@ export default function DocumentsCheck() {
                                     key={index}
                                     className="p-6 bg-white border-2 border-blue-200 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-xl"
                                 >
-                                    <h3 className="text-lg font-semibold text-blue-600 mb-2">{title}</h3>
-                                    <p className="text-blue-800 font-medium">{value || 'Unknown'}</p>
+                                    <h3 className="text-lg font-semibold text-blue-600 mb-2">
+                                        {title}
+                                    </h3>
+                                    <p className="text-blue-800 font-medium">
+                                        {value || 'Unknown'}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -130,43 +151,46 @@ export default function DocumentsCheck() {
                             </h3>
                             {documents.length > 0 ? (
                                 <ul className="divide-y divide-gray-300">
-                                {documents.map((doc) => (
-                                    <li
-                                        key={doc.id}
-                                        className="flex flex-wrap justify-between items-center py-4"
-                                    >
-                                        {/* Document Info */}
-                                        <div className="w-full sm:w-auto flex-1">
-                                            <p className="font-semibold text-gray-900">{doc.name}</p>
-                                            <p className="text-sm text-gray-600">
-                                                {doc.type} - {doc.size}
-                                            </p>
-                                        </div>
-                            
-                                        {/* Actions */}
-                                        <div className="w-full sm:w-auto flex justify-end sm:justify-center mt-4 sm:mt-0 space-x-4">
-                                            <a
-                                                href={doc.name}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-500 hover:text-blue-700 underline"
-                                            >
-                                                View
-                                            </a>
-                                            <a
-                                                href={doc.name}
-                                                download
-                                                className="text-blue-500 hover:text-blue-700 underline"
-                                            >
-                                                Download
-                                            </a>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                            
+                                    {documents.map((doc) => (
+                                        <li
+                                            key={doc.id}
+                                            className="flex flex-wrap justify-between items-center py-4"
+                                        >
+                                            {/* Document Info */}
+                                            <div className="w-full sm:w-auto flex-1">
+                                                <p className="font-semibold text-gray-900">
+                                                    {doc.name}
+                                                </p>
+                                                <p className="text-sm text-gray-600">
+                                                    {doc.type} - {doc.size}
+                                                </p>
+                                            </div>
+
+                                            {/* Actions */}
+                                            <div className="w-full sm:w-auto flex justify-end sm:justify-center mt-4 sm:mt-0 space-x-4">
+                                                <a
+                                                    href={doc.name}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-500 hover:text-blue-700 underline"
+                                                >
+                                                    View
+                                                </a>
+                                                <a
+                                                    href={doc.name}
+                                                    download
+                                                    className="text-blue-500 hover:text-blue-700 underline"
+                                                >
+                                                    Download
+                                                </a>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
                             ) : (
-                                <p className="text-center text-lg font-semibold text-blue-800">No documents available.</p>
+                                <p className="text-center text-lg font-semibold text-blue-800">
+                                    No documents available.
+                                </p>
                             )}
                         </div>
 
