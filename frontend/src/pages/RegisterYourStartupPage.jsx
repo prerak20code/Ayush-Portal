@@ -63,7 +63,7 @@ export default function RegisterYourStartupPage() {
                         ? 'bg-[#f68533] text-white shadow-lg scale-105'
                         : step.status === 'complete'
                           ? 'bg-green-600 text-white shadow-md'
-                          : 'bg-gray-300 text-gray-800'
+                          : 'bg-[#f9f9f9] text-[#040606]'
                 }`}
             >
                 {index + 1}
@@ -71,12 +71,12 @@ export default function RegisterYourStartupPage() {
 
             {/* Step Name */}
             <div
-                className={`text-sm font-medium text-center ${
+                className={`text-[15px] font-medium text-center ${
                     currentStep === index
                         ? 'text-[#f68533]'
                         : step.status === 'complete'
                           ? 'text-green-600'
-                          : 'text-gray-500'
+                          : 'text-[#040606]'
                 }`}
             >
                 {step.name}
@@ -85,10 +85,10 @@ export default function RegisterYourStartupPage() {
             {/* Connecting Line */}
             {index < steps.length && (
                 <div
-                    className={`w-full h-1 mt-4 ${
+                    className={`w-full h-1 mt-2 ${
                         step.status === 'complete'
                             ? 'bg-green-400'
-                            : 'bg-gray-300'
+                            : 'bg-[#f9f9f9]'
                     }`}
                 />
             )}
@@ -99,7 +99,7 @@ export default function RegisterYourStartupPage() {
         <div className="w-screen min-h-[calc(100vh-110px)] bg-[#fff7f2] flex flex-col items-center">
             {/* steps */}
             <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md p-4 w-full flex flex-col items-center justify-start gap-8">
-                <h1 className="text-center font-semibold text-xl">
+                <h1 className="text-center font-semibold text-2xl drop-shadow-md">
                     {steps[currentStep].name}
                 </h1>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 w-full transition-all ease-in">
