@@ -250,7 +250,7 @@ export default function OrganizationInformation() {
                 ) : (
                     <p className="text-red-500 w-full text-center text-[15px]">
                         <span className="font-bold">* </span>Indicates
-                        complusory fields
+                        compulsory fields
                     </p>
                 )}
                 {/* Form */}
