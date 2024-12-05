@@ -137,6 +137,14 @@ export default function PersonalInformation() {
             placeholder: 'Create a strong Password',
             required: true,
         },
+        {
+            type: 'url',
+            name: 'linkedInURL',
+            label: 'LinkedIn Profile (Optional)',
+            icon: icons.linkedIn,
+            placeholder: 'Enter LinkedIn profile URL',
+            required: false,
+        },
     ];
 
     const inputElements = inputFields.map((field) => (
@@ -306,23 +314,6 @@ export default function PersonalInformation() {
                             </div>
                         )}
                     </div>
-
-                    {/* LinkedIn Profile */}
-                    {/* <div className="flex items-center space-x-3">
-                            <div className="w-full">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    LinkedIn Profile (Optional)
-                                </label>
-                                <input
-                                    type="url"
-                                    name="linkedIn"
-                                    placeholder="Enter LinkedIn profile URL"
-                                    value={formData.linkedIn}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                                />
-                            </div>
-                        </div> */}
 
                     {/* buttons */}
                     <div className="w-full flex items-center justify-end gap-4 mt-4">
