@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-const generateTokens = async (user, roleKey) => {
+const generateTokens = async (user) => {
     try {
-        const accessToken = await generateAccessToken(user, roleKey);
-        const refreshToken = await generateRefreshToken(user._id, roleKey);
+        const accessToken = await generateAccessToken(user);
+        const refreshToken = await generateRefreshToken(user._id);
 
         return { accessToken, refreshToken };
     } catch (err) {
@@ -11,21 +11,18 @@ const generateTokens = async (user, roleKey) => {
     }
 };
 
-const generateAccessToken = async (user, roleKey) => {
-    const { _id, email, name, phone, dateOfBirth } = user;
-
+const generateAccessToken = async (user) => {
     return jwt.sign(
-        { _id, email, name, phone, dateOfBirth, roleKey }, // saving complete user in access token
+        { user }, // saving complete user in access token
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );
 };
 
-const generateRefreshToken = async (userId, roleKey) => {
+const generateRefreshToken = async (userId) => {
     return jwt.sign(
         {
             userId, // just saving the _id in refresh token in db
-            roleKey,
         },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }

@@ -1,4 +1,4 @@
-import { StartupRegistrationApplication } from '../models/index.js';
+import { StartupRegistrationApplication, User } from '../models/index.js';
 import {
     BAD_REQUEST,
     NOT_FOUND,
@@ -7,19 +7,16 @@ import {
 } from '../constants/statusCodes.js';
 import cron from 'node-cron';
 import { getTransporter } from '../utils/getTransporter.js';
+import mongoose from 'mongoose';
 
 const startApplication = async (req, res) => {
     try {
         const userId = req.user._id;
-        const startedApplication = await StartupRegistrationApplication.create({
+        const app = await StartupRegistrationApplication.create({
             owner: userId,
         });
 
-        if (startedApplication) {
-            return res.status(OK).json({
-                message: 'startup registeration application has been started',
-            });
-        }
+        return res.status(OK).json(app);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message:
@@ -55,12 +52,9 @@ const completeApplication = async (req, res) => {
     }
 };
 
-const getApplication = async (req, res) => {
+const getApplications = async (req, res) => {
     try {
         const userId = req.user._id;
-        // const apps = await StartupRegistrationApplication.find({
-        //     owner: userId,
-        // });
 
         //aggregation pipeline to populate the owner field
         const apps = await StartupRegistrationApplication.aggregate([
@@ -71,10 +65,67 @@ const getApplication = async (req, res) => {
             },
             {
                 $lookup: {
-                    from: 'startupOwners',
-                    localField: 'owner',
+                    from: 'startups',
+                    localField: 'startupId',
                     foreignField: '_id',
+                    as: 'startupInfo',
+                },
+            },
+            {
+                $addFields: {
+                    startup: { $first: '$startupInfo' },
+                },
+            },
+        ]);
+
+        if (apps.length > 0) {
+            return res.status(OK).json(apps);
+        } else {
+            return res
+                .status(NOT_FOUND)
+                .json({ message: 'no applications found' });
+        }
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while getting the startup application',
+            error: err.message,
+        });
+    }
+};
+
+const getApplication = async (req, res) => {
+    try {
+        const { userId, appId } = req.params;
+
+        //aggregation pipeline to populate the owner field
+        const app = await StartupRegistrationApplication.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { owner: new mongoose.Types.ObjectId(userId) },
+                        { _id: new mongoose.Types.ObjectId(appId) },
+                    ],
+                },
+            },
+            {
+                $lookup: {
+                    from: 'startupowners',
+                    localField: 'owner',
+                    foreignField: 'userId',
                     as: 'owner',
+                },
+            },
+            {
+                $addFields: {
+                    ownerUserId: { $first: '$owner.userId' }, // Extract userId from owner
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'ownerUserId',
+                    foreignField: '_id',
+                    as: 'user',
                 },
             },
             {
@@ -87,7 +138,7 @@ const getApplication = async (req, res) => {
                         {
                             $lookup: {
                                 from: 'bankinfos',
-                                localField: 'startupId',
+                                localField: '_id',
                                 foreignField: 'startupId',
                                 as: 'bankInfo',
                             },
@@ -95,9 +146,21 @@ const getApplication = async (req, res) => {
                         {
                             $lookup: {
                                 from: 'financialinfos',
-                                localField: 'startupId',
+                                localField: '_id',
                                 foreignField: 'startupId',
                                 as: 'financialInfo',
+                            },
+                        },
+                        {
+                            $addFields: {
+                                financialInfo: { $first: '$financialInfo' },
+                                bankInfo: { $first: '$bankInfo' },
+                            },
+                        },
+                        {
+                            $project: {
+                                financialInfo: 1,
+                                bankInfo: 1,
                             },
                         },
                     ],
@@ -105,27 +168,39 @@ const getApplication = async (req, res) => {
             },
             {
                 $addFields: {
-                    views: { $size: '$views' },
-                    owner: { $first: '$owner' },
+                    owner: {
+                        $mergeObjects: [
+                            { $first: '$owner' },
+                            { $first: '$user' },
+                        ],
+                    },
+                    startup: { $first: '$startupInfo' }, // Assign the first element of startupInfo to startup
+                },
+            },
+            {
+                $project: {
+                    user: 0, // Remove intermediate fields
+                    ownerUserId: 0,
+                    startupInfo: 0, // Exclude startupInfo from the output
                 },
             },
         ]);
 
-        if (apps.length > 0) {
+        if (!app) {
             return res
                 .status(NOT_FOUND)
-                .json({ message: 'no applications found' });
+                .json({ message: 'application not found' });
         } else {
-            return res.status(OK).json(apps);
+            return res.status(OK).json(app[0]);
         }
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message:
-                'error occured while getting the startup registeration application',
+            message: 'error occured while getting the startup application',
             error: err.message,
         });
     }
 };
+
 // Run the job every hour to check for expired applications
 cron.schedule('0 * * * *', async () => {
     console.log('Running the conditional expiration job...');
@@ -166,4 +241,9 @@ cron.schedule('0 * * * *', async () => {
     }
 });
 
-export { completeApplication, startApplication, getApplication };
+export {
+    completeApplication,
+    startApplication,
+    getApplications,
+    getApplication,
+};

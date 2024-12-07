@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ownerService } from '../../services';
+import { userService } from '../../services';
 import { icons } from '../../assets/icons';
 import { Button } from '..';
-import { useUserContext } from '../../contexts';
 
 export default function EmailVerification() {
     const { userId, uniqueString } = useParams();
@@ -11,29 +10,14 @@ export default function EmailVerification() {
     const [success, setSuccess] = useState(false);
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
-    const { user, setUser } = useUserContext();
 
     useEffect(() => {
         (async function verifyEmail() {
             try {
-                const res = await ownerService.verifyEmail(
-                    userId,
-                    uniqueString
-                );
+                const res = await userService.verifyEmail(userId, uniqueString);
                 if (res && res.message === 'email verified successfully') {
                     setSuccess(true);
                     setMessage(res.message);
-                    const res = await ownerService.login({
-                        email: user.email,
-                        password: user.password,
-                    });
-                    if (res && !res.message) {
-                        setUser(res);
-                        navigate('/');
-                    } else {
-                        setUser(null);
-                        setError(res.message);
-                    }
                 } else {
                     setMessage(res.message);
                     setSuccess(false);
@@ -92,7 +76,7 @@ export default function EmailVerification() {
                             {message}
                         </p>
                         <button
-                            onClick={() => navigate('/register-startup')}
+                            onClick={() => navigate('/register')}
                             className="w-fit mt-1 md:mt-0 px-2 py-[5px] text-[#f9f9f9] rounded-md bg-gradient-to-r from-blue-500 to-blue-600 hover:from-[#f68533] hover:to-[#e97c2e]"
                         >
                             Sign Up Again

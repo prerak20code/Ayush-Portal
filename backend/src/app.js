@@ -32,11 +32,11 @@ import {
     govOfficialrouter,
     startupOwnerRouter,
     startupRegistrationApplicationRouter,
-    // userRouter,
+    userRouter,
     // documentrouter,
 } from './routes/index.js';
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-// app.use('/api/v1/users', userRouter);
+app.use('/api/v1/users', userRouter);
 app.use('/api/v1/owners', startupOwnerRouter);
 app.use('/api/v1/startups', startupRouter);
 app.use('/api/v1/investments', investmentRouter);

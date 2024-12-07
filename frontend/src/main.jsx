@@ -16,12 +16,11 @@ import {
     HomePage,
     RegisterPage,
     LoginPage,
-    // ConnectedStartupsPage,
-    // TargettedStartupsPage,
+    StartupApplicationsPage,
     // OwnerConnectPage,
     ServerErrorPage,
     NotFoundPage,
-    RegisterYourStartupPage,
+    TrackApplication,
 } from './pages';
 
 import {
@@ -37,6 +36,8 @@ import {
     PersonalInformation,
     OrganizationInformation,
     Review,
+    InvestedStartups,
+    TargetedStartups,
 } from './components';
 
 import {
@@ -46,7 +47,6 @@ import {
     RegisterStartupContextProvider,
 } from './contexts';
 
-// import ConnectedStartups from './pages/ConnectedStartups.jsx';
 // import InvestorType from './InvestorConnect/InvestorType.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import DocumentsCheck from './pages/DocumentsCheck.jsx';
@@ -59,11 +59,44 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
+            </Route>
+            <Route path="" element={<LayoutTwo />}>
+                <Route path="register" element={<RegisterPage />} />
+                <Route path="login" element={<LoginPage />} />
                 <Route
-                    path="user/register-startup"
+                    path="user/verify/:userId/:uniqueString"
+                    element={
+                        <Redirect path="/" ifLoggedIn={true}>
+                            <EmailVerification />
+                        </Redirect>
+                    }
+                />
+                <Route
+                    path="user/reset-password/:userId/:resetString"
+                    element={
+                        <Redirect path="/login" ifLoggedIn={false}>
+                            <ResetPassword />
+                        </Redirect>
+                    }
+                />
+                {/* <Route path="InvestorType" element={<InvestorType />} /> */}
+            </Route>
+            <Route path="" element={<LayoutThree />}>
+                <Route
+                    path="invested-startups/:userId"
+                    element={<InvestedStartups />}
+                />
+                <Route
+                    path="applications/:userId"
+                    element={<StartupApplicationsPage />}
+                />
+                <Route
+                    path="application/:appId"
                     element={
                         <RegisterStartupContextProvider>
-                            <RegisterYourStartupPage />
+                            <Redirect path="/login">
+                                <TrackApplication />
+                            </Redirect>
                         </RegisterStartupContextProvider>
                     }
                 >
@@ -81,33 +114,10 @@ const router = createBrowserRouter(
                     <Route path="banking" element={<BankingInformation />} />
                     <Route path="review" element={<Review />} />
                 </Route>
-            </Route>
-            <Route path="" element={<LayoutTwo />}>
-                <Route path="register" element={<RegisterPage />} />
-                <Route path="login" element={<LoginPage />} />
                 <Route
-                    path="user/verify/:userId/:uniqueString"
-                    element={
-                        <Redirect path="/" ifLoggedIn={true}>
-                            <EmailVerification />
-                        </Redirect>
-                    }
+                    path="targeted-startups/:userId"
+                    element={<TargetedStartups />}
                 />
-                <Route
-                    path="user/reset-password/:userId/:resetString"
-                    element={
-                        <Redirect path="/login">
-                            <ResetPassword />
-                        </Redirect>
-                    }
-                />
-                {/* <Route path="InvestorType" element={<InvestorType />} /> */}
-            </Route>
-            <Route path="" element={<LayoutThree />}>
-                {/* <Route
-                    path="connected-startups/:userId"
-                    element={<ConnectedStartups />}
-                /> */}
             </Route>
             <Route
                 path="AdminDashboard"

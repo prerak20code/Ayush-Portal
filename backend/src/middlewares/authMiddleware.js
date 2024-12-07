@@ -5,7 +5,7 @@ import {
     SERVER_ERROR,
 } from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
-import { StartupOwner } from '../models/index.js';
+import { User } from '../models/index.js';
 
 export const verifyJWT = async (req, res, next) => {
     try {
@@ -23,6 +23,7 @@ export const verifyJWT = async (req, res, next) => {
             accessToken,
             process.env.ACCESS_TOKEN_SECRET
         );
+
         if (!decodedToken) {
             return res
                 .status(FORBIDDEN)
@@ -31,13 +32,7 @@ export const verifyJWT = async (req, res, next) => {
         }
 
         //since token is valid but is this id user in oue db or not
-        let user;
-        if (decodedToken.roleKey === 'Owner') {
-            user = await StartupOwner.findById(decodedToken._id);
-        }
-        // else if{
-
-        // }
+        const user = await User.findById(decodedToken.user._id);
 
         if (!user) {
             return res

@@ -13,11 +13,11 @@ import FourthHalf from './homePage/FourthHalf';
 import Button from './general/Button';
 import Card from './homePage/Card';
 import StartupCard from './investorConnect/StartupCard';
-// import InvestorType from './investorConnect/InvestorType';
 import EmailVerification from './EmailVerification/EmailVerification';
 import ResetPassword from './ResetPassword/ResetPassword';
 import Popup from './popups/Popup';
 import Redirect from './layout/Redirect';
+// import InvestorType from './investorConnect/InvestorType';
 // import OwnerType from './LoginPage/OwnerType';
 // import GovernmentType from './LoginPage/GovernmentType';
 // import StakeHolderType from './LoginPage/StakeholderType';
@@ -26,7 +26,8 @@ import FinancialInformation from './RegisterStartup/FinancialInformation';
 import BankingInformation from './RegisterStartup/BankingInformation';
 import OrganizationInformation from './RegisterStartup/OrganizationInformation';
 import Review from './RegisterStartup/Review';
-
+import InvestedStartups from './investorConnect/InvestedStartups';
+import TargetedStartups from './investorConnect/TargetedStartups';
 export {
     LayoutOne,
     LayoutTwo,
@@ -43,7 +44,6 @@ export {
     Button,
     Card,
     StartupCard,
-    // InvestorType,
     EmailVerification,
     ResetPassword,
     Popup,
@@ -53,6 +53,9 @@ export {
     FinancialInformation,
     OrganizationInformation,
     Review,
+    InvestedStartups,
+    TargetedStartups,
+    // InvestorType,
     // StakeHolderType,
     // OwnerType,
     // GovernmentType,

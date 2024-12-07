@@ -6,18 +6,22 @@ import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterStartupContext, useUserContext } from '../../contexts';
 import { verifyRegex } from '../../utils';
-import { ownerService } from '../../services';
+import {
+    ownerService,
+    startupRegistrationApplicationService,
+} from '../../services';
 
 export default function PersonalInformation() {
+    const { user } = useUserContext();
     const initialInputs = {
-        name: '',
-        email: '',
-        dateOfBirth: '',
-        password: '',
-        phone: '',
-        address: '',
-        nationality: '', // This should be a valid country code (e.g., "IN"),
-        linkedInURL: '',
+        name: user.name || '',
+        email: user.email || '',
+        dateOfBirth: user.dateOfBirth || '',
+        password: user.password || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        nationality: user.nationality || '',
+        linkedInURL: user.linkedInURL || '',
     };
     const [inputs, setInputs] = useState(initialInputs);
     const initialErrors = {
@@ -38,7 +42,6 @@ export default function PersonalInformation() {
     const navigate = useNavigate();
     const [countryList, setCountryList] = useState([]);
     const [flag, setFlag] = useState('');
-    const { setUser } = useUserContext();
 
     useEffect(() => {
         (async function fetchCountryList() {
@@ -77,7 +80,7 @@ export default function PersonalInformation() {
 
     function handleBlur(e) {
         const { name, value } = e.target;
-        verifyRegex(name, value, setErrors);
+        if (name !== 'password') verifyRegex(name, value, setErrors);
     }
 
     function onMouseOver() {
@@ -98,41 +101,34 @@ export default function PersonalInformation() {
     async function handleSubmit(e) {
         try {
             e.preventDefault();
-            setCompletedSteps((prev) => [...prev, 'personal']);
-            // backend service request (just to check if email already exists so send only email)
-            // if no error
-            // setCurrentStep((prev = prev + 1));
-            // setTotalData(prev=>({...prev, personal:{data:{...inputs}, status:"complete"}}))
-            // else set error and stay on current step
-            setTotalData((prev) => ({
-                ...prev,
-                personal: { data: { ...inputs }, status: 'complete' },
-            }));
             setLoading(true);
             setDisabled(true);
             setErrors(initialErrors);
-            try {
-                const res = await ownerService.register(inputs);
-                if (res && res.message === 'verification email sent') {
-                    setShowPopup(true);
-                    setUser({
-                        email: inputs.email,
-                        password: inputs.password,
-                        roleKey: 'Owner',
-                    });
-                } else {
-                    setShowPopup(false);
-                    setUser(null);
-                    setErrors((prev) => ({ ...prev, root: res.message }));
+
+            const { name, email, phone, password, ...ownerInputs } = inputs;
+
+            const res2 =
+                await startupRegistrationApplicationService.startApplication();
+            if (res2) {
+                const res = await ownerService.register(ownerInputs);
+                if (res?.message === 'personal info saved successfully') {
+                    setDisabled(true);
+                    setCurrentStep((prev = prev + 1));
+                    navigate('organization');
+                    setCompletedSteps((prev) => [...prev, 'personal']);
+                    setTotalData((prev) => ({
+                        ...prev,
+                        personal: { data: { ...inputs }, status: 'complete' },
+                    }));
                 }
-            } catch (err) {
-                navigate('/server-error');
-            } finally {
-                setDisabled(false);
-                setLoading(false);
+            } else {
+                setErrors((prev) => ({ ...prev, root: res2.message }));
             }
         } catch (err) {
             navigate('/server-error');
+        } finally {
+            setDisabled(false);
+            setLoading(false);
         }
     }
 
@@ -144,6 +140,7 @@ export default function PersonalInformation() {
             placeholder: 'Enter your Full Name',
             icon: icons.user,
             required: true,
+            readOnly: true,
         },
         {
             type: 'email',
@@ -152,12 +149,14 @@ export default function PersonalInformation() {
             icon: icons.mailUnfill,
             placeholder: 'Enter your Email',
             required: true,
+            readOnly: true,
         },
         {
             type: 'date',
             name: 'dateOfBirth',
             required: true,
             label: 'Date of Birth',
+            readOnly: false,
         },
         {
             type: 'password',
@@ -166,6 +165,7 @@ export default function PersonalInformation() {
             icon: icons.password,
             placeholder: 'Create a strong Password',
             required: true,
+            readOnly: true,
         },
         {
             type: 'url',
@@ -174,6 +174,7 @@ export default function PersonalInformation() {
             icon: icons.linkedIn,
             placeholder: 'Enter LinkedIn profile URL',
             required: false,
+            readOnly: false,
         },
     ];
 
@@ -193,6 +194,7 @@ export default function PersonalInformation() {
                 )}
                 <input
                     type={field.type}
+                    readOnly={field.readOnly}
                     name={field.name}
                     id={field.name}
                     value={inputs[field.name]}
@@ -205,11 +207,6 @@ export default function PersonalInformation() {
             {errors[field.name] && (
                 <div className="mt-1 text-red-500 text-xs font-medium">
                     {errors[field.name]}
-                </div>
-            )}
-            {field.name === 'password' && !errors.password && (
-                <div className="text-xs">
-                    This password will be used for further verification.
                 </div>
             )}
             {field.name === 'dateOfBirth' && !errors.dateOfBirth && (
@@ -268,16 +265,17 @@ export default function PersonalInformation() {
                             <PhoneInput
                                 country="in"
                                 value={inputs.phone}
-                                onChange={(value) =>
-                                    setInputs((prev) => ({
-                                        ...prev,
-                                        phone: value,
-                                    }))
-                                }
+                                // onChange={(value) =>
+                                //     setInputs((prev) => ({
+                                //         ...prev,
+                                //         phone: value,
+                                //     }))
+                                // }
                                 inputProps={{
                                     name: 'phone',
                                     required: true,
                                     id: 'phone',
+                                    readOnly: true,
                                 }}
                                 inputClass="!w-full !h-[45px] !indent-2 !rounded-md !shadow-sm !border-[0.01rem] !border-[#858585] !outline-[#f68533] !bg-transparent"
                                 buttonClass="!h-[45px] !w-[45px] !bg-[#fff7f2] !hover:bg-[#fff7f2] !z-[1] !rounded-r-none !rounded-md !border-[0.01rem] !border-[#858585] !outline-[#f68533]"
@@ -290,7 +288,7 @@ export default function PersonalInformation() {
                         <div className="bg-[#fff7f2] z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
                             <label htmlFor="nationality">
                                 <span className="text-red-500">* </span>
-                                Ntionality
+                                Nationality
                             </label>
                         </div>
                         <div className="w-full relative">

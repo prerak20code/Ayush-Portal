@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useParams } from 'react-router-dom';
 import { useRegisterStartupContext, useUserContext } from '../contexts';
 import { startupRegistrationApplicationService } from '../services';
+import { icons } from '../assets/icons';
 
-export default function RegisterYourStartupPage() {
+export default function TrackApplication() {
     const location = useLocation();
     const pathname = location.pathname;
     const currentURL = pathname.split('/').pop();
+    const { appId } = useParams();
     const { currentStep, setCurrentStep, totalData, setTotalData } =
         useRegisterStartupContext();
     const { user } = useUserContext();
@@ -29,7 +31,7 @@ export default function RegisterYourStartupPage() {
             name: 'Financial Information',
             path: 'financial',
             onClick: () => setCurrentStep(2),
-            status: totalData.financial.status,
+            status: totalData.banking.status,
         },
         {
             name: 'Banking Information',
@@ -52,14 +54,44 @@ export default function RegisterYourStartupPage() {
         step?.onClick();
     }, [currentURL]);
 
-    // check if there is already an application for current user
+    // if we have appId then auto fill the data and display current status
     useEffect(() => {
         try {
-            (async function getOngoingApplications() {
-                const res =
-                    await startupRegistrationApplicationService.getApplication();
-                if (!res?.message) {
-                    //    setTotalData(prev => )
+            (async function getApp() {
+                if (appId !== 'new') {
+                    const res =
+                        await startupRegistrationApplicationService.getApplication(
+                            user._id,
+                            appId
+                        );
+                    if (res && !res?.message) {
+                        const data = {
+                            personal: {
+                                data: res.owner,
+                                status: 'complete',
+                            },
+                            organization: {
+                                data: res.startup || {},
+                                status: res.startup ? 'complete' : 'pending',
+                            },
+                            finanical: {
+                                data: res.startup?.financialInfo || {},
+                                status: res.startup?.financialInfo
+                                    ? 'complete'
+                                    : 'pending',
+                            },
+                            banking: {
+                                data: res.startup?.bankInfo || {},
+                                status: res.startup?.bankInfo
+                                    ? 'complete'
+                                    : 'pending',
+                            },
+                            reviewd: {
+                                status: res.status,
+                            },
+                        };
+                        setTotalData(data);
+                    }
                 }
             })();
         } catch (err) {
@@ -67,7 +99,7 @@ export default function RegisterYourStartupPage() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [appId]);
 
     const stepElements = steps.map((step, index) => (
         <NavLink
@@ -129,9 +161,15 @@ export default function RegisterYourStartupPage() {
 
             {/* forms */}
             <div className="w-full p-4 flex items-center justify-center">
-                <div className="bg-white max-w-xl w-full drop-shadow-md rounded-md flex items-center justify-center p-4 flex-1">
-                    <Outlet />
-                </div>
+                {loading ? (
+                    <div className="w-full fill-[#f68533] text-white size-[30px]">
+                        {icons.loading}
+                    </div>
+                ) : (
+                    <div className="bg-white max-w-xl w-full drop-shadow-md rounded-md flex items-center justify-center p-4 flex-1">
+                        <Outlet />
+                    </div>
+                )}
             </div>
         </div>
     );

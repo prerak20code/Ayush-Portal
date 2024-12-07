@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ownerService } from '../../services';
+import { userService } from '../../services';
 import { Button, Popup } from '..';
 import { icons } from '../../assets/icons';
 // import { usePopupContext } from '../../contexts';
@@ -28,8 +28,7 @@ export default function ResetPassword() {
             e.preventDefault();
             setLoading(true);
             setDisabled(true);
-
-            const res = await ownerService.resetPassword(
+            const res = await userService.resetPassword(
                 // userId,
                 resetString,
                 inputs.newPassword
@@ -155,7 +154,7 @@ export default function ResetPassword() {
                         onMouseOver={onMouseOver}
                         btnText={
                             loading ? (
-                                <div className="fill-[#f9f9f9] text-white size-[50px]">
+                                <div className="fill-[#f9f9f9] text-[#f9a264] size-[20px]">
                                     {icons.loading}
                                 </div>
                             ) : (
