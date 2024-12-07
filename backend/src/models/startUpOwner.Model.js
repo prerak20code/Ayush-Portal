@@ -3,12 +3,12 @@ import bcrypt from 'bcrypt';
 
 const startupOwnerSchema = new mongoose.Schema(
     {
-        startupId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Startup',
-            // required: true,
-            unique: true,
-        },
+        // startupId: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: 'Startup',
+        //     // required: true, // personal info k time pe nhi hogi
+        //     unique: true,
+        // },
         name: {
             type: String,
             required: true,
@@ -44,14 +44,13 @@ const startupOwnerSchema = new mongoose.Schema(
             type: String,
             default: '',
         },
-        nationality: { type: String, required: true },
+        nationality: { type: String, required: true, trim: true },
         linkedinURL: { type: String, default: '' },
     },
     { timestamps: true }
 );
 
 // pre hooks to hash password before save
-
 startupOwnerSchema.pre('save', async function (next) {
     try {
         if (this.isModified('password')) {

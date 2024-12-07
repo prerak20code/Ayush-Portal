@@ -12,7 +12,7 @@ const passwordResetSchema = new mongoose.Schema({
 passwordResetSchema.pre('save', async function (next) {
     try {
         if (this.isModified('resetString')) {
-            this.resetString = await bcrypt.hash(this.resetString, 10);
+            this.resetString = bcrypt.hashSync(this.resetString, 10);
         }
         next();
     } catch (err) {

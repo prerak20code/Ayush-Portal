@@ -5,7 +5,7 @@ import {
     SERVER_ERROR,
 } from '../constants/statusCodes.js';
 import { cookieOptions } from '../constants/cookie.js';
-import { User } from '../models/index.js';
+import { StartupOwner } from '../models/index.js';
 
 export const verifyJWT = async (req, res, next) => {
     try {
@@ -31,7 +31,13 @@ export const verifyJWT = async (req, res, next) => {
         }
 
         //since token is valid but is this id user in oue db or not
-        const user = await User.findById(decodedToken._id);
+        let user;
+        if (decodedToken.roleKey === 'Owner') {
+            user = await StartupOwner.findById(decodedToken._id);
+        }
+        // else if{
+
+        // }
 
         if (!user) {
             return res
@@ -40,7 +46,7 @@ export const verifyJWT = async (req, res, next) => {
                 .json({ message: 'user with provided access token not found' });
         }
 
-        req.user = user; // we set a custom property name user in the req object so now after the middleware we can directly get the user using req.user
+        req.user = user;
 
         next();
     } catch (err) {

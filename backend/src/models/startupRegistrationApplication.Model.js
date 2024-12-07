@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
 
-const startupRegisterationApplicationSchema = new mongoose.Schema(
+const startupRegistrationApplicationSchema = new mongoose.Schema(
     {
         startupId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -18,6 +17,11 @@ const startupRegisterationApplicationSchema = new mongoose.Schema(
             required: true,
             default: [],
         },
+        expireAt: {
+            type: Date, // Tracks the expiration time
+            required: true,
+            default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+        },
         status: {
             type: String,
             enum: ['pending', 'complete'],
@@ -27,20 +31,7 @@ const startupRegisterationApplicationSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// pre hooks to hash password before save
-startupRegisterationApplicationSchema.pre('save', async function (next) {
-    try {
-        if (this.isModified('password')) {
-            this.password = await bcrypt.hash(this.password, 10);
-        }
-        next();
-    } catch (err) {
-        throw err;
-    }
-});
-
-// export is done after defining the hooks
-export const StartupRegisterationApplication = mongoose.model(
+export const StartupRegistrationApplication = mongoose.model(
     'StartupRegisterationApplication',
-    startupRegisterationApplicationSchema
+    startupRegistrationApplicationSchema
 );

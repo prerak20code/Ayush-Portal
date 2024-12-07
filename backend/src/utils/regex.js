@@ -20,6 +20,7 @@ export const validateRegex = async (fieldType, value) => {
 
             case 'dateOfBirth': {
                 return isValid(parseISO(value));
+                // check for atleast 18 years old as well
             }
 
             default: {

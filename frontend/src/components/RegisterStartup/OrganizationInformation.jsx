@@ -62,6 +62,9 @@ export default function OrganizationInformation() {
         })();
     }, []);
 
+    // fetch previous step data
+    useEffect(() => {}, []);
+
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
         setInputs((prevData) => ({

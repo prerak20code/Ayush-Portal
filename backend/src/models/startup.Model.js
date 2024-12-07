@@ -2,10 +2,19 @@ import mongoose from 'mongoose';
 
 const startupSchema = new mongoose.Schema(
     {
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'StartupOwner',
+            required: true,
+        },
         startupName: {
             type: String,
             required: true,
             unique: true,
+        },
+        description: {
+            type: String,
+            required: true,
         },
         businessType: {
             type: String,
@@ -38,11 +47,6 @@ const startupSchema = new mongoose.Schema(
             type: Date,
             required: true,
             default: Date.now(),
-        },
-        owner: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'startupOwner',
-            required: true,
         },
         status: {
             type: String,

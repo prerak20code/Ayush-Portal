@@ -10,7 +10,7 @@ import {
     useVariantContext,
     // usePopupContext,
 } from '../../contexts';
-import { userService } from '../../services/user.Service';
+import { ownerService } from '../../services';
 
 export default function Header() {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -122,7 +122,7 @@ export default function Header() {
 
     async function handleLogout() {
         try {
-            const res = await userService.logout();
+            const res = await ownerService.logout();
             if (res && res.message === 'user logged out successfully') {
                 setUser(null);
                 setShowProfileDropdown(false);
@@ -136,7 +136,7 @@ export default function Header() {
     async function handleDelete() {
         try {
             setShowDeletePopup(true);
-            const res = await userService.delete();
+            const res = await ownerService.delete();
             if (res && res.message === 'user account deleted successfully') {
                 setUser(null);
                 setShowProfileDropdown(false);
@@ -152,7 +152,7 @@ export default function Header() {
             setShowPopup(true);
             setShowProfileDropdown(false);
             setLoading(true);
-            const res = await userService.requestResetPassword(user.email);
+            const res = await ownerService.requestResetPassword(user.email);
             if (res?.message === 'password reset email sent') {
                 setResetMessage();
             } else {

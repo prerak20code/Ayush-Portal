@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { icons } from '../../assets/icons';
 import PhoneInput from 'react-phone-input-2';
-import { Button } from '..';
+import { Button, Popup } from '..';
 import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterStartupContext } from '../../contexts';
+import { useRegisterStartupContext, useUserContext } from '../../contexts';
+import { verifyRegex } from '../../utils';
+import { ownerService } from '../../services';
 
 export default function PersonalInformation() {
     const initialInputs = {
@@ -30,11 +32,13 @@ export default function PersonalInformation() {
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [showPopup, setShowPopup] = useState();
     const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterStartupContext();
     const navigate = useNavigate();
     const [countryList, setCountryList] = useState([]);
     const [flag, setFlag] = useState('');
+    const { setUser } = useUserContext();
 
     useEffect(() => {
         (async function fetchCountryList() {
@@ -72,7 +76,7 @@ export default function PersonalInformation() {
     }
 
     function handleBlur(e) {
-        let { name, value } = e.target;
+        const { name, value } = e.target;
         verifyRegex(name, value, setErrors);
     }
 
@@ -91,16 +95,42 @@ export default function PersonalInformation() {
         }
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         try {
             e.preventDefault();
-            setLoading(true);
             setCompletedSteps((prev) => [...prev, 'personal']);
             // backend service request (just to check if email already exists so send only email)
             // if no error
             // setCurrentStep((prev = prev + 1));
             // setTotalData(prev=>({...prev, personal:{data:{...inputs}, status:"complete"}}))
             // else set error and stay on current step
+            setTotalData((prev) => ({
+                ...prev,
+                personal: { data: { ...inputs }, status: 'complete' },
+            }));
+            setLoading(true);
+            setDisabled(true);
+            setErrors(initialErrors);
+            try {
+                const res = await ownerService.register(inputs);
+                if (res && res.message === 'verification email sent') {
+                    setShowPopup(true);
+                    setUser({
+                        email: inputs.email,
+                        password: inputs.password,
+                        roleKey: 'Owner',
+                    });
+                } else {
+                    setShowPopup(false);
+                    setUser(null);
+                    setErrors((prev) => ({ ...prev, root: res.message }));
+                }
+            } catch (err) {
+                navigate('/server-error');
+            } finally {
+                setDisabled(false);
+                setLoading(false);
+            }
         } catch (err) {
             navigate('/server-error');
         }
@@ -173,7 +203,7 @@ export default function PersonalInformation() {
                 />
             </div>
             {errors[field.name] && (
-                <div className="mt-1 text-red-500 text-sm font-medium">
+                <div className="mt-1 text-red-500 text-xs font-medium">
                     {errors[field.name]}
                 </div>
             )}
@@ -182,11 +212,26 @@ export default function PersonalInformation() {
                     This password will be used for further verification.
                 </div>
             )}
+            {field.name === 'dateOfBirth' && !errors.dateOfBirth && (
+                <div className="text-xs">
+                    Age should be atleast 18 years old.
+                </div>
+            )}
         </div>
     ));
 
     return (
         <div className="p-6 w-full bg-[#fff7f2] overflow-x-scroll rounded-lg shadow-md border border-gray-200">
+            {/* email verification popup */}
+            {showPopup && (
+                <Popup
+                    onClick={() => setShowPopup(false)}
+                    className="text-[#f9f9f9] mt-4 rounded-md text-lg bg-gradient-to-r from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                    header="Verification Email"
+                    description="A verification email has been sent on your provided email, check it out to proceed with the registeration process"
+                />
+            )}
+
             <h2 className="text-xl font-bold text-orange-600 mb-6 text-center">
                 Founder/Co-Founder Personal Information
             </h2>
@@ -322,6 +367,7 @@ export default function PersonalInformation() {
                             onClick={() => {
                                 setInputs(initialInputs);
                                 setErrors(initialErrors);
+                                setFlag('');
                             }}
                             btnText={
                                 <div className="flex items-center justify-center gap-2">

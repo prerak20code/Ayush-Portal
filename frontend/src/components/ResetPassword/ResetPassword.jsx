@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { userService } from '../../services';
+import { ownerService } from '../../services';
 import { Button, Popup } from '..';
 import { icons } from '../../assets/icons';
 // import { usePopupContext } from '../../contexts';
@@ -29,7 +29,7 @@ export default function ResetPassword() {
             setLoading(true);
             setDisabled(true);
 
-            const res = await userService.resetPassword(
+            const res = await ownerService.resetPassword(
                 // userId,
                 resetString,
                 inputs.newPassword

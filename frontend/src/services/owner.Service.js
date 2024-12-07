@@ -1,7 +1,7 @@
-class UserService {
+class OwnerService {
     async login(inputs) {
         try {
-            const res = await fetch('/api/v1/users/login', {
+            const res = await fetch('/api/v1/owners/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs),
@@ -22,7 +22,7 @@ class UserService {
 
     async register(inputs) {
         try {
-            const res = await fetch('/api/v1/users/register', {
+            const res = await fetch('/api/v1/owners/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -47,7 +47,7 @@ class UserService {
     async verifyEmail(userId, uniqueString) {
         try {
             const res = await fetch(
-                `/api/v1/users/verify-email/${userId}/${uniqueString}`,
+                `/api/v1/owners/verify-email/${userId}/${uniqueString}`,
                 {
                     method: 'GET',
                 }
@@ -70,7 +70,7 @@ class UserService {
 
     async logout() {
         try {
-            const res = await fetch('/api/v1/users/logout', {
+            const res = await fetch('/api/v1/owners/logout', {
                 method: 'PATCH',
                 credentials: 'include',
             });
@@ -90,7 +90,7 @@ class UserService {
 
     async delete() {
         try {
-            const res = await fetch('/api/v1/users', {
+            const res = await fetch('/api/v1/owners', {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -110,7 +110,7 @@ class UserService {
 
     async getCurrentUser() {
         try {
-            const res = await fetch('/api/v1/users', {
+            const res = await fetch('/api/v1/owners', {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -130,7 +130,7 @@ class UserService {
 
     async requestResetPassword(email) {
         try {
-            const res = await fetch('/api/v1/users/request-reset-password', {
+            const res = await fetch('/api/v1/owners/request-reset-password', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -157,7 +157,7 @@ class UserService {
 
     async resetPassword(resetString, newPassword) {
         try {
-            const res = await fetch('/api/v1/users/reset-password', {
+            const res = await fetch('/api/v1/owners/reset-password', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -184,4 +184,4 @@ class UserService {
     async refreshAccessToken() {}
 }
 
-export const userService = new UserService();
+export const ownerService = new OwnerService();

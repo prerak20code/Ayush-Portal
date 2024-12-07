@@ -7,7 +7,7 @@ import {
     ASHOKACHAKAR,
 } from '../assets/images';
 import { useState } from 'react';
-import { userService } from '../services';
+import { ownerService } from '../services';
 import { useVariantContext } from '../contexts';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Popup } from '../components';
@@ -66,7 +66,7 @@ export default function RegisterPage() {
         setDisabled(true);
         setErrors(emptyErrors);
         try {
-            const res = await userService.register(inputs);
+            const res = await ownerService.register(inputs);
             if (res && res.message === 'verification email sent') {
                 setShowPopup(true);
             } else {

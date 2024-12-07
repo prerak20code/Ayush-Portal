@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '../components';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserContext } from '../contexts';
-import { userService } from '../services';
+import { ownerService } from '../services';
 
 export default function LoginPage() {
     const [role, setRole] = useState('Startup Owner'); // Default role
@@ -34,7 +34,7 @@ export default function LoginPage() {
         setLoading(true);
         setDisabled(true);
         try {
-            const res = await userService.login(inputs, role);
+            const res = await ownerService.login(inputs, role);
             if (res && !res.message) {
                 setUser(res);
                 navigate('/');

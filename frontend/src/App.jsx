@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useUserContext } from './contexts';
-import { userService } from './services';
+import { ownerService } from './services';
 import { icons } from './assets/icons';
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
         (async function checkLogin() {
             try {
                 setLoading(true);
-                const res = await userService.getCurrentUser();
+                const res = await ownerService.getCurrentUser();
                 if (res && !res.message) {
                     setUser(res);
                 } else {

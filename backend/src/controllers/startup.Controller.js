@@ -6,73 +6,32 @@ import {
     SERVER_ERROR,
     FORBIDDEN,
 } from '../constants/statusCodes.js';
-import { Startup } from '../models/index.js';
+import { Startup, FinancialInfo, BankInfo } from '../models/index.js';
 
-const addStartup = async (req, res) => {
-    try {
-        const { title, description, startuptype, Ask, startupage, UserId } =
-            req.body;
-        const userId = req.user;
-
-        if (
-            !title ||
-            !description ||
-            !startuptype ||
-            !startupage ||
-            !Ask ||
-            !UserId
-        ) {
-            return res.status(BAD_REQUEST).json({
-                message: 'Some fields are missing.',
-            });
-        }
-        const startup = await Startup.create({
-            title,
-            description,
-            startuptype,
-            startupage,
-            Ask: Number(Ask),
-            user: userId,
-            created_by: userId,
-        });
-        if (startup) {
-            return res.status(CREATED).json({
-                message: 'New startup created successfully',
-                startup,
-            });
-        } else {
-            throw new Error(`startup creation error, error:${error}`);
-        }
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'error occured while posting the startup.',
-            error: err.message,
-        });
-    }
-};
-
+// pending
 const getAllStartups = async (req, res) => {
     try {
         const { keyword = '' } = req.query;
         const query = {
             $or: [
-                { title: { $regex: keyword, $options: 'i' } },
+                { startupName: { $regex: keyword, $options: 'i' } },
                 { description: { $regex: keyword, $options: 'i' } },
             ],
         };
         const startups = await Startup.find(query)
             .populate({
-                path: 'user', //to get all information about the user, populate is used
+                path: 'owner',
             })
             .sort({ createdAt: -1 });
+
+        console.log(startups);
+
         if (!startups.length) {
             return res.status(NOT_FOUND).json({
                 message: 'no startup found',
             });
         }
-        return res.status(OK).json({
-            startups,
-        });
+        return res.status(OK).json(startups);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'error occured while getting the startups.',
@@ -81,7 +40,67 @@ const getAllStartups = async (req, res) => {
     }
 };
 
-const getStartup = async (req, res) => {
+const addStartup = async (req, res) => {
+    try {
+        const {
+            startupName,
+            description,
+            businessType,
+            industry,
+            address,
+            country,
+            website,
+            valuation,
+            dateOfEstablishment,
+            pdf,
+        } = req.body;
+        valuation = Number(valuation);
+        const userId = req.user._id;
+
+        if (
+            !startupName ||
+            !description ||
+            !businessType ||
+            !industry ||
+            !address ||
+            !country ||
+            !website ||
+            !valuation ||
+            !dateOfEstablishment ||
+            !userId
+        ) {
+            return res.status(BAD_REQUEST).json({
+                message: 'missing fields',
+            });
+        }
+        const startup = await Startup.create({
+            startupName,
+            description,
+            businessType,
+            industry,
+            address,
+            country,
+            website,
+            valuation,
+            dateOfEstablishment,
+            pdf,
+            owner: userId,
+        });
+        if (startup) {
+            return res.status(CREATED).json({
+                message: 'startup created successfully',
+                startup,
+            });
+        }
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while adding the startup.',
+            error: err.message,
+        });
+    }
+};
+
+const getStartupById = async (req, res) => {
     try {
         const { startupId } = req.params;
         const startup = await Startup.findById(startupId);
@@ -90,7 +109,7 @@ const getStartup = async (req, res) => {
                 message: 'startup not found.',
             });
         }
-        return res.status(OK).json({ startup });
+        return res.status(OK).json(startup);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'error occured while getting the startup.',
@@ -99,18 +118,16 @@ const getStartup = async (req, res) => {
     }
 };
 
-const getUserStartups = async (req, res) => {
+const getStartupsByOwnerId = async (req, res) => {
     try {
-        const { userId } = req.user;
-        const startups = await Startup.find({ created_by: userId });
+        const { userId } = req.params;
+        const startups = await Startup.find({ owner: userId });
         if (!startups.length) {
             return res.status(NOT_FOUND).json({
-                message: 'Startups not found',
+                message: 'no startups found',
             });
         }
-        return res.status(OK).json({
-            startups,
-        });
+        return res.status(OK).json(startups);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'error occured while getting the user startups.',
@@ -122,8 +139,8 @@ const getUserStartups = async (req, res) => {
 const updateStartup = async (req, res) => {
     try {
         const { startupId } = req.params;
-        const userId = req.user;
-        const updates = req.body;
+        const userId = req.user._id;
+        const { updates } = req.body;
 
         const existingStartup = await Startup.findById(startupId);
 
@@ -134,7 +151,7 @@ const updateStartup = async (req, res) => {
         }
 
         // Check if the logged-in user is the owner of the startup
-        if (existingStartup.created_by.toString() !== userId) {
+        if (!existingStartup.owner.equals(userId)) {
             return res.status(FORBIDDEN).json({
                 message: 'You are not authorized to update this startup',
             });
@@ -143,7 +160,7 @@ const updateStartup = async (req, res) => {
         // Update the startup
         const updatedStartup = await Startup.findByIdAndUpdate(
             startupId,
-            updates,
+            { $set: { updates } },
             {
                 new: true, // Return the updated document
                 runValidators: true,
@@ -152,7 +169,7 @@ const updateStartup = async (req, res) => {
 
         return res.status(OK).json({
             message: 'Startup updated successfully',
-            startup: updatedStartup,
+            updatedStartup,
         });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -165,7 +182,7 @@ const updateStartup = async (req, res) => {
 const deleteStartup = async (req, res) => {
     try {
         const { startupId } = req.params;
-        const userId = req.user;
+        const userId = req.user._id;
 
         // Find the startup by ID
         const existingStartup = await Startup.findById(startupId);
@@ -177,7 +194,7 @@ const deleteStartup = async (req, res) => {
         }
 
         // Check if the logged-in user is the creator of the startup
-        if (existingStartup.created_by.toString() !== userId) {
+        if (!existingStartup.owner.equals(userId)) {
             return res.status(FORBIDDEN).json({
                 message: 'You are not authorized to delete this startup',
             });
@@ -197,11 +214,151 @@ const deleteStartup = async (req, res) => {
     }
 };
 
+const addBankInfo = async (req, res) => {
+    try {
+        const { startupId } = req.params;
+        const {
+            bankName,
+            accountNumber,
+            accountType,
+            IFSC,
+            branchName,
+            swiftCode,
+            balanceStatement,
+        } = req.body;
+        if (
+            !bankName ||
+            !accountNumber ||
+            !accountType ||
+            !IFSC ||
+            !branchName ||
+            !swiftCode
+        ) {
+            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
+        }
+
+        const addedBankInfo = await BankInfo.create({
+            bankName,
+            accountNumber,
+            accountType,
+            IFSC,
+            branchName,
+            swiftCode,
+            balanceStatement,
+            startupId,
+        });
+        if (addedBankInfo) {
+            return res.status(OK).json(addedBankInfo);
+        }
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "An error occurred while adding the startup's bank info",
+            error: err.message,
+        });
+    }
+};
+
+const addFinancialInfo = async (req, res) => {
+    try {
+        const { startupId } = req.params;
+        const {
+            revenue,
+            profitMargin,
+            fundingReceived,
+            valuation,
+            financialYear,
+            balanceSheet,
+        } = req.body;
+        if (
+            !revenue ||
+            !profitMargin ||
+            !fundingReceived ||
+            !valuation ||
+            !financialYear
+        ) {
+            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
+        }
+
+        const addedFinancialInfo = await FinancialInfo.create({
+            revenue,
+            profitMargin,
+            fundingReceived,
+            valuation,
+            financialYear,
+            balanceSheet,
+            startupId,
+        });
+        if (addedFinancialInfo) {
+            return res.status(OK).json(addedFinancialInfo);
+        }
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "An error occurred while adding the startup's bank info",
+            error: err.message,
+        });
+    }
+};
+
+const deleteBankInfo = async (req, res) => {
+    try {
+        const { startupId } = req.params;
+        const userId = req.user._id;
+        const startup = await Startup.findById(startupId);
+        if (!startup.owner.equals(userId)) {
+            return res.status(BAD_REQUEST).json({
+                message:
+                    'you are not authorized to delete bank info for this startup',
+            });
+        }
+
+        await BankInfo.findByIdAndDelete(startupId);
+
+        return res
+            .status(OK)
+            .json({ message: 'bank info has been deleted successfully' });
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "An error occurred while deleting the startup's bank info",
+            error: err.message,
+        });
+    }
+};
+
+const deleteFinancialInfo = async (req, res) => {
+    try {
+        const { startupId } = req.params;
+        const userId = req.user._id;
+        const startup = await Startup.findById(startupId);
+        if (!startup.owner.equals(userId)) {
+            return res.status(BAD_REQUEST).json({
+                message:
+                    'you are not authorized to delete financial info for this startup',
+            });
+        }
+
+        await FinancialInfo.findByIdAndDelete(startupId);
+
+        return res
+            .status(OK)
+            .json({ message: 'financial info has been deleted successfully' });
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message:
+                "An error occurred while deleting the startup's financial info",
+            error: err.message,
+        });
+    }
+};
+
 export {
     addStartup,
     updateStartup,
     deleteStartup,
-    getStartup,
+    getStartupById,
     getAllStartups,
-    getUserStartups,
+    getStartupsByOwnerId,
+    addBankInfo,
+    addFinancialInfo,
+    deleteBankInfo,
+    deleteFinancialInfo,
 };

@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { useRegisterStartupContext } from '../contexts';
+import { useRegisterStartupContext, useUserContext } from '../contexts';
+import { startupRegistrationApplicationService } from '../services';
 
 export default function RegisterYourStartupPage() {
     const location = useLocation();
     const pathname = location.pathname;
     const currentURL = pathname.split('/').pop();
-    const { currentStep, setCurrentStep, totalData } =
+    const { currentStep, setCurrentStep, totalData, setTotalData } =
         useRegisterStartupContext();
+    const { user } = useUserContext();
+    const [loading, setLoading] = useState(true);
 
     const steps = [
         {
@@ -48,6 +51,23 @@ export default function RegisterYourStartupPage() {
         );
         step?.onClick();
     }, [currentURL]);
+
+    // check if there is already an application for current user
+    useEffect(() => {
+        try {
+            (async function getOngoingApplications() {
+                const res =
+                    await startupRegistrationApplicationService.getApplication();
+                if (!res?.message) {
+                    //    setTotalData(prev => )
+                }
+            })();
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     const stepElements = steps.map((step, index) => (
         <NavLink

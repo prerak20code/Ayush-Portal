@@ -7,17 +7,29 @@ import {
     addStartup,
     updateStartup,
     deleteStartup,
-    getStartup,
+    getStartupById,
     getAllStartups,
-    getUserStartups,
+    getStartupsByOwnerId,
+    addBankInfo,
+    addFinancialInfo,
+    deleteBankInfo,
+    deleteFinancialInfo,
 } from '../controllers/startup.Controller.js';
 
-startupRouter.route('/add').post(verifyJWT, addStartup);
-startupRouter.route('/get-startups').get(verifyJWT, getUserStartups);
+startupRouter.use(verifyJWT); // will be applied to all startup routes
+
+startupRouter.route('/add').post(addStartup);
+startupRouter.route('/:userId').get(getStartupsByOwnerId);
+
+startupRouter.route('/bank-info').post(addBankInfo).delete(deleteBankInfo);
+startupRouter
+    .route('/financial-info')
+    .post(addFinancialInfo)
+    .delete(deleteFinancialInfo);
 startupRouter
     .route('/:startupId')
-    .get(verifyJWT, getStartup)
-    .put(verifyJWT, updateStartup)
-    .delete(verifyJWT, deleteStartup);
+    .get(getStartupById)
+    .patch(updateStartup)
+    .delete(deleteStartup);
 
-startupRouter.route('/').get(verifyJWT, getAllStartups);
+startupRouter.route('/').get(getAllStartups);
