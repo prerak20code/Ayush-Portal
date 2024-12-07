@@ -2,7 +2,7 @@ import './config/envLoader.js';
 import { app } from './app.js';
 import { connectDB } from './db/connectDB.js';
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 await connectDB();
 
