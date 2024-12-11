@@ -1,3 +1,4 @@
 import copyEmail from './copyEmail';
 import verifyRegex from './verifyRegex';
-export { copyEmail, verifyRegex };
+import formatDate from './formatDate';
+export { copyEmail, verifyRegex, formatDate };

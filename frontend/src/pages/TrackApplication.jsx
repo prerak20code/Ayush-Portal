@@ -31,7 +31,7 @@ export default function TrackApplication() {
             name: 'Financial Information',
             path: 'financial',
             onClick: () => setCurrentStep(2),
-            status: totalData.banking.status,
+            status: totalData.financial.status,
         },
         {
             name: 'Banking Information',
@@ -56,8 +56,8 @@ export default function TrackApplication() {
 
     // if we have appId then auto fill the data and display current status
     useEffect(() => {
-        try {
-            (async function getApp() {
+        (async function getApp() {
+            try {
                 if (appId !== 'new') {
                     const res =
                         await startupRegistrationApplicationService.getApplication(
@@ -74,7 +74,7 @@ export default function TrackApplication() {
                                 data: res.startup || {},
                                 status: res.startup ? 'complete' : 'pending',
                             },
-                            finanical: {
+                            financial: {
                                 data: res.startup?.financialInfo || {},
                                 status: res.startup?.financialInfo
                                     ? 'complete'
@@ -93,12 +93,12 @@ export default function TrackApplication() {
                         setTotalData(data);
                     }
                 }
-            })();
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setLoading(false);
-        }
+            } catch (err) {
+                navigate('/server-error');
+            } finally {
+                setLoading(false);
+            }
+        })();
     }, [appId]);
 
     const stepElements = steps.map((step, index) => (
@@ -114,8 +114,8 @@ export default function TrackApplication() {
                     currentStep === index
                         ? 'bg-[#f68533] text-white shadow-lg scale-105'
                         : step.status === 'complete'
-                          ? 'bg-green-600 text-white shadow-md'
-                          : 'bg-[#f9f9f9] text-[#040606]'
+                          ? 'bg-green-600 text-[#f9f9f9] shadow-md'
+                          : 'bg-[#f9f9f9] text-[#040606] shadow-md'
                 }`}
             >
                 {index + 1}
@@ -147,7 +147,11 @@ export default function TrackApplication() {
         </NavLink>
     ));
 
-    return (
+    return loading || !Object.keys(totalData) > 0 ? (
+        <div className="w-full fill-[#f68533] text-white size-[30px]">
+            {icons.loading}
+        </div>
+    ) : (
         <div className="w-screen min-h-[calc(100vh-110px)] bg-[#fff7f2] flex flex-col items-center">
             {/* steps */}
             <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md p-4 w-full flex flex-col items-center justify-start gap-8">
@@ -161,15 +165,9 @@ export default function TrackApplication() {
 
             {/* forms */}
             <div className="w-full p-4 flex items-center justify-center">
-                {loading ? (
-                    <div className="w-full fill-[#f68533] text-white size-[30px]">
-                        {icons.loading}
-                    </div>
-                ) : (
-                    <div className="bg-white max-w-xl w-full drop-shadow-md rounded-md flex items-center justify-center p-4 flex-1">
-                        <Outlet />
-                    </div>
-                )}
+                <div className="bg-white max-w-xl w-full drop-shadow-md rounded-md flex items-center justify-center p-4 flex-1">
+                    <Outlet />
+                </div>
             </div>
         </div>
     );

@@ -4,26 +4,34 @@ import PhoneInput from 'react-phone-input-2';
 import { Button, Popup } from '..';
 import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterStartupContext, useUserContext } from '../../contexts';
-import { verifyRegex } from '../../utils';
+import { useRegisterStartupContext } from '../../contexts';
+import { verifyRegex, formatDate } from '../../utils';
 import {
     ownerService,
     startupRegistrationApplicationService,
 } from '../../services';
 
 export default function PersonalInformation() {
-    const { user } = useUserContext();
+    // const { user } = useUserContext();
+    const { setCurrentStep, setTotalData, setCompletedSteps, totalData } =
+        useRegisterStartupContext();
+
     const initialInputs = {
-        name: user.name || '',
-        email: user.email || '',
-        dateOfBirth: user.dateOfBirth || '',
-        password: user.password || '',
-        phone: user.phone || '',
-        address: user.address || '',
-        nationality: user.nationality || '',
-        linkedInURL: user.linkedInURL || '',
+        name: totalData.personal.data.name || '',
+        email: totalData.personal.data.email || '',
+        dateOfBirth: formatDate(totalData.personal.data.dateOfBirth) || '',
+        password: totalData.personal.data.password || '',
+        phone: totalData.personal.data.phone || '',
+        address: totalData.personal.data.address || '',
+        nationality: totalData.personal.data.nationality || '',
+        linkedInURL: totalData.personal.data.linkedInURL || '',
     };
+
+    const navigate = useNavigate();
+    const [countryList, setCountryList] = useState([]);
+    const [flag, setFlag] = useState('');
     const [inputs, setInputs] = useState(initialInputs);
+
     const initialErrors = {
         root: '',
         name: '',
@@ -37,11 +45,10 @@ export default function PersonalInformation() {
     const [disabled, setDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
     const [showPopup, setShowPopup] = useState();
-    const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
-        useRegisterStartupContext();
-    const navigate = useNavigate();
-    const [countryList, setCountryList] = useState([]);
-    const [flag, setFlag] = useState('');
+
+    const isFormAutoFilled = Object.values(initialInputs).every(
+        (value, index) => value || index === 'linkedInURL'
+    );
 
     useEffect(() => {
         (async function fetchCountryList() {
@@ -60,6 +67,21 @@ export default function PersonalInformation() {
 
                 countries.sort((a, b) => a.name.localeCompare(b.name));
                 setCountryList(countries);
+                // Set the initial flag if nationality exists
+                if (initialInputs.nationality) {
+                    const initialCountry = countries.find(
+                        (countryObject) =>
+                            countryObject.name === initialInputs.nationality
+                    );
+
+                    if (initialCountry) {
+                        setFlag(initialCountry.flag); // Set the flag URL
+                    } else {
+                        console.warn(
+                            `Country with name "${initialInputs.nationality}" not found.`
+                        );
+                    }
+                }
             } catch (error) {
                 console.error('Error fetching country data:', error);
             }
@@ -90,7 +112,8 @@ export default function PersonalInformation() {
             ) ||
             Object.entries(errors).some(
                 ([key, value]) => value !== '' && key !== 'root'
-            )
+            ) ||
+            isFormAutoFilled
         ) {
             setDisabled(true);
         } else {
@@ -156,7 +179,7 @@ export default function PersonalInformation() {
             name: 'dateOfBirth',
             required: true,
             label: 'Date of Birth',
-            readOnly: false,
+            readOnly: isFormAutoFilled,
         },
         {
             type: 'password',
@@ -174,7 +197,7 @@ export default function PersonalInformation() {
             icon: icons.linkedIn,
             placeholder: 'Enter LinkedIn profile URL',
             required: false,
-            readOnly: false,
+            readOnly: isFormAutoFilled,
         },
     ];
 
@@ -265,12 +288,6 @@ export default function PersonalInformation() {
                             <PhoneInput
                                 country="in"
                                 value={inputs.phone}
-                                // onChange={(value) =>
-                                //     setInputs((prev) => ({
-                                //         ...prev,
-                                //         phone: value,
-                                //     }))
-                                // }
                                 inputProps={{
                                     name: 'phone',
                                     required: true,
@@ -305,6 +322,7 @@ export default function PersonalInformation() {
                                 name="nationality"
                                 id="nationality"
                                 value={inputs.nationality}
+                                readOnly={isFormAutoFilled}
                                 onChange={handleChange}
                                 className={`py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${flag ? 'pl-12 pr-3' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
                             >
@@ -338,6 +356,7 @@ export default function PersonalInformation() {
                                 name="address"
                                 placeholder="Provide your Current address"
                                 value={inputs.address}
+                                readOnly={isFormAutoFilled}
                                 onChange={(e) =>
                                     setInputs((prev) => ({
                                         ...prev,

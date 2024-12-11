@@ -60,7 +60,7 @@ const register = async (req, res) => {
 const getOwnerById = async (req, res) => {
     try {
         const { ownerId } = req.params;
-        console.log(ownerId);
+
         const user = await StartupOwner.find({ userId: ownerId });
         if (!user) {
             return res.status(BAD_REQUEST).json({ message: 'owner not found' });
