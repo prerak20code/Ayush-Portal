@@ -44,7 +44,7 @@ export default function Header() {
         { url: '', name: 'Home', show: true },
         { url: 'register', name: 'Register Now', show: !user },
         {
-            url: `${user?._id}/become-investor`,
+            url: `/become-investor/${user?._id}`,
             name: 'Become an Investor',
             show: user,
         },

@@ -28,6 +28,10 @@ import OrganizationInformation from './RegisterStartup/OrganizationInformation';
 import Review from './RegisterStartup/Review';
 import InvestedStartups from './investorConnect/InvestedStartups';
 import TargetedStartups from './investorConnect/TargetedStartups';
+import InvestorBankingInformation from './InvestorRegister/InvestorBankingInformation';
+import InvestorVerification from './InvestorRegister/InvestorVerification';
+import PersonalInformationInvestor from './InvestorRegister/PersonalInformation';
+import DocumentUpload from './InvestorRegister/DocumentUpload';
 export {
     LayoutOne,
     LayoutTwo,
@@ -59,4 +63,8 @@ export {
     // StakeHolderType,
     // OwnerType,
     // GovernmentType,
+    InvestorBankingInformation,
+    InvestorVerification,
+    PersonalInformationInvestor,
+    DocumentUpload,
 };

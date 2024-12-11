@@ -9,6 +9,11 @@ import {
     useRegisterStartupContext,
 } from './registerStartupContext';
 
+import {
+    RegisterInvestorContextProvider,
+    useRegisterInvestorContext,
+} from './registerInvestor';
+
 export {
     useVariantContext,
     VariantContextProvider,
@@ -18,4 +23,6 @@ export {
     useProfileDropdownContext,
     useRegisterStartupContext,
     RegisterStartupContextProvider,
+    RegisterInvestorContextProvider,
+    useRegisterInvestorContext,
 };

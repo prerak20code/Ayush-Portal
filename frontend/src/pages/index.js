@@ -9,6 +9,7 @@ import NotFoundPage from './NotFoundPage';
 // import OwnerConnectPage from './OwnerConnectPage';
 import TrackApplication from './TrackApplication';
 import StartupApplicationsPage from './StartupApplicationsPage';
+import RegisterInvestorPage from './InvestorRegistration';
 
 export {
     HomePage,
@@ -22,4 +23,5 @@ export {
     TrackApplication,
     StartupApplicationsPage,
     // OwnerConnectPage,
+    RegisterInvestorPage,
 };
