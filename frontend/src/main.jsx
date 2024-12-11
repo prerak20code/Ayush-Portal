@@ -97,6 +97,7 @@ const router = createBrowserRouter(
                     path="invested-startups/:userId"
                     element={<InvestedStartups />}
                 />
+                
                 <Route
                     path="applications/:userId"
                     element={<StartupApplicationsPage />}
