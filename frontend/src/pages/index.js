@@ -9,11 +9,8 @@ import NotFoundPage from './NotFoundPage';
 // import OwnerConnectPage from './OwnerConnectPage';
 import TrackApplication from './TrackApplication';
 import StartupApplicationsPage from './StartupApplicationsPage';
-<<<<<<< HEAD
 import DPIITregistrationPage from './DPIITregistrationPage';
-=======
 import RegisterInvestorPage from './InvestorRegistration';
->>>>>>> 815b00ac134c1f65282308902711aa8ac371035d
 
 export {
     HomePage,
@@ -27,9 +24,6 @@ export {
     TrackApplication,
     StartupApplicationsPage,
     // OwnerConnectPage,
-<<<<<<< HEAD
     DPIITregistrationPage,
-=======
     RegisterInvestorPage,
->>>>>>> 815b00ac134c1f65282308902711aa8ac371035d
 };

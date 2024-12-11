@@ -227,74 +227,75 @@ export default function Header() {
             </div>
 
             {/* tabs header */}
-            <div className="relative drop-shadow-md bg-[#f68533] flex items-center justify-end h-[40px] gap-x-8 px-4">
+            <div className="relative drop-shadow-md bg-[#f68533] flex items-center justify-between h-[40px] gap-x-8 px-4">
                 <img
                     src={AYUSHSTARTUPLOGO}
                     alt="gov india image"
                     className="object-contain h-full"
                 />
-                {/* Tabs */}
-                <div className="hidden h-full md:flex items-center justify-end gap-x-8">
-                    {tabElements}
-                    <div className="cursor-pointer relative">
-                        <div
-                            onMouseOver={() => {
-                                setShowRegisterDropdown((prev) => !prev);
-                                setShowProfileDropdown(false);
-                                setShowDropdown(false);
-                            }}
-                            className="hover:underline text-[#f9f9f9] font-medium text-md"
-                        >
-                            Register Startup
+                <div className="flex items-center justify-end gap-x-8">
+                    {/* Tabs */}
+                    <div className="hidden h-full lg:flex items-center justify-end gap-x-8">
+                        {tabElements}
+                        <div className="cursor-pointer relative">
+                            <div
+                                onMouseOver={() => {
+                                    setShowRegisterDropdown((prev) => !prev);
+                                    setShowProfileDropdown(false);
+                                    setShowDropdown(false);
+                                }}
+                                className="hover:underline text-[#f9f9f9] font-medium text-md"
+                            >
+                                Register Startup
+                            </div>
+                            {/* Hamburger Dropdown */}
+                            <AnimatePresence>
+                                {showRegisterDropdown && (
+                                    <motion.div
+                                        className="absolute top-[42px] -right-3 bg-[#f9f9f9] rounded-xl py-3 flex flex-col items-start justify-start drop-shadow-md"
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="exit"
+                                        variants={dropdownVariants}
+                                    >
+                                        {/* Pointing Tip */}
+                                        <div className="absolute -top-[7px] right-[10px] rounded-tl-sm size-4 bg-[#f9f9f9] rotate-45"></div>
+                                        {/* Dropdown Items */}
+                                        <div className="text-nowrap flex flex-col gap-y-1 px-2">
+                                            {registerTypesElements}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
-                        {/* Hamburger Dropdown */}
-                        <AnimatePresence>
-                            {showRegisterDropdown && (
-                                <motion.div
-                                    className="absolute top-[42px] -right-3 bg-[#f9f9f9] rounded-xl py-3 flex flex-col items-start justify-start drop-shadow-md"
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    variants={dropdownVariants}
-                                >
-                                    {/* Pointing Tip */}
-                                    <div className="absolute -top-[7px] right-[10px] rounded-tl-sm size-4 bg-[#f9f9f9] rotate-45"></div>
-                                    {/* Dropdown Items */}
-                                    <div className="text-nowrap flex flex-col gap-y-1 px-2">
-                                        {registerTypesElements}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
                     </div>
-                </div>
-
-                {/* Icons */}
-                <div className="flex items-center justify-end gap-x-6">
-                    <div className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]">
-                        {icons.search}
-                    </div>
-                    {user && (
+                    {/* Icons */}
+                    <div className="flex items-center justify-end gap-x-6">
+                        <div className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]">
+                            {icons.search}
+                        </div>
+                        {user && (
+                            <div
+                                className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
+                                onMouseOver={() => {
+                                    setShowProfileDropdown((prev) => !prev);
+                                    setShowDropdown(false);
+                                    setShowRegisterDropdown(false);
+                                }}
+                            >
+                                {icons.profile}
+                            </div>
+                        )}
                         <div
-                            className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
+                            className="lg:hidden hover:scale-125 transition-all ease-in size-[20px] fill-[#f9f9f9] cursor-pointer"
                             onMouseOver={() => {
-                                setShowProfileDropdown((prev) => !prev);
-                                setShowDropdown(false);
+                                setShowDropdown((prev) => !prev);
+                                setShowProfileDropdown(false);
                                 setShowRegisterDropdown(false);
                             }}
                         >
-                            {icons.profile}
+                            {icons.hamburgur}
                         </div>
-                    )}
-                    <div
-                        className="md:hidden hover:scale-125 transition-all ease-in size-[20px] fill-[#f9f9f9] cursor-pointer"
-                        onMouseOver={() => {
-                            setShowDropdown((prev) => !prev);
-                            setShowProfileDropdown(false);
-                            setShowRegisterDropdown(false);
-                        }}
-                    >
-                        {icons.hamburgur}
                     </div>
                 </div>
 

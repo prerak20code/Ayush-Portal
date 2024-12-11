@@ -32,9 +32,8 @@ export default function FirstHalf() {
                         </h1>
 
                         <p className="text-center px-4 sm:px-8 text-sm xs:text-base sm:text-lg text-[#5a5a5a]">
-                            Lorem ipsum dolor sit amet, consectetur
-                            adipisicingelit. Ab eaque qui sint explicabo est?
-                            Hic cumque similique a soluta consequatur, porro.
+                            Streamlining AYUSH Startup Registration with
+                            Transparency, Support and Growth opportunities.
                         </p>
                     </div>
 
