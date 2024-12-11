@@ -14,11 +14,13 @@ export default function App() {
             try {
                 setLoading(true);
                 const res = await userService.getCurrentUser();
-                let data;
+                console.log('current user', res);
+                let data = {};
                 if (res && !res.message) {
                     switch (res.designation) {
                         case 'owner': {
                             data = await ownerService.getStartupOwner(res._id);
+                            console.log('owner', data);
                         }
                         case 'investor': {
                             // data = await investorService.getInvestor(res._id);
@@ -28,9 +30,7 @@ export default function App() {
                         }
                     }
 
-                    if (data) {
-                        setUser({ ...res, ...data });
-                    }
+                    setUser({ ...res, ...data });
                 } else {
                     setUser(null);
                 }

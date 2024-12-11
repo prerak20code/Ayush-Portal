@@ -1,25 +1,4 @@
 class OwnerService {
-    // async login(inputs) {
-    //     try {
-    //         const res = await fetch('/api/v1/owners/login', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify(inputs),
-    //         });
-
-    //         const data = await res.json();
-    //         console.log(data);
-
-    //         if (res.status === 500) {
-    //             throw new Error(data.message);
-    //         }
-    //         return data;
-    //     } catch (err) {
-    //         console.error(`error in login service: ${err.message}`);
-    //         throw err;
-    //     }
-    // }
-
     async register(inputs) {
         try {
             const res = await fetch('/api/v1/owners/register', {
@@ -46,69 +25,27 @@ class OwnerService {
         }
     }
 
-    // async verifyEmail(userId, uniqueString) {
-    //     try {
-    //         const res = await fetch(
-    //             `/api/v1/owners/verify-email/${userId}/${uniqueString}`,
-    //             {
-    //                 method: 'GET',
-    //             }
-    //         );
-    //         const data = await res.json();
-    //         console.log(data);
+    async update(updates) {
+        try {
+            const res = await fetch('/api/v1/owners/update', {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ updates }),
+            });
 
-    //         if (res.status === 500) {
-    //             throw new Error(data);
-    //         }
-    //         return data;
-    //     } catch (err) {
-    //         console.error(
-    //             `error in email verification service: ${err.message}`
-    //         );
+            let data = await res.json();
+            console.log(data);
 
-    //         throw err;
-    //     }
-    // }
-
-    // async logout() {
-    //     try {
-    //         const res = await fetch('/api/v1/owners/logout', {
-    //             method: 'PATCH',
-    //             credentials: 'include',
-    //         });
-
-    //         const data = await res.json();
-    //         console.log(data);
-
-    //         if (res.status === 500) {
-    //             throw new Error(data.message);
-    //         }
-    //         return data;
-    //     } catch (err) {
-    //         console.error(`error in logout service: ${err.message}`);
-    //         throw err;
-    //     }
-    // }
-
-    // async delete() {
-    //     try {
-    //         const res = await fetch('/api/v1/owners', {
-    //             method: 'DELETE',
-    //             credentials: 'include',
-    //         });
-
-    //         const data = await res.json();
-    //         console.log(data);
-
-    //         if (res.status === 500) {
-    //             throw new Error(data.message);
-    //         }
-    //         return data;
-    //     } catch (err) {
-    //         console.error(`error in delete user service: ${err.message}`);
-    //         throw err;
-    //     }
-    // }
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error(`error in update service: ${err.message}`);
+            throw err;
+        }
+    }
 
     async getStartupOwner(ownerId) {
         try {
@@ -129,61 +66,6 @@ class OwnerService {
             throw err;
         }
     }
-
-    // async requestResetPassword(email) {
-    //     try {
-    //         const res = await fetch('/api/v1/owners/request-reset-password', {
-    //             method: 'POST',
-    //             credentials: 'include',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({
-    //                 email,
-    //                 redirectURL: `${import.meta.env.VITE_FRONTEND_BASE_URL}/user/reset-password`,
-    //             }),
-    //         });
-
-    //         const data = await res.json();
-    //         console.log(data);
-
-    //         if (res.status === 500) {
-    //             throw new Error(data.message);
-    //         }
-    //         return data;
-    //     } catch (err) {
-    //         console.error(
-    //             `error in request reset password service: ${err.message}`
-    //         );
-    //         throw err;
-    //     }
-    // }
-
-    // async resetPassword(resetString, newPassword) {
-    //     try {
-    //         const res = await fetch('/api/v1/owners/reset-password', {
-    //             method: 'POST',
-    //             credentials: 'include',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({
-    //                 // userId,
-    //                 resetString,
-    //                 newPassword,
-    //             }),
-    //         });
-
-    //         const data = await res.json();
-    //         console.log(data);
-
-    //         if (res.status === 500) {
-    //             throw new Error(data.message);
-    //         }
-    //         return data;
-    //     } catch (err) {
-    //         console.error(`error in reset password service: ${err.message}`);
-    //         throw err;
-    //     }
-    // }
-
-    // async refreshAccessToken() {}
 }
 
 export const ownerService = new OwnerService();

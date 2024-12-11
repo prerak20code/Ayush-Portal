@@ -91,12 +91,12 @@ export default function LoginPage() {
 
     return (
         <div
-            className="bg-cover bg-no-repeat "
+            className="bg-cover bg-no-repeat min-h-[calc(100vh-110px)] flex items-center justify-center"
             style={{
                 backgroundImage: `url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/c3/c9/ee/impressive-construction.jpg')`,
             }}
         >
-            <div className="max-w-[450px] text-center bg-[#f9f9f9] drop-shadow-md p-6 rounded-lg">
+            <div className="w-full max-w-[450px] text-center bg-[#f9f9f9] drop-shadow-md p-6 rounded-lg">
                 <h1 className="text-2xl font-bold text-gray-800 mb-4">
                     Welcome Back!
                 </h1>
@@ -116,11 +116,6 @@ export default function LoginPage() {
                     <option value="Stakeholder">Stakeholder</option>
                     <option value="Govt. Official">Govt. Official</option>
                 </select>
-
-                {/* Conditional Rendering */}
-                {/* {role === 'Startup Owner' && <OwnerType />}
-                    {role === 'Stakeholder' && <StakeholderType />}
-                    {role === 'Govt. Official' && <GovernmentType />} */}
 
                 <div className="bg-white drop-shadow-md border border-gray-300 shadow-md rounded-lg p-6 w-full max-w-sm">
                     {error && <p className="text-red-500 text-sm">{error}</p>}

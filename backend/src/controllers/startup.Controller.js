@@ -167,10 +167,7 @@ const updateStartup = async (req, res) => {
             }
         );
 
-        return res.status(OK).json({
-            message: 'Startup updated successfully',
-            updatedStartup,
-        });
+        return res.status(OK).json(updatedStartup);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'An error occurred while updating the startup',

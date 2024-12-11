@@ -101,7 +101,7 @@ const router = createBrowserRouter(
                     }
                 >
                     {/* Default to PersonalInformation for empty path */}
-                    <Route index element={<PersonalInformation />} />
+                    {/* <Route index element={<PersonalInformation />} /> */}
                     <Route path="personal" element={<PersonalInformation />} />
                     <Route
                         path="organization"
