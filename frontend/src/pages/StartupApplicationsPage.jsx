@@ -33,18 +33,31 @@ export default function StartupApplicationsPage() {
         })();
     }, []);
 
-
     const appsElements = (
-        <div className="mx-4 md:mx-8 lg:mx-16"> {/* Adding margins around the table */}
+        <div className="mx-4 md:mx-8 lg:mx-16">
+            {' '}
+            {/* Adding margins around the table */}
             <table className="table-auto border-collapse w-full bg-white shadow-lg rounded-lg overflow-hidden">
                 <thead className="bg-[#FF7F32] text-white">
                     <tr>
-                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">S. No</th>
-                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Startup ID</th>
-                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Startup Owner</th>
-                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Registered Date</th>
-                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Expiration Date</th>
-                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Status</th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">
+                            S. No
+                        </th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">
+                            Startup ID
+                        </th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">
+                            Startup Owner
+                        </th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">
+                            Registered Date
+                        </th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">
+                            Expiration Date
+                        </th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">
+                            Status
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,23 +66,39 @@ export default function StartupApplicationsPage() {
                         const expirationDate = new Date(app.expireAt);
                         const registrationDate = new Date(expirationDate);
                         registrationDate.setDate(expirationDate.getDate() - 10);
-    
+
                         return (
                             <tr
                                 key={app._id}
-                                onClick={() => navigate(`/application/${app._id}`)}
+                                onClick={() =>
+                                    navigate(`/application/${app._id}`)
+                                }
                                 className="cursor-pointer hover:bg-[#FF7F32] hover:text-white transition-all duration-300"
                             >
-                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{index + 1}</td>
-                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{app._id}</td>
-                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{app.owner || "N/A"}</td>
                                 <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
-                                    {registrationDate ? registrationDate.toLocaleDateString() : "N/A"}
+                                    {index + 1}
                                 </td>
                                 <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
-                                    {app.expireAt ? new Date(app.expireAt).toLocaleDateString() : "N/A"}
+                                    {app._id}
                                 </td>
-                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{app.status || "Pending"}</td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
+                                    {app.owner || 'N/A'}
+                                </td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
+                                    {registrationDate
+                                        ? registrationDate.toLocaleDateString()
+                                        : 'N/A'}
+                                </td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
+                                    {app.expireAt
+                                        ? new Date(
+                                              app.expireAt
+                                          ).toLocaleDateString()
+                                        : 'N/A'}
+                                </td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
+                                    {app.status || 'Pending'}
+                                </td>
                             </tr>
                         );
                     })}
@@ -77,7 +106,6 @@ export default function StartupApplicationsPage() {
             </table>
         </div>
     );
-
 
     return loading ? (
         <div className="w-full flex justify-center items-center h-screen text-white">

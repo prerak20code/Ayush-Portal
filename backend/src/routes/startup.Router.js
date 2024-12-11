@@ -36,5 +36,5 @@ startupRouter
 startupRouter
     .route('/register-DPIIT/:DPIITid')
     .post(registerStartupUsingDPIITid);
-    
+
 startupRouter.route('/').get(getAllStartups);

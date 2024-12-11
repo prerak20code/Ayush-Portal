@@ -51,8 +51,7 @@ const registerStartupUsingDPIITid = async (req, res) => {
         });
         if (!data) {
             return res.status(NOT_FOUND).json({
-                message:
-                    'startup not found',
+                message: 'startup not found',
             });
         }
         if (data.DPIITpassword !== password) {

@@ -139,7 +139,7 @@ export default function TrackApplication() {
                     } else {
                         setExistingApp(false);
                     }
-                } 
+                }
             } catch (err) {
                 navigate('/server-error');
             } finally {

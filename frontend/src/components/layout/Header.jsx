@@ -213,18 +213,11 @@ export default function Header() {
         <div className="h-[110px]">
             {/* logo header */}
             <div className="overflow-x-scroll drop-shadow-md h-[70px] bg-[#f9f9f9] flex items-center justify-between w-full px-2 sm:px-4 py-[5px]">
-                <div className="object-contain h-[70%] sm:h-full flex items-center justify-center gap-6">
-                    <img
-                        src={AYUSHSTARTUPLOGO}
-                        alt="gov india image"
-                        className="object-contain h-full"
-                    />
-                    <img
-                        src={GOVINDIAIMAGE}
-                        alt="gov india image"
-                        className="hidden xs:block object-contain h-[70%] sm:h-full"
-                    />
-                </div>
+                <img
+                    src={GOVINDIAIMAGE}
+                    alt="gov india image"
+                    className="hidden xs:block object-contain h-[70%] sm:h-full"
+                />
 
                 <img
                     src={AYUSHLOGO}
@@ -235,6 +228,11 @@ export default function Header() {
 
             {/* tabs header */}
             <div className="relative drop-shadow-md bg-[#f68533] flex items-center justify-end h-[40px] gap-x-8 px-4">
+                <img
+                    src={AYUSHSTARTUPLOGO}
+                    alt="gov india image"
+                    className="object-contain h-full"
+                />
                 {/* Tabs */}
                 <div className="hidden h-full md:flex items-center justify-end gap-x-8">
                     {tabElements}

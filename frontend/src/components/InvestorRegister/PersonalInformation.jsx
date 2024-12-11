@@ -58,7 +58,7 @@ export default function PersonalInformationInvestor() {
             [name]: type === 'file' ? files[0] : value,
         }));
         console.log(name);
-        if(name === investorType){
+        if (name === investorType) {
             setInvestorType(value);
         }
     };
@@ -144,7 +144,6 @@ export default function PersonalInformationInvestor() {
         }
     };
 
-
     // Debounce the nationality input to avoid excessive filtering
     const debouncedInputChange = debounce((inputValue) => {
         setNationalityInput(inputValue);
@@ -162,7 +161,6 @@ export default function PersonalInformationInvestor() {
                 {/* Full Name */}
                 <div className="flex items-center space-x-3">
                     {' '}
-                  
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">
                             Full Name
@@ -183,26 +181,26 @@ export default function PersonalInformationInvestor() {
                         <label className="block text-sm font-medium text-gray-700">
                             Investor Type
                         </label>
-                            <select
-                                name="investorType"
-                                id="investorType"
-                                value={formData.investorType}
-                                disabled={false}
-                                onChange={handleChange}
-                               className="m-1"
-                            >
-                                <option value="">Select InvestorType</option>
-                                {investorOptions.map((investor) => (
-                                    <option
-                                        key={investor.label}
-                                        value={investor.value}
-                                    >
-                                        {investor.value}
-                                    </option>
-                                ))}
-                            </select>
+                        <select
+                            name="investorType"
+                            id="investorType"
+                            value={formData.investorType}
+                            disabled={false}
+                            onChange={handleChange}
+                            className="m-1"
+                        >
+                            <option value="">Select InvestorType</option>
+                            {investorOptions.map((investor) => (
+                                <option
+                                    key={investor.label}
+                                    value={investor.value}
+                                >
+                                    {investor.value}
+                                </option>
+                            ))}
+                        </select>
                     </div>
-                </div> 
+                </div>
                 {investorType?.value === 'Institutional' ? (
                     <div className="flex items-center space-x-3">
                         <div className="w-full">
@@ -280,10 +278,13 @@ export default function PersonalInformationInvestor() {
                         <label className="block text-sm font-medium text-gray-700">
                             Date of Birth
                         </label>
-                     <input type="date" 
-                      name= 'dateOfBirth'
-                       value={formData.dateOfBirth} required 
-                        onChange={handleChange}/>
+                        <input
+                            type="date"
+                            name="dateOfBirth"
+                            value={formData.dateOfBirth}
+                            required
+                            onChange={handleChange}
+                        />
                     </div>
                 </div>
                 {/* Nationality */}
@@ -293,24 +294,23 @@ export default function PersonalInformationInvestor() {
                             Nationality
                         </label>
                         <select
-                                name="nationality"
-                                id="nationality"
-                                value={formData.nationality}
-                                disabled={false}
-                                onChange={handleChange}
-                                className= 'm-1'
-                            >
-                                <option value="">Select Nationality</option>
-                                {countryList.map((country) => (
-                                    <option
-                                        key={country.label}
-                                        value={country.label}
-                                    >
-                                        {country.label}
-                                    </option>
-                                ))}
-                            </select>
-                     
+                            name="nationality"
+                            id="nationality"
+                            value={formData.nationality}
+                            disabled={false}
+                            onChange={handleChange}
+                            className="m-1"
+                        >
+                            <option value="">Select Nationality</option>
+                            {countryList.map((country) => (
+                                <option
+                                    key={country.label}
+                                    value={country.label}
+                                >
+                                    {country.label}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
                 {/* LinkedIn Profile */}

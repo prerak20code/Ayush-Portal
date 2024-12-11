@@ -35,7 +35,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     }
 
     // Check if sender is part of the chat
-    if (!chat.users.some(user => user._id.equals(req.user._id))) {
+    if (!chat.users.some((user) => user._id.equals(req.user._id))) {
         res.status(403);
         throw new Error('Not authorized to send messages to this chat');
     }
