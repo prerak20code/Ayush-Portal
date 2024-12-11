@@ -23,13 +23,15 @@ import {
     TrackApplication,
     DPIITregistrationPage,
     RegisterInvestorPage,
+    PrivacyPoliciesPage,
+    AdminDashboard,
+    DocumentsCheck,
 } from './pages';
 
 import {
     LayoutOne,
     LayoutTwo,
     LayoutThree,
-    // InvestorType,
     EmailVerification,
     ResetPassword,
     Redirect,
@@ -37,7 +39,7 @@ import {
     BankingInformation,
     PersonalInformation,
     OrganizationInformation,
-    // Documents,
+    UploadDocuments,
     Review,
     InvestedStartups,
     TargetedStartups,
@@ -55,9 +57,6 @@ import {
     RegisterInvestorContextProvider,
 } from './contexts';
 
-// import InvestorType from './InvestorConnect/InvestorType.jsx';
-import AdminDashboard from './pages/AdminDashboard.jsx';
-import DocumentsCheck from './pages/DocumentsCheck.jsx';
 // import OwnerConnectPage from './pages/OwnerConnectPage.jsx';
 
 const router = createBrowserRouter(
@@ -68,6 +67,10 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
+                <Route
+                    path="privacy-policies"
+                    element={<PrivacyPoliciesPage />}
+                />
             </Route>
 
             <Route path="" element={<LayoutTwo />}>
@@ -114,7 +117,6 @@ const router = createBrowserRouter(
                         </RegisterStartupContextProvider>
                     }
                 >
-                    {/* Default to PersonalInformation for empty path */}
                     <Route index element={<PersonalInformation />} />
                     <Route path="personal" element={<PersonalInformation />} />
                     <Route
@@ -126,12 +128,16 @@ const router = createBrowserRouter(
                         element={<FinancialInformation />}
                     />
                     <Route path="banking" element={<BankingInformation />} />
-                    {/* <Route path="documents" element={<Documents />} /> */}
+                    <Route path="documents" element={<UploadDocuments />} />
                     <Route path="review" element={<Review />} />
                 </Route>
                 <Route
                     path="DPIIT/registration/:userId"
                     element={<DPIITregistrationPage />}
+                />
+                <Route
+                    path="register-DPIIT/docs"
+                    element={<UploadDocuments />}
                 />
                 <Route
                     path="become-investor/:id"

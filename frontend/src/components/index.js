@@ -17,10 +17,6 @@ import EmailVerification from './EmailVerification/EmailVerification';
 import ResetPassword from './ResetPassword/ResetPassword';
 import Popup from './popups/Popup';
 import Redirect from './layout/Redirect';
-// import InvestorType from './investorConnect/InvestorType';
-// import OwnerType from './LoginPage/OwnerType';
-// import GovernmentType from './LoginPage/GovernmentType';
-// import StakeHolderType from './LoginPage/StakeholderType';
 import PersonalInformation from './RegisterStartup/PersonalInformation';
 import FinancialInformation from './RegisterStartup/FinancialInformation';
 import BankingInformation from './RegisterStartup/BankingInformation';
@@ -32,6 +28,7 @@ import InvestorBankingInformation from './InvestorRegister/InvestorBankingInform
 import InvestorVerification from './InvestorRegister/InvestorVerification';
 import PersonalInformationInvestor from './InvestorRegister/PersonalInformation';
 import DocumentUpload from './InvestorRegister/DocumentUpload';
+import UploadDocuments from './RegisterStartup/UploadDocuments';
 export {
     LayoutOne,
     LayoutTwo,
@@ -59,10 +56,7 @@ export {
     Review,
     InvestedStartups,
     TargetedStartups,
-    // InvestorType,
-    // StakeHolderType,
-    // OwnerType,
-    // GovernmentType,
+    UploadDocuments,
     InvestorBankingInformation,
     InvestorVerification,
     PersonalInformationInvestor,
