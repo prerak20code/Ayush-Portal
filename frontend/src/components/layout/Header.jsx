@@ -224,6 +224,7 @@ export default function Header() {
             {/* tabs header */}
             <div className="relative drop-shadow-md bg-[#f68533] flex items-center justify-between h-[40px] gap-x-8 px-4">
                 <img
+                    onClick={() => navigate('/')}
                     src={AYUSHSTARTUPLOGO}
                     alt="gov india image"
                     className="object-contain h-full"
