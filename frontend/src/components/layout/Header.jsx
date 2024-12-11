@@ -53,11 +53,6 @@ export default function Header() {
             name: 'Become an Investor',
             show: user,
         },
-        {
-            url: `application/new/personal`,
-            name: 'Register your Startup',
-            show: user,
-        },
         { url: 'login', name: 'Login', show: !user },
         { url: 'faqs', name: 'FAQs', show: true },
         { url: 'about-us', name: 'About Us', show: true },
@@ -186,7 +181,7 @@ export default function Header() {
     const registerTypes = [
         {
             name: 'Register using DPIIT ID',
-            path: `DPIIT/registration/${user._id}`,
+            path: `DPIIT/registration/${user?._id}`,
         },
         {
             name: 'Manual Registration',
