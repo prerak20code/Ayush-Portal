@@ -151,8 +151,7 @@ export default function PersonalInformation() {
                 ) {
                     let updates = {};
                     Object.entries(inputs).map(([key, value]) => {
-                        if(value !== initialInputs[key]){
-                            
+                        if (value !== initialInputs[key]) {
                         }
                     });
                     console.log(updates);

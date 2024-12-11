@@ -73,7 +73,7 @@ const updateOwnerDetails = async (req, res) => {
                 message: 'owner not found',
             });
         }
-console.log(updates);
+        console.log(updates);
         // Update the owner details
         const updatedOwner = await StartupOwner.findOneAndUpdate(
             { userId: ownerId },
