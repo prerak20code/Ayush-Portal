@@ -4,13 +4,18 @@ import {
     completeApplication,
     startApplication,
     getApplication,
-} from '../controllers/startupRegisterationApplication.js';
+    getApplications,
+} from '../controllers/startupRegisterationApplication.Controller.js';
 
 import { verifyJWT } from '../middlewares/index.js';
 
 startupRegistrationApplicationRouter.use(verifyJWT);
+
 startupRegistrationApplicationRouter.route('/start').get(startApplication);
 startupRegistrationApplicationRouter
     .route('/complete')
     .get(completeApplication);
-startupRegistrationApplicationRouter.route('/').get(getApplication);
+startupRegistrationApplicationRouter.route('/:userId').get(getApplications);
+startupRegistrationApplicationRouter
+    .route('/application/:userId/:appId')
+    .get(getApplication);

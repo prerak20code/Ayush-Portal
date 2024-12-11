@@ -5,11 +5,10 @@ const startupRegistrationApplicationSchema = new mongoose.Schema(
         startupId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Startup',
-            // required: true,
         },
         owner: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'StartupOwner',
+            ref: 'User',
             required: true,
         },
         completedSteps: {
@@ -18,7 +17,7 @@ const startupRegistrationApplicationSchema = new mongoose.Schema(
             default: [],
         },
         expireAt: {
-            type: Date, // Tracks the expiration time
+            type: Date,
             required: true,
             default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
         },

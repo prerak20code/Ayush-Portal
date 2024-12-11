@@ -1,7 +1,6 @@
-import { StartupCard } from '../components';
+import { StartupCard } from '..';
 
-export default function ConnectedStartupsPage() {
-    // dummy startups
+export default function InvestedStartups() {
     const startups = [
         {
             id: 1,
@@ -53,11 +52,12 @@ export default function ConnectedStartupsPage() {
                 'Startup India is a flagship initiative launched by the Government of India in 2016 to promote innovation, entrepreneurship, and economic growth by nurturing startups. The program aims to create a robust ecosystem for startups through various incentives, such as tax exemptions, funding support, and simplified compliance.',
         },
     ];
-    //Partitioning startups
-    const connectedStartups = startups.slice(0, 6); // First 6 startups
+
+    // pagination
+    const investedStartups = startups.slice(0, 6); // First 6 startups
     const trendingStartups = startups.slice(6); // Remaining startups
 
-    const connectedStartupElements = connectedStartups.map((startup) => (
+    const investedStartupElements = investedStartups.map((startup) => (
         <StartupCard
             key={startup.id}
             image={startup.image}
@@ -83,7 +83,7 @@ export default function ConnectedStartupsPage() {
                     Connected Startups
                 </h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {connectedStartupElements}
+                    {investedStartupElements}
                 </div>
             </div>
 

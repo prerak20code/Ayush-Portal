@@ -6,10 +6,10 @@ import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ServerErrorPage from './ServerErrorPage';
 import NotFoundPage from './NotFoundPage';
-// import ConnectedStartupsPage from './ConnectedStartupsPage';
-// import TargettedStartupsPage from './TargetedStartupsPage';
 // import OwnerConnectPage from './OwnerConnectPage';
-import RegisterYourStartupPage from './RegisterYourStartupPage';
+import TrackApplication from './TrackApplication';
+import StartupApplicationsPage from './StartupApplicationsPage';
+
 export {
     HomePage,
     AboutUsPage,
@@ -19,8 +19,7 @@ export {
     LoginPage,
     ServerErrorPage,
     NotFoundPage,
-    // ConnectedStartupsPage,
-    RegisterYourStartupPage,
+    TrackApplication,
+    StartupApplicationsPage,
     // OwnerConnectPage,
-    // TargettedStartupsPage,
 };

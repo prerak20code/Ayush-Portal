@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from 'react';
 const RegisterStartupContext = createContext();
 
 export const RegisterStartupContextProvider = ({ children }) => {
+    const [existingApp, setExistingApp] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [completedSteps, setCompletedSteps] = useState([]);
     const [totalData, setTotalData] = useState({
@@ -19,6 +20,8 @@ export const RegisterStartupContextProvider = ({ children }) => {
     return (
         <RegisterStartupContext.Provider
             value={{
+                existingApp,
+                setExistingApp,
                 currentStep,
                 setCurrentStep,
                 totalData,

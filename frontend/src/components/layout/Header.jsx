@@ -10,7 +10,7 @@ import {
     useVariantContext,
     // usePopupContext,
 } from '../../contexts';
-import { ownerService } from '../../services';
+import { userService } from '../../services';
 
 export default function Header() {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -43,6 +43,16 @@ export default function Header() {
     const tabs = [
         { url: '', name: 'Home', show: true },
         { url: 'register', name: 'Register Now', show: !user },
+        {
+            url: `${user?._id}/become-investor`,
+            name: 'Become an Investor',
+            show: user,
+        },
+        {
+            url: `${user?._id}/register-startup`,
+            name: 'Register your Startup',
+            show: user,
+        },
         { url: 'login', name: 'Login', show: !user },
         { url: 'faqs', name: 'FAQs', show: true },
         { url: 'about-us', name: 'About Us', show: true },
@@ -85,10 +95,13 @@ export default function Header() {
 
     const profileItems = [
         { path: '/profile', name: 'My Profile' },
-        { path: '/track-application', name: 'Track your Application' },
         {
-            path: '/startups',
-            name: 'Applied Startups',
+            path: `/applications/${user?._id}`,
+            name: 'Track your Applications',
+        },
+        {
+            path: `/invested-startups/${user?._id}`,
+            name: 'Invested Startups',
         },
         {
             onClick: handleRequestResetPassword,
@@ -122,7 +135,7 @@ export default function Header() {
 
     async function handleLogout() {
         try {
-            const res = await ownerService.logout();
+            const res = await userService.logout();
             if (res && res.message === 'user logged out successfully') {
                 setUser(null);
                 setShowProfileDropdown(false);
@@ -136,7 +149,7 @@ export default function Header() {
     async function handleDelete() {
         try {
             setShowDeletePopup(true);
-            const res = await ownerService.delete();
+            const res = await userService.delete();
             if (res && res.message === 'user account deleted successfully') {
                 setUser(null);
                 setShowProfileDropdown(false);
@@ -152,7 +165,7 @@ export default function Header() {
             setShowPopup(true);
             setShowProfileDropdown(false);
             setLoading(true);
-            const res = await ownerService.requestResetPassword(user.email);
+            const res = await userService.requestResetPassword(user.email);
             if (res?.message === 'password reset email sent') {
                 setResetMessage();
             } else {

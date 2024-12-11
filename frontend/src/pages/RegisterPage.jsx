@@ -7,7 +7,7 @@ import {
     ASHOKACHAKAR,
 } from '../assets/images';
 import { useState } from 'react';
-import { ownerService } from '../services';
+import { userService } from '../services';
 import { useVariantContext } from '../contexts';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Popup } from '../components';
@@ -18,7 +18,7 @@ export default function RegisterPage() {
     const emptyInputs = {
         name: '',
         email: '',
-        dateOfBirth: '',
+        // dateOfBirth: '',
         password: '',
         phone: '',
     };
@@ -26,7 +26,7 @@ export default function RegisterPage() {
         root: '',
         name: '',
         email: '',
-        dateOfBirth: '',
+        // dateOfBirth: '',
         password: '',
         phone: '',
     };
@@ -66,7 +66,7 @@ export default function RegisterPage() {
         setDisabled(true);
         setErrors(emptyErrors);
         try {
-            const res = await ownerService.register(inputs);
+            const res = await userService.register(inputs);
             if (res && res.message === 'verification email sent') {
                 setShowPopup(true);
             } else {
@@ -104,13 +104,13 @@ export default function RegisterPage() {
             placeholder: 'Create a strong password',
             required: true,
         },
-        {
-            type: 'date',
-            name: 'dateOfBirth',
-            label: 'Date of Birth',
-            placeholder: 'select date of birth',
-            required: true,
-        },
+        // {
+        //     type: 'date',
+        //     name: 'dateOfBirth',
+        //     label: 'Date of Birth',
+        //     placeholder: 'select date of birth',
+        //     required: true,
+        // },
     ];
 
     const inputElements = inputFields.map((field) => (
@@ -139,7 +139,9 @@ export default function RegisterPage() {
                 </div>
             )}
             {field.name === 'password' && !errors.password && (
-                <div className="text-xs">password must be 8-12 characters.</div>
+                <div className="text-xs">
+                    This password will be used for further verification.
+                </div>
             )}
         </div>
     ));
@@ -232,30 +234,34 @@ export default function RegisterPage() {
                             className="flex flex-col items-start justify-center gap-1 w-full"
                         >
                             {inputElements}
+
                             {/* Phone Number */}
-                            <div>
-                                <label
-                                    htmlFor="phone"
-                                    className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium"
-                                >
-                                    Phone Number
-                                </label>
-                                <PhoneInput
-                                    country="in"
-                                    value={inputs.phone}
-                                    onChange={(value) =>
-                                        setInputs((prev) => ({
-                                            ...prev,
-                                            phone: value,
-                                        }))
-                                    }
-                                    inputProps={{
-                                        name: 'phone',
-                                        required: true,
-                                        id: 'phone',
-                                    }}
-                                    inputClass="!w-full !border !border-gray-300 !rounded-md !shadow-sm focus:!ring-blue-500 focus:!border-blue-500 sm:!text-sm"
-                                />
+                            <div className="w-full shadow-md shadow-[#f8f0eb]">
+                                <div className="bg-white z-[10] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                                    <label htmlFor="phone">
+                                        <span className="text-red-500">* </span>
+                                        Phone Number
+                                    </label>
+                                </div>
+                                <div className="w-full">
+                                    <PhoneInput
+                                        country="in"
+                                        value={inputs.phone}
+                                        onChange={(value) =>
+                                            setInputs((prev) => ({
+                                                ...prev,
+                                                phone: value,
+                                            }))
+                                        }
+                                        inputProps={{
+                                            name: 'phone',
+                                            required: true,
+                                            id: 'phone',
+                                        }}
+                                        inputClass="!w-full !h-[45px] !indent-2 !rounded-md !shadow-sm !border-[0.01rem] !border-[#858585] !outline-[#f68533] !bg-transparent"
+                                        buttonClass="!h-[45px] !w-[45px] !bg-white !hover:bg-white !z-[1] !rounded-r-none !rounded-md !border-[0.01rem] !border-[#858585] !outline-[#f68533]"
+                                    />
+                                </div>
                             </div>
 
                             <div className="w-full">

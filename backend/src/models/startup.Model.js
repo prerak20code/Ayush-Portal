@@ -24,9 +24,9 @@ const startupSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        pdf: {
-            type: String,
-        },
+        // pdf: {
+        //     type: String,
+        // },
         address: {
             type: String,
             required: true,

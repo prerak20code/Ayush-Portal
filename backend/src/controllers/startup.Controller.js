@@ -52,7 +52,7 @@ const addStartup = async (req, res) => {
             website,
             valuation,
             dateOfEstablishment,
-            pdf,
+            // pdf,
         } = req.body;
         valuation = Number(valuation);
         const userId = req.user._id;
@@ -83,7 +83,7 @@ const addStartup = async (req, res) => {
             website,
             valuation,
             dateOfEstablishment,
-            pdf,
+            // pdf,
             owner: userId,
         });
         if (startup) {
@@ -167,10 +167,7 @@ const updateStartup = async (req, res) => {
             }
         );
 
-        return res.status(OK).json({
-            message: 'Startup updated successfully',
-            updatedStartup,
-        });
+        return res.status(OK).json(updatedStartup);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'An error occurred while updating the startup',

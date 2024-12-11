@@ -3,6 +3,7 @@ class StartupRegistrationApplicationService {
         try {
             const res = await fetch(`/api/v1/applications/start`, {
                 method: 'GET',
+                credentials: 'include',
             });
             const data = await res.json();
             console.log(data);
@@ -19,12 +20,15 @@ class StartupRegistrationApplicationService {
             throw err;
         }
     }
-
-    async getApplication() {
+    async getApplication(userId, appId) {
         try {
-            const res = await fetch(`/api/v1/applications`, {
-                method: 'GET',
-            });
+            const res = await fetch(
+                `/api/v1/applications/application/${userId}/${appId}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             const data = await res.json();
             console.log(data);
 
@@ -40,11 +44,33 @@ class StartupRegistrationApplicationService {
             throw err;
         }
     }
+    async getApplications(userId) {
+        try {
+            const res = await fetch(`/api/v1/applications/${userId}`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data);
+            }
+            return data;
+        } catch (err) {
+            console.error(
+                `error in getting startup registeration applications service: ${err.message}`
+            );
+
+            throw err;
+        }
+    }
 
     async markApplicationComplete() {
         try {
             const res = await fetch(`/api/v1/applications/complete`, {
                 method: 'PATCH',
+                credentials: 'include',
             });
             const data = await res.json();
             console.log(data);

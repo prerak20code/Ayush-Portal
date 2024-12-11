@@ -1,16 +1,30 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import {
+    NavLink,
+    Outlet,
+    useLocation,
+    useParams,
+    useNavigate,
+} from 'react-router-dom';
 import { useRegisterStartupContext, useUserContext } from '../contexts';
 import { startupRegistrationApplicationService } from '../services';
+import { icons } from '../assets/icons';
 
-export default function RegisterYourStartupPage() {
+export default function TrackApplication() {
     const location = useLocation();
     const pathname = location.pathname;
     const currentURL = pathname.split('/').pop();
-    const { currentStep, setCurrentStep, totalData, setTotalData } =
-        useRegisterStartupContext();
+    const { appId } = useParams();
+    const {
+        currentStep,
+        setCurrentStep,
+        totalData,
+        setTotalData,
+        setExistingApp,
+    } = useRegisterStartupContext();
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const steps = [
         {
@@ -52,22 +66,76 @@ export default function RegisterYourStartupPage() {
         step?.onClick();
     }, [currentURL]);
 
-    // check if there is already an application for current user
+    // if we have appId then auto fill the data and display current status
     useEffect(() => {
-        try {
-            (async function getOngoingApplications() {
-                const res =
-                    await startupRegistrationApplicationService.getApplication();
-                if (!res?.message) {
-                    //    setTotalData(prev => )
+        (async function getApp() {
+            try {
+                if (appId !== 'new') {
+                    const res =
+                        await startupRegistrationApplicationService.getApplication(
+                            user._id,
+                            appId
+                        );
+                    if (res && !res?.message) {
+                        setExistingApp(true);
+                        console.log(res.completedSteps.pop());
+                        switch (res.completedSteps.pop()) {
+                            case 'personal': {
+                                navigate('organization');
+                            }
+                            case 'organization': {
+                                navigate('financial');
+                            }
+                            case 'financial': {
+                                navigate('banking');
+                            }
+                            case 'banking': {
+                                navigate('documents');
+                            }
+                            case 'documents': {
+                                navigate('review');
+                            }
+                            default: {
+                                navigate('personal');
+                            }
+                        }
+                        const data = {
+                            personal: {
+                                data: res.owner || {},
+                                status: res.owner ? 'complete' : 'pending',
+                            },
+                            organization: {
+                                data: res.startup || {},
+                                status: res.startup ? 'complete' : 'pending',
+                            },
+                            financial: {
+                                data: res.startup?.financialInfo || {},
+                                status: res.startup?.financialInfo
+                                    ? 'complete'
+                                    : 'pending',
+                            },
+                            banking: {
+                                data: res.startup?.bankInfo || {},
+                                status: res.startup?.bankInfo
+                                    ? 'complete'
+                                    : 'pending',
+                            },
+                            reviewd: {
+                                status: res.status,
+                            },
+                        };
+                        setTotalData(data);
+                    } else {
+                        setExistingApp(false);
+                    }
                 }
-            })();
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+            } catch (err) {
+                navigate('/server-error');
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, [appId]);
 
     const stepElements = steps.map((step, index) => (
         <NavLink
@@ -82,8 +150,8 @@ export default function RegisterYourStartupPage() {
                     currentStep === index
                         ? 'bg-[#f68533] text-white shadow-lg scale-105'
                         : step.status === 'complete'
-                          ? 'bg-green-600 text-white shadow-md'
-                          : 'bg-[#f9f9f9] text-[#040606]'
+                          ? 'bg-green-600 text-[#f9f9f9] shadow-md'
+                          : 'bg-[#f9f9f9] text-[#040606] shadow-md'
                 }`}
             >
                 {index + 1}
@@ -115,7 +183,11 @@ export default function RegisterYourStartupPage() {
         </NavLink>
     ));
 
-    return (
+    return loading || !Object.keys(totalData) > 0 ? (
+        <div className="w-full fill-[#f68533] text-white size-[30px]">
+            {icons.loading}
+        </div>
+    ) : (
         <div className="w-screen min-h-[calc(100vh-110px)] bg-[#fff7f2] flex flex-col items-center">
             {/* steps */}
             <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md p-4 w-full flex flex-col items-center justify-start gap-8">

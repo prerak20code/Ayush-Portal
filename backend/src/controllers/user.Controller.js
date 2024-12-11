@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import {
     sendVerificationEmail,
     validateRegex,
-    getTranporter,
+    getTransporter,
     generateTokens,
     validatePassword,
 } from '../utils/index.js';
@@ -85,16 +85,14 @@ const verifyEmail = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        let { name, email, password, dateOfBirth, phone, redirectURL } =
-            req.body;
+        let { name, email, phone, password, redirectURL } = req.body;
         name = name.trim();
         email = email.trim();
-        dateOfBirth = dateOfBirth.trim();
         phone = phone.trim();
 
-        if (!name || !email || !password || !dateOfBirth || !phone) {
+        if (!name || !email || !password || !phone) {
             return res.status(BAD_REQUEST).json({
-                message: 'Empty input fields!',
+                message: 'empty input fields!',
             });
         }
 
@@ -121,13 +119,6 @@ const register = async (req, res) => {
             });
         }
 
-        isValid = validateRegex('dateOfBirth', dateOfBirth);
-        if (!isValid) {
-            return res.status(BAD_REQUEST).json({
-                message: 'Invalid DOB entered',
-            });
-        }
-
         //check if user already exists
         const user = await User.findOne({ email });
 
@@ -143,7 +134,6 @@ const register = async (req, res) => {
                 name,
                 email,
                 password,
-                dateOfBirth,
                 phone,
             });
 
@@ -153,7 +143,7 @@ const register = async (req, res) => {
             }
         }
     } catch (err) {
-        res.status(SERVER_ERROR).json({
+        return res.status(SERVER_ERROR).json({
             message: 'An error occured while registering user !',
             error: err.message,
         });
@@ -168,21 +158,20 @@ const login = async (req, res) => {
         password = password.trim();
 
         if (!email || !password) {
-            res.status(BAD_REQUEST).json({
+            return res.status(BAD_REQUEST).json({
                 message: 'Empty credentials provided !',
             });
         }
 
         //check if user exists
         const user = await User.findOne({ email });
-        console.log(bcrypt.compareSync(password, user.password));
 
         if (user) {
             //user exists
 
             //check if user is verified
             if (!user.verified) {
-                res.status(BAD_REQUEST).json({
+                return res.status(BAD_REQUEST).json({
                     message:
                         'Email has not been verified yet. Check your inbox',
                 });
@@ -201,7 +190,8 @@ const login = async (req, res) => {
                     await user.save();
 
                     // send cookies
-                    res.status(OK)
+                    return res
+                        .status(OK)
                         .cookie('accessToken', accessToken, {
                             ...cookieOptions,
                             maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
@@ -245,6 +235,28 @@ const logout = async (req, res) => {
         return res.status(SERVER_ERROR).json({
             message: 'error occured while logging out user',
             err: err.message,
+        });
+    }
+};
+
+const updateRole = async (req, res, next) => {
+    try {
+        const { _id } = req.user;
+        const { role } = req.body;
+        const user = await User.findById(_id);
+        if (!user.verified) {
+            return res.status(BAD_REQUEST).json({
+                message: 'Email has not been verified yet. Check your inbox',
+            });
+        } else {
+            user.designation = role;
+            await user.save();
+        }
+        next();
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error while updating user role',
+            error: err.message,
         });
     }
 };
@@ -335,7 +347,7 @@ const sendPasswordResetEmail = async (user, redirectURL, res) => {
 
         if (newPasswordResetRecord) {
             // send the email
-            const transporter = await getTranporter();
+            const transporter = await getTransporter();
             await transporter.sendMail(mailOptions);
             //reset email sent and password reset record saved
             res.status(PENDING).json({
@@ -372,7 +384,7 @@ const resetPassword = async (req, res) => {
                     await PasswordReset.findByIdAndDelete(resetRecord._id);
                 if (deletedResetRecord) {
                     // Reset record deleted successfully
-                    res.status(BAD_REQUEST).json({
+                    return res.status(BAD_REQUEST).json({
                         message:
                             'Your password reset link has expired, Please try again.',
                     });
@@ -405,21 +417,21 @@ const resetPassword = async (req, res) => {
                             );
                         if (deletedResetRecord) {
                             //reset reset record deleted
-                            res.status(OK).json({
+                            return res.status(OK).json({
                                 message: 'password has been reset successfully',
                             });
                         }
                     }
                 } else {
                     //existing record but incorrect reset string
-                    res.status(BAD_REQUEST).json({
+                    return res.status(BAD_REQUEST).json({
                         message:
                             'Invalid reset credentials provided. Please try again with valid credentials.',
                     });
                 }
             }
         } else {
-            res.status(BAD_REQUEST).json({
+            return res.status(BAD_REQUEST).json({
                 message:
                     'No reset record with provided details found, Please try again.',
             });
@@ -438,6 +450,7 @@ export {
     verifyEmail,
     login,
     logout,
+    updateRole,
     deleteAccount,
     getCurrentUser,
     resetPassword,
