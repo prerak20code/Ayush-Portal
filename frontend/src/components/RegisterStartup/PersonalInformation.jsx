@@ -114,7 +114,9 @@ export default function PersonalInformation() {
 
     function handleBlur(e) {
         const { name, value } = e.target;
-        if (name !== 'password') verifyRegex(name, value, setErrors);
+        if (name !== 'password') {
+            verifyRegex(name, value, setErrors);
+        }
     }
 
     function onMouseOver() {
@@ -124,8 +126,7 @@ export default function PersonalInformation() {
             ) ||
             Object.entries(errors).some(
                 ([key, value]) => value !== '' && key !== 'root'
-            ) ||
-            isFormAutoFilled
+            )
         ) {
             setDisabled(true);
         } else {
@@ -143,7 +144,24 @@ export default function PersonalInformation() {
             const { name, email, phone, password, ...ownerInputs } = inputs;
 
             if (existingApp) {
-                // const res = await ownerService.updateData();
+                if (
+                    Object.entries(inputs).some(
+                        ([key, value]) => value !== initialInputs[key]
+                    )
+                ) {
+                    let updates = {};
+                    Object.entries(inputs).map(([key, value]) => {
+                        if (value !== initialInputs[key]) {
+                        }
+                    });
+                    console.log(updates);
+                    const res = await ownerService.update({ ...updates });
+                    if (res && !res.message) {
+                        alert('your details have been updated');
+                    } else {
+                        setErrors((prev) => ({ ...prev, root: res.message }));
+                    }
+                }
             } else {
                 const res =
                     await startupRegistrationApplicationService.startApplication();
@@ -153,7 +171,6 @@ export default function PersonalInformation() {
                         'personal'
                     );
                     if (res2?.message === 'personal info saved successfully') {
-                        setDisabled(true);
                         setCurrentStep((prev = prev + 1));
                         navigate('organization');
                         setCompletedSteps((prev) => [...prev, 'personal']);
@@ -201,7 +218,7 @@ export default function PersonalInformation() {
             name: 'dateOfBirth',
             required: true,
             label: 'Date of Birth',
-            readOnly: isFormAutoFilled,
+            readOnly: false,
         },
         {
             type: 'password',
@@ -219,7 +236,7 @@ export default function PersonalInformation() {
             icon: icons.linkedIn,
             placeholder: 'Enter LinkedIn profile URL',
             required: false,
-            readOnly: isFormAutoFilled,
+            readOnly: false,
         },
     ];
     console.log(isFormAutoFilled);
@@ -344,7 +361,7 @@ export default function PersonalInformation() {
                                 name="nationality"
                                 id="nationality"
                                 value={inputs.nationality}
-                                disabled={isFormAutoFilled}
+                                disabled={false}
                                 onChange={handleChange}
                                 className={`py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${flag ? 'pl-12 pr-3' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
                             >

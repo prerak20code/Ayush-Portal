@@ -95,6 +95,9 @@ export default function TrackApplication() {
                             case 'documents': {
                                 navigate('review');
                             }
+                            default: {
+                                navigate('personal');
+                            }
                         }
                         const data = {
                             personal: {

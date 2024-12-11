@@ -32,27 +32,83 @@ export default function StartupApplicationsPage() {
         })();
     }, []);
 
-    const appsElements = applications.map((app) => (
-        <div
-            key={app._id}
-            onClick={() => navigate(`/application/${app?._id}`)}
-            className="cursor-pointer"
-        >
-            {app._id}
+
+    const appsElements = (
+        <div className="mx-4 md:mx-8 lg:mx-16"> {/* Adding margins around the table */}
+            <table className="table-auto border-collapse w-full bg-white shadow-lg rounded-lg overflow-hidden">
+                <thead className="bg-[#FF7F32] text-white">
+                    <tr>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">S. No</th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Startup ID</th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Startup Owner</th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Registered Date</th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Expiration Date</th>
+                        <th className="border-b-2 border-white px-4 sm:px-6 py-4 text-left">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {applications.map((app, index) => {
+                        // Calculate the registration date as 10 days before the expiration date
+                        const expirationDate = new Date(app.expireAt);
+                        const registrationDate = new Date(expirationDate);
+                        registrationDate.setDate(expirationDate.getDate() - 10);
+    
+                        return (
+                            <tr
+                                key={app._id}
+                                onClick={() => navigate(`/application/${app._id}`)}
+                                className="cursor-pointer hover:bg-[#FF7F32] hover:text-white transition-all duration-300"
+                            >
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{index + 1}</td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{app._id}</td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{app.owner || "N/A"}</td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
+                                    {registrationDate ? registrationDate.toLocaleDateString() : "N/A"}
+                                </td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">
+                                    {app.expireAt ? new Date(app.expireAt).toLocaleDateString() : "N/A"}
+                                </td>
+                                <td className="border-b border-[#FF7F32] px-4 sm:px-6 py-4">{app.status || "Pending"}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
         </div>
-    ));
+    );
+
 
     return loading ? (
-        <div className="w-full fill-[#f68533] text-white size-[30px]">
+        <div className="w-full flex justify-center items-center h-screen text-white">
             {icons.loading}
         </div>
     ) : (
         <div>
-            <Button
-                btnText="Register new Startup"
-                onClick={() => navigate(`/application/new`)}
-                className=""
-            />
+            <div className="flex justify-center w-full px-4 sm:px-6 lg:px-8">
+                <Button
+                    className="text-[#f9f9f9] rounded-md h-auto px-6 py-3 bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-green-600 hover:to-green-700 
+                        flex items-center justify-center gap-2 min-w-[120px] max-w-[90vw] transition-all duration-300 m-4"
+                    onClick={() => navigate(`/application/new/personal`)}
+                    type="submit"
+                    btnText={
+                        loading ? (
+                            <div className="fill-[#f9f9f9] text-[#f9a264] size-[20px]">
+                                {icons.loading}
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-center gap-2">
+                                <p className="text-[#f9f9f9] text-center">
+                                    Register new Startup
+                                </p>
+                                <div className="size-[14px] fill-[#f9f9f9]">
+                                    {icons.next}
+                                </div>
+                            </div>
+                        )
+                    }
+                />
+            </div>
+
             {applications.length > 0 ? (
                 <div>{appsElements}</div>
             ) : (

@@ -50,6 +50,7 @@ import {
 // import InvestorType from './InvestorConnect/InvestorType.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import DocumentsCheck from './pages/DocumentsCheck.jsx';
+// import OwnerConnectPage from './pages/OwnerConnectPage.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -60,9 +61,12 @@ const router = createBrowserRouter(
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
             </Route>
+
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
+                {/* <Route path="/pages/OwnerConnectPage" element = {<OwnerConnectPage/>}/> */}
+
                 <Route
                     path="user/verify/:userId/:uniqueString"
                     element={
@@ -81,11 +85,13 @@ const router = createBrowserRouter(
                 />
                 {/* <Route path="InvestorType" element={<InvestorType />} /> */}
             </Route>
+
             <Route path="" element={<LayoutThree />}>
                 <Route
                     path="invested-startups/:userId"
                     element={<InvestedStartups />}
                 />
+                
                 <Route
                     path="applications/:userId"
                     element={<StartupApplicationsPage />}
@@ -101,7 +107,7 @@ const router = createBrowserRouter(
                     }
                 >
                     {/* Default to PersonalInformation for empty path */}
-                    <Route index element={<PersonalInformation />} />
+                    {/* <Route index element={<PersonalInformation />} /> */}
                     <Route path="personal" element={<PersonalInformation />} />
                     <Route
                         path="organization"
@@ -122,17 +128,17 @@ const router = createBrowserRouter(
             <Route
                 path="AdminDashboard"
                 element={
-                    <Redirect path="/login">
-                        <AdminDashboard />
-                    </Redirect>
+                    // <Redirect path="/login">
+                    <AdminDashboard />
+                    // </Redirect>
                 }
             />
             <Route
-                path="/startup/:id/documents"
+                path="document-check/startups/:id"
                 element={
-                    <Redirect path="/login">
-                        <DocumentsCheck />
-                    </Redirect>
+                    // <Redirect path="/login">
+                    <DocumentsCheck />
+                    // </Redirect>
                 }
             />
             <Route path="/server-error" element={<ServerErrorPage />} />
