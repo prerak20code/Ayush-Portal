@@ -21,14 +21,14 @@ export default function PersonalInformation() {
     } = useRegisterStartupContext();
 
     const initialInputs = {
-        name: totalData.personal.data.name || '',
-        email: totalData.personal.data.email || '',
-        dateOfBirth: formatDate(totalData.personal.data.dateOfBirth) || '',
-        password: totalData.personal.data.password || '',
-        phone: totalData.personal.data.phone || '',
-        address: totalData.personal.data.address || '',
-        nationality: totalData.personal.data.nationality || '',
-        linkedInURL: totalData.personal.data.linkedInURL || '',
+        name: totalData.persona?.data?.name || '',
+        email: totalData.personal?.data?.email || '',
+        dateOfBirth: formatDate(totalData.personal?.data?.dateOfBirth) || '',
+        password: totalData.personal?.data?.password || '',
+        phone: totalData.personal?.data?.phone || '',
+        address: totalData.personal?.data?.address || '',
+        nationality: totalData.personal?.data?.nationality || '',
+        linkedInURL: totalData.personal?.data?.linkedInURL || '',
     };
 
     const navigate = useNavigate();
@@ -154,7 +154,7 @@ export default function PersonalInformation() {
                         if (value !== initialInputs[key]) {
                         }
                     });
-                    console.log(updates);
+
                     const res = await ownerService.update({ ...updates });
                     if (res && !res.message) {
                         alert('your details have been updated');
@@ -166,10 +166,7 @@ export default function PersonalInformation() {
                 const res =
                     await startupRegistrationApplicationService.startApplication();
                 if (res) {
-                    const res2 = await ownerService.register(
-                        ownerInputs,
-                        'personal'
-                    );
+                    const res2 = await ownerService.register(ownerInputs);
                     if (res2?.message === 'personal info saved successfully') {
                         setCurrentStep((prev = prev + 1));
                         navigate('organization');
@@ -202,7 +199,7 @@ export default function PersonalInformation() {
             placeholder: 'Enter your Full Name',
             icon: icons.user,
             required: true,
-            readOnly: true,
+            readOnly: isFormAutoFilled,
         },
         {
             type: 'email',
@@ -211,7 +208,7 @@ export default function PersonalInformation() {
             icon: icons.mailUnfill,
             placeholder: 'Enter your Email',
             required: true,
-            readOnly: true,
+            readOnly: isFormAutoFilled,
         },
         {
             type: 'date',
@@ -227,7 +224,7 @@ export default function PersonalInformation() {
             icon: icons.password,
             placeholder: 'Create a strong Password',
             required: true,
-            readOnly: true,
+            readOnly: isFormAutoFilled,
         },
         {
             type: 'url',
@@ -239,7 +236,7 @@ export default function PersonalInformation() {
             readOnly: false,
         },
     ];
-    console.log(isFormAutoFilled);
+
     const inputElements = inputFields.map((field) => (
         <div key={field.name} className="w-full">
             <div className="bg-[#fff7f2] z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
@@ -331,7 +328,7 @@ export default function PersonalInformation() {
                                     name: 'phone',
                                     required: true,
                                     id: 'phone',
-                                    readOnly: true,
+                                    readOnly: isFormAutoFilled,
                                 }}
                                 inputClass="!w-full !h-[45px] !indent-2 !rounded-md !shadow-sm !border-[0.01rem] !border-[#858585] !outline-[#f68533] !bg-transparent"
                                 buttonClass="!h-[45px] !w-[45px] !bg-[#fff7f2] !hover:bg-[#fff7f2] !z-[1] !rounded-r-none !rounded-md !border-[0.01rem] !border-[#858585] !outline-[#f68533]"

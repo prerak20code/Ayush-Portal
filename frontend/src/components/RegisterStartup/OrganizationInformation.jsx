@@ -15,17 +15,17 @@ export default function OrganizationInformation() {
     } = useRegisterStartupContext();
 
     const initialInputs = {
-        startupName: totalData.organization.data.startupName || '',
+        startupName: totalData.organization?.data?.startupName || '',
         dateOfEstablishment:
-            totalData.organization.data.dateOfEstablishment || '',
-        valuation: totalData.organization.data.valuation || '',
-        address: totalData.organization.data.address || '',
-        industry: totalData.organization.data.industory || '',
-        website: totalData.organization.data.website || '',
-        // pdf: totalData.organization.data.dateOfEstablishment || null,
-        businessType: totalData.organization.data.businessType || '',
-        country: totalData.organization.data.country || '',
-        description: totalData.organization.data.description || '',
+            totalData.organization?.data?.dateOfEstablishment || '',
+        valuation: totalData.organization?.data?.valuation || '',
+        address: totalData.organization?.data?.address || '',
+        industry: totalData.organization?.data?.industory || '',
+        website: totalData.organization?.data?.website || '',
+        // pdf: totalData.organization?.data?.dateOfEstablishment || null,
+        businessType: totalData.organization?.data?.businessType || '',
+        country: totalData.organization?.data?.country || '',
+        description: totalData.organization?.data?.description || '',
     };
     const initialErrors = {
         root: '',

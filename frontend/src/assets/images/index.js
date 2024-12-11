@@ -17,7 +17,6 @@ import HASHTAG from './hashtag.png';
 import RajBhavan from './RajBhavan.png';
 import landingPageGif from './ayushAnimation.gif';
 
-
 export {
     // first half
     HOMEBG,

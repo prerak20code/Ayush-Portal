@@ -4,6 +4,7 @@ import { startupRegistrationApplicationService } from '../services';
 import { useNavigate, useParams } from 'react-router-dom';
 import { icons } from '../assets/icons';
 import { Button } from '../components';
+import { formatDate } from '../utils';
 
 export default function StartupApplicationsPage() {
     const [applications, setApplications] = useState([]);

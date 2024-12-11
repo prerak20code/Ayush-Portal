@@ -14,6 +14,7 @@ import {
     addFinancialInfo,
     deleteBankInfo,
     deleteFinancialInfo,
+    registerStartupUsingDPIITid,
 } from '../controllers/startup.Controller.js';
 
 startupRouter.use(verifyJWT); // will be applied to all startup routes
@@ -32,4 +33,8 @@ startupRouter
     .patch(updateStartup)
     .delete(deleteStartup);
 
+startupRouter
+    .route('/register-DPIIT/:DPIITid')
+    .post(registerStartupUsingDPIITid);
+    
 startupRouter.route('/').get(getAllStartups);

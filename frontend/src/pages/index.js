@@ -9,6 +9,7 @@ import NotFoundPage from './NotFoundPage';
 // import OwnerConnectPage from './OwnerConnectPage';
 import TrackApplication from './TrackApplication';
 import StartupApplicationsPage from './StartupApplicationsPage';
+import DPIITregistrationPage from './DPIITregistrationPage';
 
 export {
     HomePage,
@@ -22,4 +23,5 @@ export {
     TrackApplication,
     StartupApplicationsPage,
     // OwnerConnectPage,
+    DPIITregistrationPage,
 };

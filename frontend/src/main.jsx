@@ -21,6 +21,7 @@ import {
     ServerErrorPage,
     NotFoundPage,
     TrackApplication,
+    DPIITregistrationPage,
 } from './pages';
 
 import {
@@ -35,6 +36,7 @@ import {
     BankingInformation,
     PersonalInformation,
     OrganizationInformation,
+    // Documents,
     Review,
     InvestedStartups,
     TargetedStartups,
@@ -83,7 +85,6 @@ const router = createBrowserRouter(
                         </Redirect>
                     }
                 />
-                {/* <Route path="InvestorType" element={<InvestorType />} /> */}
             </Route>
 
             <Route path="" element={<LayoutThree />}>
@@ -95,6 +96,7 @@ const router = createBrowserRouter(
                     path="applications/:userId"
                     element={<StartupApplicationsPage />}
                 />
+                
                 <Route
                     path="application/:appId"
                     element={
@@ -106,7 +108,7 @@ const router = createBrowserRouter(
                     }
                 >
                     {/* Default to PersonalInformation for empty path */}
-                    {/* <Route index element={<PersonalInformation />} /> */}
+                    <Route index element={<PersonalInformation />} />
                     <Route path="personal" element={<PersonalInformation />} />
                     <Route
                         path="organization"
@@ -117,8 +119,13 @@ const router = createBrowserRouter(
                         element={<FinancialInformation />}
                     />
                     <Route path="banking" element={<BankingInformation />} />
+                    {/* <Route path="documents" element={<Documents />} /> */}
                     <Route path="review" element={<Review />} />
                 </Route>
+                <Route
+                    path="DPIIT/registration/:userId"
+                    element={<DPIITregistrationPage />}
+                />
                 <Route
                     path="targeted-startups/:userId"
                     element={<TargetedStartups />}
@@ -127,17 +134,17 @@ const router = createBrowserRouter(
             <Route
                 path="AdminDashboard"
                 element={
-                    // <Redirect path="/login">
-                    <AdminDashboard />
-                    // </Redirect>
+                    <Redirect path="/login">
+                        <AdminDashboard />
+                    </Redirect>
                 }
             />
             <Route
                 path="document-check/startups/:id"
                 element={
-                    // <Redirect path="/login">
-                    <DocumentsCheck />
-                    // </Redirect>
+                    <Redirect path="/login">
+                        <DocumentsCheck />
+                    </Redirect>
                 }
             />
             <Route path="/server-error" element={<ServerErrorPage />} />

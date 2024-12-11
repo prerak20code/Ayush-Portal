@@ -6,7 +6,7 @@ import {
     SERVER_ERROR,
     FORBIDDEN,
 } from '../constants/statusCodes.js';
-import { Startup, FinancialInfo, BankInfo } from '../models/index.js';
+import { Startup, FinancialInfo, BankInfo, Dpiit } from '../models/index.js';
 
 // pending
 const getAllStartups = async (req, res) => {
@@ -35,6 +35,37 @@ const getAllStartups = async (req, res) => {
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'error occured while getting the startups.',
+            error: err.message,
+        });
+    }
+};
+
+const registerStartupUsingDPIITid = async (req, res) => {
+    try {
+        const { DPIITid } = req.params;
+        const { password } = req.body;
+
+        // get data from dpiit website and create its record in db and send the data to the frontend
+        const data = await Dpiit.findOne({
+            DPIITid,
+        });
+        if (!data) {
+            return res.status(NOT_FOUND).json({
+                message:
+                    'startup not found',
+            });
+        }
+        if (data.DPIITpassword !== password) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'invalid password' });
+        }
+
+        return res.status(OK).json(data);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message:
+                'Error occurred while registering the startup using DPIIT.',
             error: err.message,
         });
     }
@@ -358,4 +389,5 @@ export {
     addFinancialInfo,
     deleteBankInfo,
     deleteFinancialInfo,
+    registerStartupUsingDPIITid,
 };

@@ -1,4 +1,8 @@
-import { AYUSHLOGO, GOVINDIAIMAGE } from '../../assets/images';
+import {
+    AYUSHLOGO,
+    GOVINDIAIMAGE,
+    AYUSHSTARTUPLOGO,
+} from '../../assets/images';
 import { icons } from '../../assets/icons';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -17,6 +21,7 @@ export default function Header() {
     const { dropdownVariants } = useVariantContext();
     const { showProfileDropdown, setShowProfileDropdown } =
         useProfileDropdownContext();
+    const [showRegisterDropdown, setShowRegisterDropdown] = useState(false);
     const location = useLocation();
     const { user, setUser } = useUserContext();
     const navigate = useNavigate();
@@ -43,16 +48,6 @@ export default function Header() {
     const tabs = [
         { url: '', name: 'Home', show: true },
         { url: 'register', name: 'Register Now', show: !user },
-        {
-            url: `${user?._id}/become-investor`,
-            name: 'Become an Investor',
-            show: user,
-        },
-        {
-            url: `application/new/personal`,
-            name: 'Register your Startup',
-            show: user,
-        },
         { url: 'login', name: 'Login', show: !user },
         { url: 'faqs', name: 'FAQs', show: true },
         { url: 'about-us', name: 'About Us', show: true },
@@ -178,15 +173,49 @@ export default function Header() {
         }
     }
 
+    const registerTypes = [
+        {
+            name: 'Register using DPIIT ID',
+            path: `DPIIT/registration/${user._id}`,
+        },
+        {
+            name: 'Manual Registration',
+            path: 'application/new/personal',
+        },
+    ];
+
+    const registerTypesElements = registerTypes.map((type) => (
+        <NavLink
+            to={type.path}
+            end
+            key={type.name}
+            className={({ isActive }) =>
+                `hover:bg-[#f68533] hover:text-[#ffffff] pl-3 pr-8 py-[5px] text-[#040606] font-medium text-md rounded-md ${
+                    isActive && 'bg-[#f68533] text-white'
+                }`
+            }
+        >
+            {type.name}
+        </NavLink>
+    ));
+
     return (
         <div className="h-[110px]">
             {/* logo header */}
             <div className="overflow-x-scroll drop-shadow-md h-[70px] bg-[#f9f9f9] flex items-center justify-between w-full px-2 sm:px-4 py-[5px]">
-                <img
-                    src={GOVINDIAIMAGE}
-                    alt="gov india image"
-                    className="object-contain h-[70%] sm:h-full"
-                />
+                <div className="object-contain h-[70%] sm:h-full flex items-center justify-center gap-6">
+                    <img
+                        src={AYUSHSTARTUPLOGO}
+                        alt="gov india image"
+                        className="object-contain h-full"
+                    />
+                    <img
+                        src={GOVINDIAIMAGE}
+                        alt="gov india image"
+                        className="hidden xs:block object-contain h-[70%] sm:h-full"
+                    />
+                </div>
+
                 <img
                     src={AYUSHLOGO}
                     alt="ayush logo"
@@ -199,6 +228,37 @@ export default function Header() {
                 {/* Tabs */}
                 <div className="hidden h-full md:flex items-center justify-end gap-x-8">
                     {tabElements}
+                    <div className="cursor-pointer relative">
+                        <div
+                            onMouseOver={() => {
+                                setShowRegisterDropdown((prev) => !prev);
+                                setShowProfileDropdown(false);
+                                setShowDropdown(false);
+                            }}
+                            className="hover:underline text-[#f9f9f9] font-medium text-md"
+                        >
+                            Register Startup
+                        </div>
+                        {/* Hamburger Dropdown */}
+                        <AnimatePresence>
+                            {showRegisterDropdown && (
+                                <motion.div
+                                    className="absolute top-[42px] -right-3 bg-[#f9f9f9] rounded-xl py-3 flex flex-col items-start justify-start drop-shadow-md"
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    variants={dropdownVariants}
+                                >
+                                    {/* Pointing Tip */}
+                                    <div className="absolute -top-[7px] right-[10px] rounded-tl-sm size-4 bg-[#f9f9f9] rotate-45"></div>
+                                    {/* Dropdown Items */}
+                                    <div className="text-nowrap flex flex-col gap-y-1 px-2">
+                                        {registerTypesElements}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
 
                 {/* Icons */}
@@ -209,9 +269,10 @@ export default function Header() {
                     {user && (
                         <div
                             className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
-                            onClick={() => {
+                            onMouseOver={() => {
                                 setShowProfileDropdown((prev) => !prev);
                                 setShowDropdown(false);
+                                setShowRegisterDropdown(false);
                             }}
                         >
                             {icons.profile}
@@ -219,9 +280,10 @@ export default function Header() {
                     )}
                     <div
                         className="md:hidden hover:scale-125 transition-all ease-in size-[20px] fill-[#f9f9f9] cursor-pointer"
-                        onClick={() => {
+                        onMouseOver={() => {
                             setShowDropdown((prev) => !prev);
                             setShowProfileDropdown(false);
+                            setShowRegisterDropdown(false);
                         }}
                     >
                         {icons.hamburgur}

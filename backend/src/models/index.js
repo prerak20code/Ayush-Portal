@@ -8,6 +8,7 @@ import { Startup } from './startup.Model.js';
 import { BankInfo } from './bankingInformation.Model.js';
 import { FinancialInfo } from './financialInformation.Model.js';
 import { StartupRegistrationApplication } from './startupRegistrationApplication.Model.js';
+import { Dpiit } from './dpiitDummy.Model.js';
 
 export {
     GovOfficial,
@@ -20,4 +21,5 @@ export {
     BankInfo,
     FinancialInfo,
     StartupRegistrationApplication,
+    Dpiit,
 };

@@ -171,7 +171,7 @@ export default function RegisterPage() {
     ));
 
     return (
-        <div className="py-6 px-[5%] text-[#040606] flex flex-col md:flex-row items-center justify-start gap-14 bg-white">
+        <div className="py-6 px-[5%] text-[#040606] flex flex-col md:flex-row items-center justify-start gap-14 bg-white min-h-[calc(100vh-110px)]">
             {/* email verification popup */}
             {showPopup && (
                 <Popup

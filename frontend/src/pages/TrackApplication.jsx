@@ -15,6 +15,7 @@ export default function TrackApplication() {
     const pathname = location.pathname;
     const currentURL = pathname.split('/').pop();
     const { appId } = useParams();
+
     const {
         currentStep,
         setCurrentStep,
@@ -22,6 +23,7 @@ export default function TrackApplication() {
         setTotalData,
         setExistingApp,
     } = useRegisterStartupContext();
+
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -52,17 +54,21 @@ export default function TrackApplication() {
             status: totalData.banking.status,
         },
         {
+            name: 'Upload Documents',
+            path: 'documents',
+            onClick: () => setCurrentStep(4),
+            status: totalData.documents.status,
+        },
+        {
             name: 'Review & Submit',
             path: 'review',
-            onClick: () => setCurrentStep(4),
+            onClick: () => setCurrentStep(5),
             status: totalData.reviewd.status,
         },
     ];
 
     useEffect(() => {
-        const step = steps.find(
-            (step) => step.path === (currentURL || 'personal')
-        );
+        const step = steps.find((step) => step.path === currentURL);
         step?.onClick();
     }, [currentURL]);
 
@@ -78,7 +84,7 @@ export default function TrackApplication() {
                         );
                     if (res && !res?.message) {
                         setExistingApp(true);
-                        console.log(res.completedSteps.pop());
+
                         switch (res.completedSteps.pop()) {
                             case 'personal': {
                                 navigate('organization');
@@ -99,26 +105,31 @@ export default function TrackApplication() {
                                 navigate('personal');
                             }
                         }
+
                         const data = {
                             personal: {
-                                data: res.owner || {},
+                                data: res.owner || null,
                                 status: res.owner ? 'complete' : 'pending',
                             },
                             organization: {
-                                data: res.startup || {},
+                                data: res.startup || null,
                                 status: res.startup ? 'complete' : 'pending',
                             },
                             financial: {
-                                data: res.startup?.financialInfo || {},
+                                data: res.startup?.financialInfo || null,
                                 status: res.startup?.financialInfo
                                     ? 'complete'
                                     : 'pending',
                             },
                             banking: {
-                                data: res.startup?.bankInfo || {},
+                                data: res.startup?.bankInfo || null,
                                 status: res.startup?.bankInfo
                                     ? 'complete'
                                     : 'pending',
+                            },
+                            documents: {
+                                data: res.documents || null,
+                                status: res.documents ? 'complete' : 'pending',
                             },
                             reviewd: {
                                 status: res.status,
@@ -128,7 +139,7 @@ export default function TrackApplication() {
                     } else {
                         setExistingApp(false);
                     }
-                }
+                } 
             } catch (err) {
                 navigate('/server-error');
             } finally {
@@ -146,7 +157,7 @@ export default function TrackApplication() {
         >
             {/* Circle */}
             <div
-                className={`rounded-full w-14 h-14 flex items-center justify-center text-lg font-semibold transition-all ${
+                className={`rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold transition-all ${
                     currentStep === index
                         ? 'bg-[#f68533] text-white shadow-lg scale-105'
                         : step.status === 'complete'
@@ -159,7 +170,7 @@ export default function TrackApplication() {
 
             {/* Step Name */}
             <div
-                className={`text-[15px] font-medium text-center ${
+                className={`text-sm md:text-[15px] text-wrap max-w-[100px] font-medium text-center ${
                     currentStep === index
                         ? 'text-[#f68533]'
                         : step.status === 'complete'
@@ -173,30 +184,27 @@ export default function TrackApplication() {
             {/* Connecting Line */}
             {index < steps.length && (
                 <div
-                    className={`w-full h-1 mt-2 ${
-                        step.status === 'complete'
-                            ? 'bg-green-400'
-                            : 'bg-[#f9f9f9]'
+                    className={`w-full h-[3px] ${
+                        currentStep === index
+                            ? 'bg-[#f68533]'
+                            : step.status === 'complete'
+                              ? 'bg-green-400'
+                              : 'bg-[#f9f9f9]'
                     }`}
                 />
             )}
         </NavLink>
     ));
 
-    return loading || !Object.keys(totalData) > 0 ? (
+    return loading || !Object.keys(totalData).length > 0 ? (
         <div className="w-full fill-[#f68533] text-white size-[30px]">
             {icons.loading}
         </div>
     ) : (
         <div className="w-screen min-h-[calc(100vh-110px)] bg-[#fff7f2] flex flex-col items-center">
             {/* steps */}
-            <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md p-4 w-full flex flex-col items-center justify-start gap-8">
-                <h1 className="text-center font-semibold text-2xl drop-shadow-md">
-                    {steps[currentStep].name}
-                </h1>
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 w-full transition-all ease-in">
-                    {stepElements}
-                </div>
+            <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md py-4 grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] px-2 md:px-4 lg:px-10 gap-6 w-full transition-all ease-in">
+                {stepElements}
             </div>
 
             {/* forms */}

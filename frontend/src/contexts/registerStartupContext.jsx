@@ -8,12 +8,13 @@ export const RegisterStartupContextProvider = ({ children }) => {
     const [completedSteps, setCompletedSteps] = useState([]);
     const [totalData, setTotalData] = useState({
         personal: {
-            data: {},
+            data: null,
             status: 'pending',
         },
-        organization: { data: {}, status: 'pending' },
-        financial: { data: {}, status: 'pending' },
-        banking: { data: {}, status: 'pending' },
+        organization: { data: null, status: 'pending' },
+        financial: { data: null, status: 'pending' },
+        banking: { data: null, status: 'pending' },
+        documents: { data: null, status: 'pending' },
         reviewd: { status: 'pending' },
     });
 

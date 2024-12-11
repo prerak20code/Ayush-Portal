@@ -48,7 +48,7 @@
     border-right: 2px solid transparent; /* Cursor effect */
     width: 0; /* Start with no text visible */
     animation:
-        typing  steps(30, end) 1s forwards,
+        typing steps(30, end) 1s forwards,
         blink 0.75s step-end infinite;
 }
 

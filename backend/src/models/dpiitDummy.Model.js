@@ -2,12 +2,26 @@ import mongoose from 'mongoose';
 
 const dpiitSchema = new mongoose.Schema(
     {
+        DPIITid: {
+            type: String,
+            required: true,
+            unique: true,
+            index: true,
+        },
+        DPIITpassword: {
+            type: String,
+            required: true,
+        },
         startupId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Startup',
             required: true,
             unique: true,
             index: true,
+        },
+        startupType: {
+            type: String,
+            enum: ['ayurvedic', ''],
         },
         bankName: { type: String, required: true },
         accountNumber: { type: String, required: true },
@@ -16,7 +30,7 @@ const dpiitSchema = new mongoose.Schema(
         branchName: { type: String, required: true },
         swiftCode: { type: String, required: true },
         balanceStatement: { type: String },
-        
+
         // Personal Details
         firstName: {
             type: String,
@@ -100,4 +114,4 @@ const dpiitSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export const dpiit = new mongoose.model('Dpiit', dpiitSchema);
+export const Dpiit = mongoose.model('Dpiit', dpiitSchema);
