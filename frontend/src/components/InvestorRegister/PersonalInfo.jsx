@@ -1,67 +1,47 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { icons } from '../../assets/icons';
-import PhoneInput from 'react-phone-input-2';
-import { Button, Popup } from '..';
-import 'react-phone-input-2/lib/style.css';
+import { verifyRegex } from '../../utils';
+import { useRegisterInvestorContext, useUserContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterStartupContext } from '../../contexts';
-import { verifyRegex, formatDate } from '../../utils';
-import {
-    ownerService,
-    startupRegistrationApplicationService,
-} from '../../services';
+import { Button } from '..';
 
-export default function PersonalInformation() {
-    const {
-        setCurrentStep,
-        setTotalData,
-        setCompletedSteps,
-        totalData,
-        existingApp,
-    } = useRegisterStartupContext();
+export default function InvestorPersonalInfo() {
+    const { setCurrentStep, setTotalData, setCompletedSteps } =
+        useRegisterInvestorContext();
 
     const initialInputs = {
-        name: totalData.persona?.data?.name || '',
-        email: totalData.personal?.data?.email || '',
-        dateOfBirth: formatDate(totalData.personal?.data?.dateOfBirth) || '',
-        password: totalData.personal?.data?.password || '',
-        phone: totalData.personal?.data?.phone || '',
-        address: totalData.personal?.data?.address || '',
-        nationality: totalData.personal?.data?.nationality || '',
-        linkedInURL: totalData.personal?.data?.linkedInURL || '',
+        investorType: '',
+        organizationName: '',
+        address: '',
+        dateOfBirth: '',
+        nationality: '',
+        linkedIn: '',
     };
-
-    const navigate = useNavigate();
-    const [countryList, setCountryList] = useState([]);
-    const [flag, setFlag] = useState('');
     const [inputs, setInputs] = useState(initialInputs);
+    const { user } = useUserContext();
 
     const initialErrors = {
         root: '',
-        name: '',
-        email: '',
-        dateOfBirth: '',
-        password: '',
-        phone: '',
+        investorType: '',
+        organizationName: '',
         address: '',
+        dateOfBirth: '',
+        nationality: '',
+        linkedIn: '',
     };
     const [errors, setErrors] = useState(initialErrors);
-    const [disabled, setDisabled] = useState(true);
+    const navigate = useNavigate();
+    const [countryList, setCountryList] = useState([]);
+    const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [isFormAutoFilled, setIsFormAutoFilled] = useState(false);
-
-    // Memoizing the check for autofill status to prevent unnecessary rerenders
-    const checkFormAutoFilled = useMemo(() => {
-        return Object.entries(inputs).every(
-            ([key, value]) => value || key === 'linkedInURL'
-        );
-    }, [inputs]);
+    const [flag, setFlag] = useState('');
 
     useEffect(() => {
-        setIsFormAutoFilled(checkFormAutoFilled);
-    }, [checkFormAutoFilled]); // Only trigger when checkFormAutoFilled changes
-
-    useEffect(() => {
+        setCurrentStep(0);
+        const savedData = localStorage.getItem('InvestorPersonalInfo');
+        if (savedData) {
+            setInputs(JSON.parse(savedData));
+        }
         (async function fetchCountryList() {
             try {
                 const res = await fetch(
@@ -79,17 +59,17 @@ export default function PersonalInformation() {
                 countries.sort((a, b) => a.name.localeCompare(b.name));
                 setCountryList(countries);
                 // Set the initial flag if nationality exists
-                if (initialInputs.nationality) {
+                if (savedData?.nationality) {
                     const initialCountry = countries.find(
                         (countryObject) =>
-                            countryObject.name === initialInputs.nationality
+                            countryObject.name === savedData.nationality
                     );
 
                     if (initialCountry) {
                         setFlag(initialCountry.flag); // Set the flag URL
                     } else {
                         console.warn(
-                            `Country with name "${initialInputs.nationality}" not found.`
+                            `Country with name "${savedData.nationality}" not found.`
                         );
                     }
                 }
@@ -99,159 +79,140 @@ export default function PersonalInformation() {
         })();
     }, []);
 
-    function handleChange(e) {
-        const { value, name } = e.target;
-        setInputs((prev) => ({ ...prev, [name]: value }));
-        // update flag
-        if (name === 'nationality') {
-            const selectedCountry = countryList.find(
-                (countryObject) => countryObject.name === value
-            );
-            setFlag(selectedCountry.flag);
-        }
-    }
-
-    function handleBlur(e) {
-        const { name, value } = e.target;
-        if (name !== 'password') {
-            verifyRegex(name, value, setErrors);
-        }
-    }
-
     function onMouseOver() {
         if (
             Object.entries(inputs).some(
-                ([key, value]) => !value && key !== 'linkedInURL'
+                ([key, value]) => !value && key !== 'linkedIn'
             ) ||
             Object.entries(errors).some(
                 ([key, value]) => value && key !== 'root'
             )
         ) {
+            console.log(inputs);
             setDisabled(true);
         } else {
             setDisabled(false);
         }
     }
 
-    async function handleSubmit(e) {
-        try {
-            e.preventDefault();
-            setLoading(true);
-            setDisabled(true);
-            setErrors(initialErrors);
-
-            const { name, email, phone, password, ...ownerInputs } = inputs;
-
-            if (existingApp) {
-                if (
-                    Object.entries(inputs).some(
-                        ([key, value]) => value !== initialInputs[key]
-                    )
-                ) {
-                    let updates = {};
-                    Object.entries(inputs).map(([key, value]) => {
-                        if (value !== initialInputs[key]) {
-                        }
-                    });
-
-                    const res = await ownerService.update({ ...updates });
-                    if (res && !res.message) {
-                        alert('your details have been updated');
-                    } else {
-                        setErrors((prev) => ({ ...prev, root: res.message }));
-                    }
-                }
-            } else {
-                const res =
-                    await startupRegistrationApplicationService.startApplication();
-                if (res) {
-                    const res2 = await ownerService.register(ownerInputs);
-                    if (res2?.message === 'personal info saved successfully') {
-                        setCurrentStep((prev = prev + 1));
-                        navigate('organization');
-                        setCompletedSteps((prev) => [...prev, 'personal']);
-                        setTotalData((prev) => ({
-                            ...prev,
-                            personal: {
-                                data: { ...inputs },
-                                status: 'complete',
-                            },
-                        }));
-                    }
-                } else {
-                    setErrors((prev) => ({ ...prev, root: res.message }));
-                }
-            }
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setDisabled(false);
-            setLoading(false);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setInputs((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+        if (name === 'nationality') {
+            const selectedCountry = countryList.find(
+                (countryObject) => countryObject.name === value
+            );
+            setFlag(selectedCountry.flag);
         }
+    };
+
+    function handleBlur(e) {
+        const { name, value } = e.target;
+        verifyRegex(name, value, setErrors);
+        localStorage.setItem(
+            'InvestorPersonalInfo',
+            JSON.stringify({ ...inputs, personalInfoStatus: 'pending' })
+        );
     }
 
+    const investorOptions = [
+        { value: 'Individual', name: 'Individual' },
+        { value: 'organization', name: 'organization' },
+    ];
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        setCompletedSteps((prev) => [...prev, 'personal']);
+        setTotalData((prev) => ({
+            ...prev,
+            personal: { data: inputs, status: 'complete' },
+        }));
+        localStorage.setItem(
+            'InvestorPersonalInfo',
+            JSON.stringify({ ...inputs, personalInfoStatus: 'complete' })
+        );
+        navigate(`/become-investor/${user._id}/financial`);
+    };
+
     const inputFields = [
+        {
+            name: 'organizationName',
+            label: 'Organization Name',
+            placeholder: 'Enter your Organization Name',
+            required: true,
+            icon: icons.building,
+            type: 'text',
+            show: inputs.investorType === 'organization',
+        },
         {
             type: 'date',
             name: 'dateOfBirth',
             required: true,
             label: 'Date of Birth',
-            readOnly: false,
+            show: true,
         },
         {
             type: 'url',
-            name: 'linkedInURL',
+            name: 'linkedIn',
             label: 'LinkedIn Profile (Optional)',
             icon: icons.linkedIn,
             placeholder: 'Enter LinkedIn profile URL',
             required: false,
-            readOnly: false,
+            show: true,
         },
     ];
 
-    const inputElements = inputFields.map((field) => (
-        <div key={field.name} className="w-full">
-            <div className="bg-[#fff7f2] z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
-                <label htmlFor={field.name}>
-                    {field.required && <span className="text-red-500">* </span>}
-                    {field.label}
-                </label>
-            </div>
-            <div className="shadow-md shadow-[#f8f0eb] relative">
-                {field.icon && (
-                    <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
-                        {field.icon}
+    const inputElements = inputFields.map(
+        (field) =>
+            field.show && (
+                <div key={field.name} className="w-full transition-all ease-in">
+                    <div className="bg-[#fff7f2] z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                        <label htmlFor={field.name}>
+                            {field.required && (
+                                <span className="text-red-500">* </span>
+                            )}
+                            {field.label}
+                        </label>
                     </div>
-                )}
-                <input
-                    type={field.type}
-                    readOnly={field.readOnly}
-                    name={field.name}
-                    id={field.name}
-                    value={inputs[field.name]}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder={field.placeholder}
-                    className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent`}
-                />
-            </div>
-            {errors[field.name] && (
-                <div className="mt-1 text-red-500 text-xs font-medium">
-                    {errors[field.name]}
+                    <div className="shadow-md shadow-[#f8f0eb] relative">
+                        {field.icon && (
+                            <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
+                                {field.icon}
+                            </div>
+                        )}
+                        <input
+                            type={field.type}
+                            name={field.name}
+                            id={field.name}
+                            value={inputs[field.name]}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder={field.placeholder}
+                            className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent`}
+                        />
+                    </div>
+                    {errors[field.name] && (
+                        <div className="mt-1 text-red-500 text-xs font-medium">
+                            {errors[field.name]}
+                        </div>
+                    )}
+                    {field.name === 'dateOfBirth' && !errors.dateOfBirth && (
+                        <div className="text-xs">
+                            Age should be atleast 18 years old.
+                        </div>
+                    )}
                 </div>
-            )}
-            {field.name === 'dateOfBirth' && !errors.dateOfBirth && (
-                <div className="text-xs">
-                    Age should be atleast 18 years old.
-                </div>
-            )}
-        </div>
-    ));
+            )
+    );
 
     return (
-        <div className="p-6 w-full bg-[#fff7f2] overflow-x-scroll rounded-lg shadow-md border border-gray-200">
-            <h2 className="text-xl font-bold text-orange-600 mb-6 text-center">
-                Founder/Co-Founder Personal Information
+        <div className="p-6 w-full bg-orange-50 rounded-lg shadow-md border border-gray-200">
+            <h2 className="text-2xl font-bold text-orange-600 mb-6 text-center">
+                Investor Personal Information
             </h2>
             <div className="w-full flex flex-col items-center justify-center gap-3">
                 {errors.root ? (
@@ -264,11 +225,33 @@ export default function PersonalInformation() {
                         compulsory fields
                     </p>
                 )}
-
+                {/* Form */}
                 <form
-                    onSubmit={handleSubmit}
                     className="flex flex-col items-start justify-center gap-1 w-full"
+                    onSubmit={handleSubmit}
                 >
+                    <div className="w-full">
+                        <div className="bg-orange-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="investorType">
+                                <span className="text-red-500">* </span>
+                                Investor Type
+                            </label>
+                        </div>
+                        <select
+                            name="investorType"
+                            id="investorType"
+                            value={inputs.investorType}
+                            onChange={handleChange}
+                            className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent"
+                        >
+                            <option value="">Select Investor Type</option>
+                            {investorOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     {inputElements}
 
                     {/* Nationality */}
@@ -293,8 +276,8 @@ export default function PersonalInformation() {
                                 name="nationality"
                                 id="nationality"
                                 value={inputs.nationality}
-                                disabled={false}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
                                 className={`py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${flag ? 'pl-12 pr-3' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
                             >
                                 <option value="">Select Nationality</option>
@@ -327,7 +310,7 @@ export default function PersonalInformation() {
                                 name="address"
                                 placeholder="Provide your Current address"
                                 value={inputs.address}
-                                readOnly={isFormAutoFilled}
+                                onBlur={handleBlur}
                                 onChange={(e) =>
                                     setInputs((prev) => ({
                                         ...prev,

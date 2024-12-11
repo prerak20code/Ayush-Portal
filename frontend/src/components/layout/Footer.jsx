@@ -53,7 +53,7 @@ export default function Footer() {
     const quickLinks = [
         { url: '', name: 'Home' },
         { url: 'about-us', name: 'About Ministry' },
-        { url: 'servcies', name: 'AYUSH Services' },
+        { url: 'services', name: 'AYUSH Services' },
         { url: 'faqs', name: 'FAQs' },
         { url: 'contact-us', name: 'Contact Us' },
     ];

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function InvestorBankingInformation() {
+export default function InvestorBankingInfo() {
     // State for form fields
     const [formData, setFormData] = useState({
         bankName: '',
@@ -168,22 +168,6 @@ export default function InvestorBankingInformation() {
                             name="swiftCode"
                             placeholder="Enter SWIFT code"
                             value={formData.swiftCode}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
-                        />
-                    </div>
-                </div>
-
-                {/* Balance Statement Upload */}
-                <div className="flex items-center space-x-3">
-                    <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Upload Balance Statement (Optional)
-                        </label>
-                        <input
-                            type="file"
-                            name="balanceStatement"
-                            accept=".pdf"
                             onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
                         />

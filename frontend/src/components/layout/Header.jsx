@@ -235,7 +235,7 @@ export default function Header() {
                         {tabElements}
                         <div className="cursor-pointer relative">
                             <div
-                                onMouseOver={() => {
+                                onClick={() => {
                                     setShowRegisterDropdown((prev) => !prev);
                                     setShowProfileDropdown(false);
                                     setShowDropdown(false);
@@ -273,7 +273,7 @@ export default function Header() {
                         {user && (
                             <div
                                 className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
-                                onMouseOver={() => {
+                                onClick={() => {
                                     setShowProfileDropdown((prev) => !prev);
                                     setShowDropdown(false);
                                     setShowRegisterDropdown(false);
@@ -284,7 +284,7 @@ export default function Header() {
                         )}
                         <div
                             className="lg:hidden hover:scale-125 transition-all ease-in size-[20px] fill-[#f9f9f9] cursor-pointer"
-                            onMouseOver={() => {
+                            onClick={() => {
                                 setShowDropdown((prev) => !prev);
                                 setShowProfileDropdown(false);
                                 setShowRegisterDropdown(false);

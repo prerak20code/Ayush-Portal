@@ -14,6 +14,7 @@ import RegisterInvestorPage from './InvestorRegistration';
 import AdminDashboard from './AdminDashboard';
 import DocumentsCheck from './DocumentsCheck';
 import PrivacyPoliciesPage from './PrivacyPoliciesPage';
+import AyushServicesPage from './AYUSHservices';
 
 export {
     HomePage,
@@ -32,4 +33,5 @@ export {
     DocumentsCheck,
     PrivacyPoliciesPage,
     AdminDashboard,
+    AyushServicesPage,
 };
