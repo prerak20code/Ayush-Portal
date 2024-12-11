@@ -15,6 +15,8 @@ import GOVINDIAIMAGE from './govIndiaLogo.png';
 import AYUSHSTARTUPLOGO from './AyushStartupLogo.png';
 import HASHTAG from './hashtag.png';
 import RajBhavan from './RajBhavan.png';
+import landingPageGif from './ayushAnimation.gif';
+
 
 export {
     // first half
@@ -39,4 +41,5 @@ export {
     GOVINDIAIMAGE,
     AYUSHSTARTUPLOGO,
     HASHTAG,
+    landingPageGif,
 };

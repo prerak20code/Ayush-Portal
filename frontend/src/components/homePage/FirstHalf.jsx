@@ -1,6 +1,7 @@
 import { Statistics } from '..';
 import { useVariantContext } from '../../contexts';
 import { motion } from 'framer-motion';
+import { landingPageGif } from '../../assets/images';
 
 export default function FirstHalf() {
     const { textVariants } = useVariantContext();
@@ -35,7 +36,7 @@ export default function FirstHalf() {
                     <div className="w-full md:w-1/2 flex justify-center items-center">
                         <img
                             className="w-full max-w-screen-lg h-auto object-contain"
-                            src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTAzNXkyZ3kwZ2VwNXplZGZ2ZXEzYjZ6aWZoMDA5cGV1dmgzMDk4dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OGczfrdEagbJ1anLpf/giphy.gif"
+                            src={landingPageGif}
                             alt="Example GIF"
                         />
                     </div>
