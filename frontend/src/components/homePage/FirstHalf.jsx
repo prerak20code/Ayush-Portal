@@ -19,10 +19,10 @@ export default function FirstHalf() {
 
             {/* Overlay Content */}
             <div className="h-full w-full absolute z-1 top-0">
-                <div className="h-[calc(100vh-190px)] md:h-[calc(100vh-210px)] flex flex-col sm:flex-row justify-between items-center py-6 md:py-14 px-4 sm:px-8">
+                <div className="h-[calc(100vh-190px)] md:h-[calc(100vh-210px)] flex flex-col md:flex-row justify-center items-center py-6 md:py-14 px-4 sm:px-8">
                     {/* Heading and Text Section */}
-                    <div className="flex flex-col items-center lg:items-start justify-center gap-4 md:gap-6">
-                        <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-extrabold bg-clip-text bg-gradient-to-r text-orange-400 typing-effect text-center lg:text-left">
+                    <div className="flex flex-col items-center lg:items-start justify-center gap-4 mb-24 md:gap-6">
+                        <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl mb-2 xl:text-5xl font-extrabold bg-clip-text bg-gradient-to-r text-orange-400 typing-effect text-center lg:text-left">
                             <span className="text-center block typing-line">
                                 AYUSH STARTUP
                             </span>
@@ -31,14 +31,14 @@ export default function FirstHalf() {
                             </span>
                         </h1>
 
-                        <p className="text-center px-4 sm:px-8 text-sm xs:text-base sm:text-lg text-[#5a5a5a]">
+                        <p className="text-center px-4 sm:px-8 text-lg md:text-2xl text-[#5a5a5a]">
                             Streamlining AYUSH Startup Registration with
                             Transparency, Support and Growth opportunities.
                         </p>
                     </div>
 
                     {/* Image Section */}
-                    <div className="w-full max-w-xs mt-4 sm:min-w-[300px] sm:max-w-md md:max-w-lg lg:max-w-2xl flex justify-center items-center">
+                    <div className="w-full max-w-xs mt-4 min-w-[350px] sm:max-w-md md:max-w-lg lg:max-w-2xl flex justify-center items-center">
                         <img
                             className="w-full h-auto object-contain"
                             src={landingPageGif}
