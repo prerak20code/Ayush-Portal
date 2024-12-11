@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { icons } from '../../assets/icons';
 import PhoneInput from 'react-phone-input-2';
 import { Button, Popup } from '..';
@@ -12,9 +12,13 @@ import {
 } from '../../services';
 
 export default function PersonalInformation() {
-    // const { user } = useUserContext();
-    const { setCurrentStep, setTotalData, setCompletedSteps, totalData } =
-        useRegisterStartupContext();
+    const {
+        setCurrentStep,
+        setTotalData,
+        setCompletedSteps,
+        totalData,
+        existingApp,
+    } = useRegisterStartupContext();
 
     const initialInputs = {
         name: totalData.personal.data.name || '',
@@ -45,10 +49,18 @@ export default function PersonalInformation() {
     const [disabled, setDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
     const [showPopup, setShowPopup] = useState();
+    const [isFormAutoFilled, setIsFormAutoFilled] = useState(false);
 
-    const isFormAutoFilled = Object.values(initialInputs).every(
-        (value, index) => value || index === 'linkedInURL'
-    );
+    // Memoizing the check for autofill status to prevent unnecessary rerenders
+    const checkFormAutoFilled = useMemo(() => {
+        return Object.entries(inputs).every(
+            ([key, value]) => value || key === 'linkedInURL'
+        );
+    }, [inputs]);
+
+    useEffect(() => {
+        setIsFormAutoFilled(checkFormAutoFilled);
+    }, [checkFormAutoFilled]); // Only trigger when checkFormAutoFilled changes
 
     useEffect(() => {
         (async function fetchCountryList() {
@@ -130,22 +142,32 @@ export default function PersonalInformation() {
 
             const { name, email, phone, password, ...ownerInputs } = inputs;
 
-            const res2 =
-                await startupRegistrationApplicationService.startApplication();
-            if (res2) {
-                const res = await ownerService.register(ownerInputs);
-                if (res?.message === 'personal info saved successfully') {
-                    setDisabled(true);
-                    setCurrentStep((prev = prev + 1));
-                    navigate('organization');
-                    setCompletedSteps((prev) => [...prev, 'personal']);
-                    setTotalData((prev) => ({
-                        ...prev,
-                        personal: { data: { ...inputs }, status: 'complete' },
-                    }));
-                }
+            if (existingApp) {
+                // const res = await ownerService.updateData();
             } else {
-                setErrors((prev) => ({ ...prev, root: res2.message }));
+                const res =
+                    await startupRegistrationApplicationService.startApplication();
+                if (res) {
+                    const res2 = await ownerService.register(
+                        ownerInputs,
+                        'personal'
+                    );
+                    if (res2?.message === 'personal info saved successfully') {
+                        setDisabled(true);
+                        setCurrentStep((prev = prev + 1));
+                        navigate('organization');
+                        setCompletedSteps((prev) => [...prev, 'personal']);
+                        setTotalData((prev) => ({
+                            ...prev,
+                            personal: {
+                                data: { ...inputs },
+                                status: 'complete',
+                            },
+                        }));
+                    }
+                } else {
+                    setErrors((prev) => ({ ...prev, root: res.message }));
+                }
             }
         } catch (err) {
             navigate('/server-error');
@@ -200,7 +222,7 @@ export default function PersonalInformation() {
             readOnly: isFormAutoFilled,
         },
     ];
-
+    console.log(isFormAutoFilled);
     const inputElements = inputFields.map((field) => (
         <div key={field.name} className="w-full">
             <div className="bg-[#fff7f2] z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
@@ -322,7 +344,7 @@ export default function PersonalInformation() {
                                 name="nationality"
                                 id="nationality"
                                 value={inputs.nationality}
-                                readOnly={isFormAutoFilled}
+                                disabled={isFormAutoFilled}
                                 onChange={handleChange}
                                 className={`py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${flag ? 'pl-12 pr-3' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
                             >

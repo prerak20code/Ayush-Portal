@@ -52,7 +52,7 @@ const addStartup = async (req, res) => {
             website,
             valuation,
             dateOfEstablishment,
-            pdf,
+            // pdf,
         } = req.body;
         valuation = Number(valuation);
         const userId = req.user._id;
@@ -83,7 +83,7 @@ const addStartup = async (req, res) => {
             website,
             valuation,
             dateOfEstablishment,
-            pdf,
+            // pdf,
             owner: userId,
         });
         if (startup) {

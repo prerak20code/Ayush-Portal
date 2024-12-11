@@ -1,20 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterStartupContext } from '../../contexts';
 import { icons } from '../../assets/icons';
 import { Button } from '..';
 
 export default function OrganizationInformation() {
+    const {
+        currentStep,
+        setCurrentStep,
+        setTotalData,
+        setCompletedSteps,
+        totalData,
+        existingApp,
+    } = useRegisterStartupContext();
+
     const initialInputs = {
-        startupName: '',
-        dateOfEstablishment: '',
-        valuation: '',
-        address: '',
-        industry: '',
-        website: '',
-        pdf: null,
-        businessType: '',
-        country: '', // Add country field
+        startupName: totalData.organization.data.startupName || '',
+        dateOfEstablishment:
+            totalData.organization.data.dateOfEstablishment || '',
+        valuation: totalData.organization.data.valuation || '',
+        address: totalData.organization.data.address || '',
+        industry: totalData.organization.data.industory || '',
+        website: totalData.organization.data.website || '',
+        // pdf: totalData.organization.data.dateOfEstablishment || null,
+        businessType: totalData.organization.data.businessType || '',
+        country: totalData.organization.data.country || '',
+        description: totalData.organization.data.description || '',
     };
     const initialErrors = {
         root: '',
@@ -26,15 +37,24 @@ export default function OrganizationInformation() {
         website: '',
         pdf: null,
         businessType: '',
-        country: '', // Add country field
+        country: '',
     };
     const [inputs, setInputs] = useState(initialInputs);
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
-    const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
-        useRegisterStartupContext();
+
     const navigate = useNavigate();
+    const [isFormAutoFilled, setIsFormAutoFilled] = useState(false);
+
+    // Memoizing the check for autofill status to prevent unnecessary rerenders
+    const checkFormAutoFilled = useMemo(() => {
+        return Object.values(inputs).every((value) => value);
+    }, [inputs]);
+
+    useEffect(() => {
+        setIsFormAutoFilled(checkFormAutoFilled);
+    }, [checkFormAutoFilled]); // Only trigger when checkFormAutoFilled changes
 
     const [countryList, setCountryList] = useState([]);
     const [flag, setFlag] = useState('');
@@ -103,17 +123,48 @@ export default function OrganizationInformation() {
             setDisabled(false);
         }
     }
-    const handleSubmit = (e) => {
+
+    async function handleSubmit(e) {
         try {
             e.preventDefault();
             setLoading(true);
-            setCompletedSteps((prev) => [...prev, 'organization']);
+            setDisabled(true);
+            setErrors(initialErrors);
 
-            // set total data & send backend request
+            if (existingApp) {
+                // const res = await ownerService.updateData();
+            } else {
+                const res =
+                    await startupRegistrationApplicationService.startApplication();
+                if (res) {
+                    const res2 = await ownerService.register(inputs);
+                    if (
+                        res2?.message ===
+                        'organizational info saved successfully'
+                    ) {
+                        setDisabled(true);
+                        setCurrentStep((prev = prev + 1));
+                        navigate('financial');
+                        setCompletedSteps((prev) => [...prev, 'organization']);
+                        setTotalData((prev) => ({
+                            ...prev,
+                            personal: {
+                                data: { ...inputs },
+                                status: 'complete',
+                            },
+                        }));
+                    }
+                } else {
+                    setErrors((prev) => ({ ...prev, root: res.message }));
+                }
+            }
         } catch (err) {
             navigate('/server-error');
+        } finally {
+            setLoading(false);
+            setDisabled(false);
         }
-    };
+    }
 
     const inputFields = [
         {
@@ -146,14 +197,14 @@ export default function OrganizationInformation() {
             placeholder: 'Enter website URL',
             required: true,
         },
-        {
-            type: 'file',
-            name: 'pdf',
-            required: false,
-            accept: '.pdf',
-            icon: icons.file,
-            label: 'Attach Documents (Optional)',
-        },
+        // {
+        //     type: 'file',
+        //     name: 'pdf',
+        //     required: false,
+        //     accept: '.pdf',
+        //     icon: icons.file,
+        //     label: 'Attach Documents (Optional)',
+        // },
     ];
 
     const inputElements = inputFields.map((field) => (

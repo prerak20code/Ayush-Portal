@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useLocation, useParams } from 'react-router-dom';
+import {
+    NavLink,
+    Outlet,
+    useLocation,
+    useParams,
+    useNavigate,
+} from 'react-router-dom';
 import { useRegisterStartupContext, useUserContext } from '../contexts';
 import { startupRegistrationApplicationService } from '../services';
 import { icons } from '../assets/icons';
@@ -9,10 +15,16 @@ export default function TrackApplication() {
     const pathname = location.pathname;
     const currentURL = pathname.split('/').pop();
     const { appId } = useParams();
-    const { currentStep, setCurrentStep, totalData, setTotalData } =
-        useRegisterStartupContext();
+    const {
+        currentStep,
+        setCurrentStep,
+        totalData,
+        setTotalData,
+        setExistingApp,
+    } = useRegisterStartupContext();
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const steps = [
         {
@@ -65,10 +77,29 @@ export default function TrackApplication() {
                             appId
                         );
                     if (res && !res?.message) {
+                        setExistingApp(true);
+                        console.log(res.completedSteps.pop());
+                        switch (res.completedSteps.pop()) {
+                            case 'personal': {
+                                navigate('organization');
+                            }
+                            case 'organization': {
+                                navigate('financial');
+                            }
+                            case 'financial': {
+                                navigate('banking');
+                            }
+                            case 'banking': {
+                                navigate('documents');
+                            }
+                            case 'documents': {
+                                navigate('review');
+                            }
+                        }
                         const data = {
                             personal: {
-                                data: res.owner,
-                                status: 'complete',
+                                data: res.owner || {},
+                                status: res.owner ? 'complete' : 'pending',
                             },
                             organization: {
                                 data: res.startup || {},
@@ -91,6 +122,8 @@ export default function TrackApplication() {
                             },
                         };
                         setTotalData(data);
+                    } else {
+                        setExistingApp(false);
                     }
                 }
             } catch (err) {
