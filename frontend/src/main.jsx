@@ -26,6 +26,7 @@ import {
     PrivacyPoliciesPage,
     AdminDashboard,
     DocumentsCheck,
+    AyushServicesPage,
 } from './pages';
 
 import {
@@ -67,6 +68,7 @@ const router = createBrowserRouter(
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
                 <Route path="faqs" element={<FAQpage />} />
+                <Route path="services" element={<AyushServicesPage />} />
                 <Route
                     path="privacy-policies"
                     element={<PrivacyPoliciesPage />}
