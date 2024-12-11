@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReviewSubmit from './ReviewSubmit';
 
-export default function DocumentUpload() {
+export default function InvestorDocuments() {
     // State to manage form validation and file uploads
     const [uploadedFiles, setUploadedFiles] = useState({
         image: null,

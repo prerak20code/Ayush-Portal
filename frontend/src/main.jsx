@@ -44,10 +44,10 @@ import {
     Review,
     InvestedStartups,
     TargetedStartups,
-    InvestorBankingInformation,
-    InvestorVerification,
-    DocumentUpload,
-    PersonalInformationInvestor,
+    InvestorBankingInfo,
+    InvestorFinancialInfo,
+    InvestorPersonalInfo,
+    InvestorDocuments,
 } from './components';
 
 import {
@@ -151,20 +151,14 @@ const router = createBrowserRouter(
                         </RegisterInvestorContextProvider>
                     }
                 >
-                    <Route index element={<PersonalInformationInvestor />} />
-                    <Route
-                        path="personal"
-                        element={<PersonalInformationInvestor />}
-                    />
+                    <Route index element={<InvestorPersonalInfo />} />
+                    <Route path="personal" element={<InvestorPersonalInfo />} />
                     <Route
                         path="financial"
-                        element={<InvestorVerification />}
+                        element={<InvestorFinancialInfo />}
                     />
-                    <Route
-                        path="banking"
-                        element={<InvestorBankingInformation />}
-                    />
-                    <Route path="document" element={<DocumentUpload />} />
+                    <Route path="banking" element={<InvestorBankingInfo />} />
+                    <Route path="document" element={<InvestorDocuments />} />
                 </Route>
                 <Route
                     path="targeted-startups/:userId"

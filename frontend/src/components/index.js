@@ -24,10 +24,10 @@ import OrganizationInformation from './RegisterStartup/OrganizationInformation';
 import Review from './RegisterStartup/Review';
 import InvestedStartups from './investorConnect/InvestedStartups';
 import TargetedStartups from './investorConnect/TargetedStartups';
-import InvestorBankingInformation from './InvestorRegister/InvestorBankingInformation';
-import InvestorVerification from './InvestorRegister/InvestorVerification';
-import PersonalInformationInvestor from './InvestorRegister/PersonalInformation';
-import DocumentUpload from './InvestorRegister/DocumentUpload';
+import InvestorBankingInfo from './InvestorRegister/BankingInfo';
+import InvestorFinancialInfo from './InvestorRegister/FinancialInfo';
+import InvestorPersonalInfo from './InvestorRegister/PersonalInfo';
+import InvestorDocuments from './InvestorRegister/InvestorDocuments';
 import UploadDocuments from './RegisterStartup/UploadDocuments';
 export {
     LayoutOne,
@@ -57,8 +57,8 @@ export {
     InvestedStartups,
     TargetedStartups,
     UploadDocuments,
-    InvestorBankingInformation,
-    InvestorVerification,
-    PersonalInformationInvestor,
-    DocumentUpload,
+    InvestorBankingInfo,
+    InvestorFinancialInfo,
+    InvestorPersonalInfo,
+    InvestorDocuments,
 };

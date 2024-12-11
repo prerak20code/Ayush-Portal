@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function InvestorBankingInformation() {
+export default function InvestorBankingInfo() {
     // State for form fields
     const [formData, setFormData] = useState({
         bankName: '',
