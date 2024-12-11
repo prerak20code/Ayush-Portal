@@ -108,7 +108,7 @@ export default function StartupApplicationsPage() {
     );
 
     return loading ? (
-        <div className="w-full flex justify-center items-center h-screen text-white">
+        <div className="w-full flex size-[20px] text-[#f9f9f9] justify-center items-center fill-[#f68533]">
             {icons.loading}
         </div>
     ) : (
@@ -120,20 +120,14 @@ export default function StartupApplicationsPage() {
                     onClick={() => navigate(`/application/new/personal`)}
                     type="submit"
                     btnText={
-                        loading ? (
-                            <div className="fill-[#f9f9f9] text-[#f9a264] size-[20px]">
-                                {icons.loading}
+                        <div className="flex items-center justify-center gap-2">
+                            <p className="text-[#f9f9f9] text-center">
+                                Register new Startup
+                            </p>
+                            <div className="size-[14px] fill-[#f9f9f9]">
+                                {icons.next}
                             </div>
-                        ) : (
-                            <div className="flex items-center justify-center gap-2">
-                                <p className="text-[#f9f9f9] text-center">
-                                    Register new Startup
-                                </p>
-                                <div className="size-[14px] fill-[#f9f9f9]">
-                                    {icons.next}
-                                </div>
-                            </div>
-                        )
+                        </div>
                     }
                 />
             </div>

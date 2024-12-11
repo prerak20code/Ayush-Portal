@@ -211,7 +211,7 @@ export default function Header() {
                 <img
                     src={GOVINDIAIMAGE}
                     alt="gov india image"
-                    className="hidden xs:block object-contain h-[70%] sm:h-full"
+                    className="object-contain h-[70%] sm:h-full"
                 />
 
                 <img

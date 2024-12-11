@@ -11,6 +11,9 @@ import TrackApplication from './TrackApplication';
 import StartupApplicationsPage from './StartupApplicationsPage';
 import DPIITregistrationPage from './DPIITregistrationPage';
 import RegisterInvestorPage from './InvestorRegistration';
+import AdminDashboard from './AdminDashboard';
+import DocumentsCheck from './DocumentsCheck';
+import PrivacyPoliciesPage from './PrivacyPoliciesPage';
 
 export {
     HomePage,
@@ -26,4 +29,7 @@ export {
     // OwnerConnectPage,
     DPIITregistrationPage,
     RegisterInvestorPage,
+    DocumentsCheck,
+    PrivacyPoliciesPage,
+    AdminDashboard,
 };
