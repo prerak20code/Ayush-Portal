@@ -49,7 +49,7 @@ export default function Header() {
             show: user,
         },
         {
-            url: `${user?._id}/register-startup`,
+            url: `application/new/personal`,
             name: 'Register your Startup',
             show: user,
         },

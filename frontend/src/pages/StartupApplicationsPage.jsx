@@ -50,7 +50,7 @@ export default function StartupApplicationsPage() {
         <div>
             <Button
                 btnText="Register new Startup"
-                onClick={() => navigate(`/application/new`)}
+                onClick={() => navigate(`/application/new/personal`)}
                 className=""
             />
             {applications.length > 0 ? (

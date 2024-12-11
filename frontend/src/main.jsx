@@ -128,7 +128,7 @@ const router = createBrowserRouter(
                 }
             />
             <Route
-                path="/startup/:id/documents"
+                path="document-check/startups/:id"
                 element={
                     <Redirect path="/login">
                         <DocumentsCheck />
