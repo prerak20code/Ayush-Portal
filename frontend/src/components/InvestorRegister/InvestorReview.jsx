@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ReviewSubmit = () => {
+export default function InvestorReview() {
     // State to hold fetched data
     const [investorData, setInvestorData] = useState({
         personalInformation: {},
@@ -143,6 +143,4 @@ const ReviewSubmit = () => {
             </div>
         </div>
     );
-};
-
-export default ReviewSubmit;
+}

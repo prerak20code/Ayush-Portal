@@ -48,6 +48,7 @@ import {
     InvestorFinancialInfo,
     InvestorPersonalInfo,
     InvestorDocuments,
+    InvestorReview,
 } from './components';
 
 import {
@@ -158,7 +159,8 @@ const router = createBrowserRouter(
                         element={<InvestorFinancialInfo />}
                     />
                     <Route path="banking" element={<InvestorBankingInfo />} />
-                    <Route path="document" element={<InvestorDocuments />} />
+                    <Route path="documents" element={<InvestorDocuments />} />
+                    <Route path="review" element={<InvestorReview />} />
                 </Route>
                 <Route
                     path="targeted-startups/:userId"

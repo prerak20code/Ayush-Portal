@@ -12,7 +12,6 @@ export default function RegisterInvestorPage() {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    console.log('total', totalData);
     const steps = [
         {
             name: 'Personal Information',
@@ -40,7 +39,7 @@ export default function RegisterInvestorPage() {
         },
         {
             name: 'Review & Submit',
-            path: 'document',
+            path: 'review',
             onClick: () => setCurrentStep(4),
             status: totalData.reviewd?.status,
         },

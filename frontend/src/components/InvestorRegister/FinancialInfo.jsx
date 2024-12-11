@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '..';
 
 export default function InvestorFinancialInfo() {
+    const { setCurrentStep, setTotalData, setCompletedSteps } =
+        useRegisterInvestorContext();
     const initialInputs = {
         revenue: '',
         netWorth: '',
@@ -40,17 +42,6 @@ export default function InvestorFinancialInfo() {
         { value: 'voterId', name: 'Voter ID' },
     ];
 
-    const handleGovtIssuedIdentificationChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            govtIssuedIdentification: {
-                ...prevData.govtIssuedIdentification,
-                [name]: value,
-            },
-        }));
-    };
-
     useEffect(() => {
         setCurrentStep(1);
         const savedData = localStorage.getItem('InvestorFinancialInfo');
@@ -66,13 +57,12 @@ export default function InvestorFinancialInfo() {
     function onMouseOver() {
         if (
             Object.entries(inputs).some(
-                ([key, value]) => !value && key !== 'linkedIn'
+                ([key, value]) => !value && key !== 'businessLicenseNumber'
             ) ||
             Object.entries(errors).some(
                 ([key, value]) => value && key !== 'root'
             )
         ) {
-            console.log(inputs);
             setDisabled(true);
         } else {
             setDisabled(false);
@@ -85,6 +75,21 @@ export default function InvestorFinancialInfo() {
             ...prev,
             [name]: value,
         }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        setCompletedSteps((prev) => [...prev, 'financial']);
+        setTotalData((prev) => ({
+            ...prev,
+            financial: { data: inputs, status: 'complete' },
+        }));
+        localStorage.setItem(
+            'InvestorFinancialInfo',
+            JSON.stringify({ ...inputs, financialInfoStatus: 'complete' })
+        );
+        navigate(`/become-investor/${user._id}/banking`);
     };
 
     function handleBlur(e) {
@@ -100,26 +105,19 @@ export default function InvestorFinancialInfo() {
         {
             name: 'revenue',
             label: 'Revenue',
-            placeholder: 'Enter your Organization Name',
+            placeholder: 'Enter your Revenue (in crores)',
             required: true,
-            icon: icons.building,
-            type: 'text',
-            show: inputs.investorType === 'organization',
-        },
-        {
-            type: 'date',
-            name: 'dateOfBirth',
-            required: true,
-            label: 'Date of Birth',
+            icon: icons.money,
+            type: 'number',
             show: true,
         },
         {
-            type: 'url',
-            name: 'linkedIn',
-            label: 'LinkedIn Profile (Optional)',
-            icon: icons.linkedIn,
-            placeholder: 'Enter LinkedIn profile URL',
-            required: false,
+            name: 'netWorth',
+            label: 'Net Worth',
+            placeholder: 'Enter your Net worth (in crores)',
+            required: true,
+            icon: icons.progress,
+            type: 'number',
             show: true,
         },
     ];
@@ -128,7 +126,7 @@ export default function InvestorFinancialInfo() {
         (field) =>
             field.show && (
                 <div key={field.name} className="w-full transition-all ease-in">
-                    <div className="bg-[#fff7f2] z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                    <div className="bg-blue-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
                         <label htmlFor={field.name}>
                             {field.required && (
                                 <span className="text-red-500">* </span>
@@ -136,7 +134,7 @@ export default function InvestorFinancialInfo() {
                             {field.label}
                         </label>
                     </div>
-                    <div className="shadow-md shadow-[#f8f0eb] relative">
+                    <div className="relative">
                         {field.icon && (
                             <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
                                 {field.icon}
@@ -189,129 +187,137 @@ export default function InvestorFinancialInfo() {
                     className="flex flex-col items-start justify-center gap-1 w-full"
                     onSubmit={handleSubmit}
                 >
-                    {/* Revenue */}
-                    <div className="flex items-center space-x-3">
+                    {inputElements}
+                    {investorTypeData === 'organization' && (
                         <div className="w-full">
-                            <label className="block text-sm font-medium text-gray-700">
-                                Revenue
-                            </label>
-                            <input
-                                type="text"
-                                name="revenue"
-                                placeholder="Enter Revenue"
-                                value={formData.revenue}
-                                onChange={handleChange}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Net Worth */}
-                    <div className="flex items-center space-x-3">
-                        <div className="w-full">
-                            <label className="block text-sm font-medium text-gray-700">
-                                Net Worth (in Crores)
-                            </label>
-                            <input
-                                type="number"
-                                name="netWorth"
-                                placeholder="Enter Net Worth in Crores"
-                                value={formData.netWorth}
-                                onChange={handleChange}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Conditional Fields */}
-                    {investorTypeData === 'Institutional' ? (
-                        <div className="flex items-center space-x-3">
-                            <div className="w-full">
-                                <label className="block text-sm font-medium text-gray-700">
+                            <div className="bg-blue-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                                <label htmlFor="businessLicenseNumber">
+                                    <span className="text-red-500">* </span>
                                     Business License Number (optional)
                                 </label>
+                            </div>
+                            <div className="w-full relative">
+                                <div className="size-[16px] fill-[#323232] absolute top-2 right-3">
+                                    {icons.locationPinPoint}
+                                </div>
                                 <input
-                                    type="number"
+                                    type="text"
                                     name="businessLicenseNumber"
-                                    placeholder="Enter License Number"
-                                    value={formData.businessLicenseNumber}
+                                    id="businessLicenseNumber"
+                                    placeholder="Enter Business License Number"
+                                    value={inputs.businessLicenseNumber}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md pl-3 pr-10 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
                                 />
                             </div>
                         </div>
-                    ) : null}
-                    <div className="flex items-center space-x-3">
-                        <div className="w-full">
-                            <label className="block text-sm font-medium text-gray-700">
-                                {investorTypeData === 'Institutional'
-                                    ? 'Tax Registration Number or VAT/GST Number'
-                                    : ' PAN or Equivalent ID'}
+                    )}
+
+                    <div className="w-full">
+                        <div className="bg-blue-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="taxPayerIdentification">
+                                <span className="text-red-500">* </span>
+                                {investorTypeData === 'organization'
+                                    ? 'Tax or GST Number'
+                                    : 'PAN Number'}
                             </label>
-                            <input
-                                type="number"
-                                name="taxPayerIdentification"
-                                placeholder={
-                                    investorTypeData === 'Institutional'
-                                        ? ' enter TRN or GST Number'
-                                        : 'Enter PAN/Equivalent ID'
-                                }
-                                value={formData.taxPayerIdentification}
-                                onChange={handleChange}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            />
                         </div>
+                        <input
+                            type="text"
+                            name="taxPayerIdentification"
+                            id="taxPayerIdentification"
+                            placeholder={
+                                investorTypeData === 'organization'
+                                    ? 'Enter TRN or GST number'
+                                    : 'Enter PAN number'
+                            }
+                            value={inputs.taxPayerIdentification}
+                            onChange={handleChange}
+                            className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md pl-3 pr-10 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
+                        />
                     </div>
 
                     {/* Government ID */}
-                    <div className="flex items-center space-x-3">
-                        <div className="w-full">
-                            <label className="block text-sm font-medium text-gray-700">
-                                Government Issued Identification
+                    <div className="w-full">
+                        <div className="bg-blue-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="idType">
+                                <span className="text-red-500">* </span>
+                                Government ID Type
                             </label>
-                            <select
-                                name="type"
-                                value={formData.govtIssuedIdentification.type}
-                                onChange={handleGovtIssuedIdentificationChange}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            >
-                                <option value="">Select Government ID</option>
-                                {govtIdentification.map((govtId) => (
-                                    <option
-                                        key={govtId.value}
-                                        value={govtId.value}
-                                    >
-                                        {govtId.label}
-                                    </option>
-                                ))}
-                            </select>
+                        </div>
+                        <select
+                            name="idType"
+                            id="idType"
+                            value={inputs.idType}
+                            onChange={handleChange}
+                            className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md pl-3 pr-10 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
+                        >
+                            <option value="">Select Government ID</option>
+                            {idOptions.map((govtId) => (
+                                <option key={govtId.value} value={govtId.value}>
+                                    {govtId.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
+                    <div className="w-full">
+                        <div className="bg-blue-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="idValue">
+                                <span className="text-red-500">* </span>
+                                ID
+                            </label>
+                        </div>
+                        <div className="w-full relative">
                             <input
                                 type="text"
-                                name="typeValue"
-                                placeholder={`Enter ${formData.govtIssuedIdentification.type || 'ID'} Number`}
-                                value={
-                                    formData.govtIssuedIdentification.typeValue
-                                }
-                                onChange={handleGovtIssuedIdentificationChange}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                name="idValue"
+                                placeholder={`Enter ${inputs.idType || 'ID'} Number`}
+                                value={inputs.idValue}
+                                onChange={handleChange}
+                                className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md pl-3 pr-10 w-full border-[0.01rem] border-[#858585] outline-[#f68533] bg-transparent"
                             />
                         </div>
                     </div>
 
-                    {/* Submit Button */}
-                    <div className="text-center">
-                        <button
+                    {/* buttons */}
+                    <div className="w-full flex items-center justify-end gap-4 mt-4">
+                        <Button
+                            className="text-[#f9f9f9] rounded-md h-[35px] w-[80px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-red-600 hover:to-red-700"
+                            onClick={() => {
+                                setInputs(initialInputs);
+                                setErrors(initialErrors);
+                                setFlag('');
+                            }}
+                            btnText={
+                                <div className="flex items-center justify-center gap-2">
+                                    <p className="text-[#f9f9f9]">Reset</p>
+                                    <div className="size-[15px] fill-[#f9f9f9]">
+                                        {icons.erase}
+                                    </div>
+                                </div>
+                            }
+                        />
+                        <Button
+                            className="text-[#f9f9f9] rounded-md h-[35px] w-[80px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-green-600 hover:to-green-700"
+                            disabled={disabled}
+                            onMouseOver={onMouseOver}
                             type="submit"
-                            className={`py-2 px-6 rounded-md font-semibold text-white ${
-                                isFormComplete
-                                    ? 'bg-blue-500 hover:bg-blue-600'
-                                    : 'bg-gray-400 cursor-not-allowed'
-                            }`}
-                            disabled={!isFormComplete}
-                        >
-                            Save Financial Information
-                        </button>
+                            btnText={
+                                loading ? (
+                                    <div className="fill-[#f9f9f9] text-[#f9a264] size-[20px]">
+                                        {icons.loading}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <p className="text-[#f9f9f9]">Save</p>
+                                        <div className="size-[14px] fill-[#f9f9f9]">
+                                            {icons.next}
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        />
                     </div>
                 </form>
             </div>

@@ -12,7 +12,7 @@ import {
 import {
     RegisterInvestorContextProvider,
     useRegisterInvestorContext,
-} from './registerInvestor';
+} from './registerInvestorContext';
 
 export {
     useVariantContext,

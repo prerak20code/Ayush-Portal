@@ -6,27 +6,24 @@ import { Button } from '..';
 
 export default function OrganizationInformation() {
     const {
-        currentStep,
         setCurrentStep,
         setTotalData,
         setCompletedSteps,
-        totalData,
         existingApp,
     } = useRegisterStartupContext();
 
     const initialInputs = {
-        startupName: totalData.organization?.data?.startupName || '',
-        dateOfEstablishment:
-            totalData.organization?.data?.dateOfEstablishment || '',
-        valuation: totalData.organization?.data?.valuation || '',
-        address: totalData.organization?.data?.address || '',
-        industry: totalData.organization?.data?.industory || '',
-        website: totalData.organization?.data?.website || '',
-        // pdf: totalData.organization?.data?.dateOfEstablishment || null,
-        businessType: totalData.organization?.data?.businessType || '',
-        country: totalData.organization?.data?.country || '',
-        description: totalData.organization?.data?.description || '',
+        startupName: '',
+        dateOfEstablishment: '',
+        valuation: '',
+        address: '',
+        industry: '',
+        website: '',
+        businessType: '',
+        country: '',
+        description: '',
     };
+    
     const initialErrors = {
         root: '',
         startupName: '',
@@ -39,6 +36,7 @@ export default function OrganizationInformation() {
         businessType: '',
         country: '',
     };
+
     const [inputs, setInputs] = useState(initialInputs);
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
@@ -197,14 +195,6 @@ export default function OrganizationInformation() {
             placeholder: 'Enter website URL',
             required: true,
         },
-        // {
-        //     type: 'file',
-        //     name: 'pdf',
-        //     required: false,
-        //     accept: '.pdf',
-        //     icon: icons.file,
-        //     label: 'Attach Documents (Optional)',
-        // },
     ];
 
     const inputElements = inputFields.map((field) => (

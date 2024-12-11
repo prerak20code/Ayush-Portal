@@ -28,6 +28,7 @@ import InvestorBankingInfo from './InvestorRegister/BankingInfo';
 import InvestorFinancialInfo from './InvestorRegister/FinancialInfo';
 import InvestorPersonalInfo from './InvestorRegister/PersonalInfo';
 import InvestorDocuments from './InvestorRegister/InvestorDocuments';
+import InvestorReview from './InvestorRegister/InvestorReview';
 import UploadDocuments from './RegisterStartup/UploadDocuments';
 export {
     LayoutOne,
@@ -61,4 +62,5 @@ export {
     InvestorFinancialInfo,
     InvestorPersonalInfo,
     InvestorDocuments,
+    InvestorReview,
 };

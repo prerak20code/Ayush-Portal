@@ -33,37 +33,37 @@ export default function TrackApplication() {
             name: 'Personal Information',
             path: 'personal',
             onClick: () => setCurrentStep(0),
-            status: totalData.personal.status,
+            status: totalData.personal?.status,
         },
         {
             name: 'Organization Information',
             path: 'organization',
             onClick: () => setCurrentStep(1),
-            status: totalData.organization.status,
+            status: totalData.organization?.status,
         },
         {
             name: 'Financial Information',
             path: 'financial',
             onClick: () => setCurrentStep(2),
-            status: totalData.financial.status,
+            status: totalData.financial?.status,
         },
         {
             name: 'Banking Information',
             path: 'banking',
             onClick: () => setCurrentStep(3),
-            status: totalData.banking.status,
+            status: totalData.banking?.status,
         },
         {
             name: 'Upload Documents',
             path: 'documents',
             onClick: () => setCurrentStep(4),
-            status: totalData.documents.status,
+            status: totalData.documents?.status,
         },
         {
             name: 'Review & Submit',
             path: 'review',
             onClick: () => setCurrentStep(5),
-            status: totalData.reviewd.status,
+            status: totalData.reviewd?.status,
         },
     ];
 
@@ -72,7 +72,6 @@ export default function TrackApplication() {
         step?.onClick();
     }, [currentURL]);
 
-    // if we have appId then auto fill the data and display current status
     useEffect(() => {
         (async function getApp() {
             try {
@@ -84,27 +83,6 @@ export default function TrackApplication() {
                         );
                     if (res && !res?.message) {
                         setExistingApp(true);
-
-                        switch (res.completedSteps.pop()) {
-                            case 'personal': {
-                                navigate('organization');
-                            }
-                            case 'organization': {
-                                navigate('financial');
-                            }
-                            case 'financial': {
-                                navigate('banking');
-                            }
-                            case 'banking': {
-                                navigate('documents');
-                            }
-                            case 'documents': {
-                                navigate('review');
-                            }
-                            default: {
-                                navigate('personal');
-                            }
-                        }
 
                         const data = {
                             personal: {
@@ -196,7 +174,7 @@ export default function TrackApplication() {
         </NavLink>
     ));
 
-    return loading || !Object.keys(totalData).length > 0 ? (
+    return loading  ? (
         <div className="w-full fill-[#f68533] text-white size-[30px]">
             {icons.loading}
         </div>
