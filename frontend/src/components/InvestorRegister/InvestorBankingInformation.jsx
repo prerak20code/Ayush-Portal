@@ -64,7 +64,7 @@ export default function InvestorBankingInformation() {
     };
 
     return (
-        <div className="p-6 bg-green-50 rounded-lg shadow-md border border-gray-200">
+        <div className="p-6 w-full bg-green-50 rounded-lg shadow-md border border-gray-200">
             {/* Section Title */}
             <h2 className="text-2xl font-bold text-green-600 mb-6 text-center">
                 Banking Information

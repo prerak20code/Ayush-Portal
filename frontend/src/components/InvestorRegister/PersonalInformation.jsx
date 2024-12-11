@@ -150,7 +150,7 @@ export default function PersonalInformationInvestor() {
     }, 300); // 300ms debounce time
 
     return (
-        <div className="p-6 bg-orange-100 rounded-lg shadow-md border border-gray-200">
+        <div className="p-6 w-full bg-orange-100 rounded-lg shadow-md border border-gray-200">
             {/* Section Title */}
             <h2 className="text-2xl font-bold text-orange-600 mb-6 text-center">
                 Investor Personal Information

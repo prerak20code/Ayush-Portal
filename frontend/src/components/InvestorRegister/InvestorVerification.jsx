@@ -88,7 +88,7 @@ export default function InvestorVerification() {
     };
 
     return (
-        <div className="p-6 bg-blue-50 rounded-lg shadow-md border border-gray-200">
+        <div className="p-6 w-full bg-blue-50 rounded-lg shadow-md border border-gray-200">
             {/* Section Title */}
             <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">
                 Financial Information
