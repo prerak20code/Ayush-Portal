@@ -48,6 +48,19 @@ export default function Header() {
     const tabs = [
         { url: '', name: 'Home', show: true },
         { url: 'register', name: 'Register Now', show: !user },
+<<<<<<< HEAD
+=======
+        {
+            url: `/become-investor/${user?._id}`,
+            name: 'Become an Investor',
+            show: user,
+        },
+        {
+            url: `application/new/personal`,
+            name: 'Register your Startup',
+            show: user,
+        },
+>>>>>>> 815b00ac134c1f65282308902711aa8ac371035d
         { url: 'login', name: 'Login', show: !user },
         { url: 'faqs', name: 'FAQs', show: true },
         { url: 'about-us', name: 'About Us', show: true },

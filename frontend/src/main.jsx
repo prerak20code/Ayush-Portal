@@ -21,7 +21,11 @@ import {
     ServerErrorPage,
     NotFoundPage,
     TrackApplication,
+<<<<<<< HEAD
     DPIITregistrationPage,
+=======
+    RegisterInvestorPage,
+>>>>>>> 815b00ac134c1f65282308902711aa8ac371035d
 } from './pages';
 
 import {
@@ -40,6 +44,10 @@ import {
     Review,
     InvestedStartups,
     TargetedStartups,
+    InvestorBankingInformation,
+    InvestorVerification,
+    DocumentUpload,
+    PersonalInformationInvestor,
 } from './components';
 
 import {
@@ -47,6 +55,7 @@ import {
     VariantContextProvider,
     UserContextProvider,
     RegisterStartupContextProvider,
+    RegisterInvestorContextProvider,
 } from './contexts';
 
 // import InvestorType from './InvestorConnect/InvestorType.jsx';
@@ -124,9 +133,39 @@ const router = createBrowserRouter(
                     <Route path="review" element={<Review />} />
                 </Route>
                 <Route
+<<<<<<< HEAD
                     path="DPIIT/registration/:userId"
                     element={<DPIITregistrationPage />}
                 />
+=======
+                    path="become-investor/:id"
+                    element={
+                        <RegisterInvestorContextProvider>
+                             <Redirect path="/" >
+                            <RegisterInvestorPage /></Redirect>
+                        </RegisterInvestorContextProvider>
+                    }
+                >
+                    <Route index element={<PersonalInformationInvestor />} />
+                    <Route
+                        path="personal"
+                        element={
+                          
+                                <PersonalInformationInvestor />
+                          
+                        }
+                    />
+                    <Route
+                        path="financial"
+                        element={<InvestorVerification />}
+                    />
+                    <Route
+                        path="banking"
+                        element={<InvestorBankingInformation />}
+                    />
+                    <Route path="document" element={<DocumentUpload />} />
+                </Route>
+>>>>>>> 815b00ac134c1f65282308902711aa8ac371035d
                 <Route
                     path="targeted-startups/:userId"
                     element={<TargetedStartups />}
