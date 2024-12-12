@@ -108,7 +108,7 @@ export default function StartupOwnerDocuments() {
         formData.append('image', file); // Appending the file as expected by the backend
         formData.append('Documentname', docName);
         formData.append('userId', user._id); // Adding the userId as part of the form data
-
+        console.log(user._id);
         try {
             const res = await uploadOnS3Service.uploadDocuments(formData);
             if (res && res.signedUrl) {

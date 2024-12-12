@@ -36,8 +36,8 @@ export default function App() {
                             break;
                         }
                     }
-
-                    setUser({ ...res, ...data });
+                    const {_id, ...reqData} = data;
+                    setUser({ ...res, ...reqData });
                 } else {
                     setUser(null);
                 }
