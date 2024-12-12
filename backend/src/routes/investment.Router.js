@@ -17,4 +17,4 @@ investmentRouter
 
 investmentRouter.route('/').get(verifyJWT, getAppliedStartups);
 
-investmentRouter.route('/become-a-investor').post(verifyJWT,registerInvestor);
+investmentRouter.route('/become-a-investor').post(verifyJWT, registerInvestor);
