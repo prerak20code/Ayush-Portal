@@ -7,7 +7,7 @@ import { Button } from '..';
 import { uploadOnS3Service } from '../../services';
 
 export default function StartupOwnerDocuments() {
-    const { setCompletedSteps, setTotalData, totalData, setCurrentStep } =
+    const { setCompletedSteps, setTotalData, setCurrentStep } =
         useRegisterStartupContext();
     const { user } = useUserContext();
 
@@ -107,7 +107,7 @@ export default function StartupOwnerDocuments() {
         const formData = new FormData();
         formData.append('image', file); // Appending the file as expected by the backend
         formData.append('Documentname', docName);
-        formData.append('userId', user.userId); // Adding the userId as part of the form data
+        formData.append('userId', user._id); // Adding the userId as part of the form data
 
         try {
             const res = await uploadOnS3Service.uploadDocuments(formData);

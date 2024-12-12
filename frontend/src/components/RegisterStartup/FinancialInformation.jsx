@@ -168,14 +168,6 @@ export default function FinancialInformation() {
                     {errors[field.name]}
                 </div>
             )}
-            {field.name === 'password' && !errors.password && (
-                <div className="text-xs">
-                    This password will be used for further verification.
-                </div>
-            )}
-            {field.name === 'balanceSheet' && (
-                <div className="text-xs">Only .pdf files are accepted.</div>
-            )}
         </div>
     ));
 

@@ -151,20 +151,6 @@ export default function Header() {
         }
     }
 
-    async function handleDelete() {
-        try {
-            setShowDeletePopup(true);
-            const res = await userService.delete();
-            if (res && res.message === 'user account deleted successfully') {
-                setUser(null);
-                setShowProfileDropdown(false);
-                navigate('/');
-            }
-        } catch (err) {
-            navigate('/server-error');
-        }
-    }
-
     async function handleRequestResetPassword() {
         try {
             setShowPopup(true);
@@ -344,11 +330,6 @@ export default function Header() {
                                         btnText="Logout"
                                         className="w-full text-[#f9f9f9] rounded-md bg-gradient-to-r py-[5px] from-[#f68533] to-[#f68533] hover:from-green-600 hover:to-green-700"
                                         onClick={handleLogout}
-                                    />
-                                    <Button
-                                        btnText="Delete"
-                                        className="w-full text-[#f9f9f9] rounded-md bg-gradient-to-r py-[5px] from-[#f68533] to-[#f68533] hover:from-red-600 hover:to-red-700"
-                                        onClick={handleDelete}
                                     />
                                 </div>
                             </div>

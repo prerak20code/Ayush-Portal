@@ -88,26 +88,6 @@ class UserService {
         }
     }
 
-    async delete() {
-        try {
-            const res = await fetch('/api/v1/users', {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-
-            const data = await res.json();
-            console.log(data);
-
-            if (res.status === 500) {
-                throw new Error(data.message);
-            }
-            return data;
-        } catch (err) {
-            console.error(`error in delete user service: ${err.message}`);
-            throw err;
-        }
-    }
-
     async getCurrentUser() {
         try {
             const res = await fetch('/api/v1/users', {

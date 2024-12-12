@@ -233,6 +233,9 @@ const addStartup = async (req, res) => {
             });
         }
 
+        user.designation = 'owner';
+        await user.save();
+
         let {
             startupName,
             description,

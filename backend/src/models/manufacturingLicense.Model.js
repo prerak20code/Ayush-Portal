@@ -1,55 +1,7 @@
 import mongoose from 'mongoose';
 
-const ManufacturingLicenseSchema = new mongoose.Schema({
-    applicantBusiness: {
-        type: String,
-        required: true,
-    },
-    manufacturingFacility: {
-        type: String,
-        required: true,
-    },
-    landArea: {
-        type: Number, // in square feet
-        required: true,
-        validate: {
-            validator: function (value) {
-                return value >= 1200; // Minimum land area requirement
-            },
-            message: 'Land area must be at least 1200 square feet.',
-        },
-    },
-    gmpCertified: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
-    ayurvedicExperts: {
-        type: Number,
-        required: true,
-        validate: {
-            validator: function (value) {
-                return value >= 2; // Minimum 2 Ayurvedic experts
-            },
-            message: 'There must be at least 2 Ayurvedic experts.',
-        },
-    },
-    ayurvedicPharmacists: {
-        type: Number,
-        required: true,
-        validate: {
-            validator: function (value) {
-                return value >= 2; // Minimum 2 Ayurvedic pharmacists
-            },
-            message: 'There must be at least 2 Ayurvedic pharmacists.',
-        },
-    },
-    machineryInstalled: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
-    documents: {
+const ManufacturingLicenseSchema = new mongoose.Schema(
+    {
         manufacturingLicenseCopy: {
             type: String,
             required: true, // File path or URL
@@ -60,35 +12,35 @@ const ManufacturingLicenseSchema = new mongoose.Schema({
         },
         manufacturingFormula: {
             type: String,
-            required: true,
+            required: false,
         },
         finishedProductSpecification: {
             type: String,
-            required: true,
+            required: false,
         },
         coppCertificationProducts: {
             type: [String], // Array of products applied/approved for COPP
-            required: true,
+            required: false,
         },
         processValidationReport: {
             type: String,
-            required: true,
+            required: false,
         },
         technicalStaffDetails: {
             type: String,
-            required: true,
+            required: false,
         },
         equipmentList: {
             type: String,
-            required: true,
+            required: false,
         },
         waterHVACDiagrams: {
             type: String,
-            required: true,
+            required: false,
         },
         proofOfSafetyAndEffectiveness: {
             type: String,
-            required: true,
+            required: false,
         },
         nonHerbalIngredientsUndertaking: {
             type: Boolean,
@@ -100,39 +52,32 @@ const ManufacturingLicenseSchema = new mongoose.Schema({
         },
         kycDetails: {
             type: String,
-            required: true,
+            required: false,
         },
         premisesAddressProof: {
             type: String,
-            required: true,
+            required: false,
         },
         businessConstitutionDocument: {
             type: String,
-            required: true,
+            required: false,
+        },
+        gmpCertificate: {
+            type: String, // File path or URL
+            required: false,
+        },
+        coppCertificate: {
+            type: String, // File path or URL
+            required: false, // Only if applicable
+        },
+        applicationStatus: {
+            type: String,
+            enum: ['Pending', 'Under Review', 'Approved', 'Rejected'],
+            default: 'Pending',
         },
     },
-    gmpCertificate: {
-        type: String, // File path or URL
-        required: true,
-    },
-    coppCertificate: {
-        type: String, // File path or URL
-        required: false, // Only if applicable
-    },
-    applicationStatus: {
-        type: String,
-        enum: ['Pending', 'Under Review', 'Approved', 'Rejected'],
-        default: 'Pending',
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
+    { timestamps: true }
+);
 
 export default mongoose.model(
     'ManufacturingLicense',
