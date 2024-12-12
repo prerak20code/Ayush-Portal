@@ -16,7 +16,6 @@ export default function ContactUsPage() {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
     }
-    const navigate = useNavigate();
 
     async function submitQuery(e) {
         try {
@@ -35,16 +34,17 @@ export default function ContactUsPage() {
 
             const data = await res.json();
             if (res.status === 500) {
-                throw new Error(data.message);
+                throw new Error(data);
+            } else {
+                setInputs({ query: '', subject: '' });
+                alert('Query Submitted Successfully 🤗');
             }
-            setInputs({ query: '', subject: '' });
-            alert('Query Submitted Successfully 🤗');
         } catch (err) {
             console.log(
                 'error occured while submitting the query, error:',
                 err.message
             );
-            // navigate('/server-error');
+            navigate('/server-error');
         } finally {
             setLoading(false);
         }

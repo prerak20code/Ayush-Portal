@@ -3,24 +3,8 @@ import { useState } from 'react';
 import { Button } from '../components';
 
 export default function LicenseGeneratorPage() {
-    const [inputs, setInputs] = useState({
-        manufacturingLicense: null,
-        siteLayout: null,
-        manufacturingFormula: null,
-        productSpecification: null,
-        coppProducts: null,
-        processValidation: null,
-        technicalStaffDetails: null,
-        equipmentList: null,
-        waterHVAC: null,
-        proofSafetyEffectiveness: null,
-        herbalUndertaking: null,
-        complianceUndertaking: null,
-        kycDetails: null,
-        addressProof: null,
-        constitutionDocument: null,
-    });
-
+    const [inputs, setInputs] = useState({});
+    const [licenseType, setLicenseType] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -40,6 +24,11 @@ export default function LicenseGeneratorPage() {
         }
     }
 
+    const handleLicenseTypeChange = (event) => {
+        setLicenseType(event.target.value);
+        setInputs({}); // Reset the input fields when license type changes
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         alert(
@@ -47,113 +36,145 @@ export default function LicenseGeneratorPage() {
         );
     };
 
-    const fileFields = [
+    const manufactureFields = [
         {
             name: 'manufacturingLicense',
-            label: 'Copy of Manufacturing License, if the applicant is manufacturing AYUSH products',
+            label: 'Copy of Manufacturing License',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'siteLayout',
             label: 'Site layout of the manufacturing facility',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'manufacturingFormula',
-            label: 'Details of Manufacturing formula and manufacturing process',
+            label: 'Manufacturing formula and process',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'productSpecification',
             label: 'Finished product specification report',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'coppProducts',
             label: 'List of applied and approved products for COPP certification',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'processValidation',
             label: 'Process Validation Report for 3 batches',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'technicalStaffDetails',
-            label: 'Details of the technical staff, their names, experience, and qualifications',
+            label: 'Details of technical staff',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'equipmentList',
-            label: 'List of equipment to be used for manufacturing',
+            label: 'List of equipment to be used',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'waterHVAC',
             label: 'Water & HVAC system diagrams',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'proofSafetyEffectiveness',
-            label: 'Proof of Safety & Effectiveness according to Rule 158B of Drugs & Cosmetics Rules, 1945',
+            label: 'Proof of Safety & Effectiveness',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'herbalUndertaking',
-            label: 'Undertaking regarding the absence of non-herbal ingredients, applicable in case of herbal products',
+            label: 'Undertaking regarding herbal ingredients',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'complianceUndertaking',
-            label: 'Undertaking regarding compliance with the Drugs and Cosmetics Act, Drugs and Cosmetic Rules, Drugs & Magic Remedies (Objectionable Advertisements) Act, 1954, and its corresponding rules (applicable in case of herbal products only)',
+            label: 'Compliance Undertaking',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'kycDetails',
             label: 'KYC details of the applicant',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'addressProof',
-            label: 'Address Proof of the Premises (Rent Agreement)',
+            label: 'Address Proof (Rent Agreement)',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
         {
             name: 'constitutionDocument',
             label: 'Constitution Document of the business',
             required: true,
-            icon: icons.file,
-            type: 'file',
         },
     ];
+
+    const loanFields = [
+        {
+            name: 'loanApplication',
+            label: 'Loan Application Form',
+            required: true,
+        },
+        { name: 'loanApproval', label: 'Loan Approval Letter', required: true },
+        {
+            name: 'bankStatement',
+            label: 'Bank Statements (last 6 months)',
+            required: true,
+        },
+        {
+            name: 'collateralProof',
+            label: 'Collateral Proof Document',
+            required: true,
+        },
+        {
+            name: 'financialReports',
+            label: 'Financial Reports (last 3 years)',
+            required: true,
+        },
+        { name: 'businessPlan', label: 'Business Plan', required: true },
+        ...manufactureFields.slice(6), // Reuse remaining fields from manufacture license
+    ];
+
+    const retailWholesaleFields = [
+        {
+            name: 'retailApplication',
+            label: 'Retail License Application Form',
+            required: true,
+        },
+        {
+            name: 'wholesaleApplication',
+            label: 'Wholesale License Application Form',
+            required: true,
+        },
+        {
+            name: 'storeDetails',
+            label: 'Details of Store/Outlet',
+            required: true,
+        },
+        {
+            name: 'inventoryRecords',
+            label: 'Inventory Records',
+            required: true,
+        },
+        {
+            name: 'distributionPlan',
+            label: 'Distribution Plan',
+            required: true,
+        },
+        ...manufactureFields.slice(5), // Reuse remaining fields from manufacture license
+    ];
+
+    const fileFields =
+        licenseType === 'loan'
+            ? loanFields
+            : licenseType === 'retailWholesale'
+              ? retailWholesaleFields
+              : manufactureFields;
 
     const fileElements = fileFields.map((field) => (
         <div key={field.name} className="w-full transition-all ease-in">
@@ -164,18 +185,12 @@ export default function LicenseGeneratorPage() {
                 </label>
             </div>
             <div className="relative">
-                {field.icon && (
-                    <div className="size-[16px] fill-[#323232] stroke-[#323232] absolute top-[50%] translate-y-[-50%] right-3">
-                        {field.icon}
-                    </div>
-                )}
                 <input
-                    type={field.type}
+                    type="file"
                     name={field.name}
                     id={field.name}
-                    accept={field.accept}
                     onChange={handleChange}
-                    className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] bg-transparent`}
+                    className="py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] bg-transparent"
                 />
             </div>
             {errors[field.name] && (
@@ -192,44 +207,53 @@ export default function LicenseGeneratorPage() {
                 License Generator Document Verification
             </h2>
 
-            <div className="w-full flex flex-col items-center justify-center gap-3">
-                {errors.root ? (
-                    <div className="text-red-500 w-full text-center">
-                        {errors.root}
-                    </div>
-                ) : (
-                    <p className="text-red-500 w-full text-center text-[15px]">
-                        <span className="font-bold">* </span>Indicates
-                        compulsory fields
-                    </p>
-                )}
+            <form
+                className="flex flex-col items-start justify-center gap-1 w-full"
+                onSubmit={handleSubmit}
+            >
+                {/* Dropdown for License Type */}
+                <div className="w-full mb-4">
+                    <label
+                        htmlFor="licenseType"
+                        className="text-lg font-medium"
+                    >
+                        Select License Type
+                    </label>
+                    <select
+                        id="licenseType"
+                        name="licenseType"
+                        value={licenseType}
+                        onChange={handleLicenseTypeChange}
+                        className="py-[10px] rounded-md px-3 w-full border-[0.01rem] border-[#858585] bg-transparent"
+                    >
+                        <option value="">Select License Type</option>
+                        <option value="manufacture">Manufacture License</option>
+                        <option value="loan">Loan License</option>
+                        <option value="retailWholesale">
+                            Retail & Wholesale License
+                        </option>
+                    </select>
+                </div>
 
-                <form
-                    className="flex flex-col items-start justify-center gap-1 w-full"
-                    onSubmit={handleSubmit}
-                >
-                    {fileElements}
+                {/* Render file input fields based on selected license type */}
+                {fileElements}
 
-                    <div className="w-full flex items-center justify-end gap-4 mt-4">
-                        <Button
-                            disabled={disabled}
-                            onMouseOver={onMouseOver}
-                            className="text-[#f9f9f9] rounded-md h-[40px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-green-600 hover:to-green-700"
-                            type="submit"
-                            btnText={
-                                <div className="flex items-center justify-center gap-2">
-                                    <p className="text-[#f9f9f9] text-nowrap">
-                                        Pay 2000 and continue
-                                    </p>
-                                    <div className="size-[14px] fill-[#f9f9f9]">
-                                        {icons.next}
-                                    </div>
-                                </div>
-                            }
-                        />
-                    </div>
-                </form>
-            </div>
+                <div className="w-full flex items-center justify-end gap-4 mt-4">
+                    <Button
+                        disabled={disabled}
+                        onMouseOver={onMouseOver}
+                        className="text-[#f9f9f9] rounded-md h-[40px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-green-600 hover:to-green-700"
+                        type="submit"
+                        btnText={
+                            <div className="flex items-center justify-center gap-2">
+                                <p className="text-[#f9f9f9] text-nowrap">
+                                    Pay 2000 and continue
+                                </p>
+                            </div>
+                        }
+                    />
+                </div>
+            </form>
         </div>
     );
 }

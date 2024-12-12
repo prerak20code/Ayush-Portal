@@ -47,6 +47,7 @@ export default function Header() {
 
     const tabs = [
         { url: '', name: 'Home', show: true },
+        { url: '/license-generator/verification', name: 'Generate License', show: true },
         { url: 'register', name: 'Register Now', show: !user },
         {
             url: `/become-investor/${user?._id}`,

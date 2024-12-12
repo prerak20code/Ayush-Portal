@@ -26,6 +26,7 @@ import {
     AdminDashboard,
     DocumentsCheck,
     AyushServicesPage,
+    AadhaarVerificationPage,
     LicenseGeneratorPage,
 } from './pages';
 
@@ -81,7 +82,11 @@ const router = createBrowserRouter(
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route
-                    path="license-generator"
+                    path="license-generator/verification"
+                    element={<AadhaarVerificationPage />}
+                />
+                <Route
+                    path="license-generator/generation"
                     element={<LicenseGeneratorPage />}
                 />
                 <Route

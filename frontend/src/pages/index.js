@@ -16,6 +16,7 @@ import DocumentsCheck from './DocumentsCheck';
 import PrivacyPoliciesPage from './PrivacyPoliciesPage';
 import AyushServicesPage from './AYUSHservices';
 import LicenseGeneratorPage from './LicenseGeneratorPage';
+import AadhaarVerificationPage from './AdhaarVerificationPage';
 
 export {
     HomePage,
@@ -36,4 +37,5 @@ export {
     AdminDashboard,
     AyushServicesPage,
     LicenseGeneratorPage,
+    AadhaarVerificationPage 
 };
