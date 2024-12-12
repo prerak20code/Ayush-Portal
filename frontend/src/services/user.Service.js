@@ -180,8 +180,6 @@ class UserService {
             throw err;
         }
     }
-
-    async refreshAccessToken() {}
 }
 
 export const userService = new UserService();

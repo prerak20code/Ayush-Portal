@@ -30,7 +30,7 @@ export async function uploadFile(fileBuffer, fileName, mimetype) {
     try {
         const data = await s3Client.send(new PutObjectCommand(uploadParams));
         console.log(`File uploaded successfully: ${fileName}`);
-        return data; // Return data if necessary
+        return data;
     } catch (error) {
         console.error(`Error uploading file: ${fileName}`, error);
         throw new Error('Error uploading file');
@@ -46,7 +46,7 @@ export async function deleteFile(fileName) {
     try {
         const data = await s3Client.send(new DeleteObjectCommand(deleteParams));
         console.log(`File deleted successfully: ${fileName}`);
-        return data; // Return data if necessary
+        return data;
     } catch (error) {
         console.error(`Error deleting file: ${fileName}`, error);
         throw new Error('Error deleting file');
@@ -61,7 +61,7 @@ export async function getObjectSignedUrl(key) {
 
     try {
         const command = new GetObjectCommand(params);
-        const seconds = 600; // 10 minutes
+        const seconds = 604800; // 7 days
         const url = await getSignedUrl(s3Client, command, {
             expiresIn: seconds,
         });

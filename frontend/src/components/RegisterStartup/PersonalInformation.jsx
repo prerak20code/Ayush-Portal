@@ -28,6 +28,7 @@ export default function PersonalInformation() {
         dateOfBirth: '',
         address: '',
     };
+
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
 
@@ -55,7 +56,6 @@ export default function PersonalInformation() {
 
                 countries.sort((a, b) => a.name.localeCompare(b.name));
                 setCountryList(countries);
-                // Set the initial flag if nationality exists
                 if (inputs.nationality) {
                     const initialCountry = countries.find(
                         (countryObject) =>
@@ -63,7 +63,7 @@ export default function PersonalInformation() {
                     );
 
                     if (initialCountry) {
-                        setFlag(initialCountry.flag); // Set the flag URL
+                        setFlag(initialCountry.flag);
                     } else {
                         console.warn(
                             `Country with name "${inputs.nationality}" not found.`

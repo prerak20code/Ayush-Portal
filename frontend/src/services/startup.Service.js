@@ -5,7 +5,13 @@ class StartupService {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(inputs),
+                body: JSON.stringify({
+                    ...inputs.banking.data,
+                    ...inputs.documents.data,
+                    ...inputs.financial.data,
+                    ...inputs.personal.data,
+                    ...inputs.organization.data,
+                }),
             });
             const data = await res.json();
             if (res.status === 500) {

@@ -99,60 +99,60 @@ export default function RegisterInvestorPage() {
     }, [currentURL]);
 
     useEffect(() => {
-        try {
-            setLoading(true);
+        (async function getData() {
+            try {
+                setLoading(true);
 
-            let res = localStorage.getItem('InvestorPersonalInfo');
-            const { personalInfoStatus, ...personalInfo } = JSON.parse(
-                res || '{}'
-            ); // Default to empty object
+                let res = localStorage.getItem('InvestorPersonalInfo');
+                const { personalInfoStatus, ...personalInfo } =
+                    await JSON.parse(res || '{}');
 
-            res = localStorage.getItem('InvestorFinancialInfo');
-            const { financialInfoStatus, ...financialInfo } = JSON.parse(
-                res || '{}'
-            );
+                res = localStorage.getItem('InvestorFinancialInfo');
+                const { financialInfoStatus, ...financialInfo } =
+                    await JSON.parse(res || '{}');
 
-            res = localStorage.getItem('InvestorBankingInfo');
-            const { bankingInfoStatus, ...bankingInfo } = JSON.parse(
-                res || '{}'
-            );
+                res = localStorage.getItem('InvestorBankingInfo');
+                const { bankingInfoStatus, ...bankingInfo } = await JSON.parse(
+                    res || '{}'
+                );
 
-            res = localStorage.getItem('InvestorDocuments');
-            const { documentsStatus, ...documentsInfo } = JSON.parse(
-                res || '{}'
-            );
+                res = localStorage.getItem('InvestorDocuments');
+                const { documentsStatus, ...documentsInfo } = await JSON.parse(
+                    res || '{}'
+                );
 
-            res = localStorage.getItem('InvestorReviewd');
-            const { reviewdStatus } = JSON.parse(res || '{}');
+                res = localStorage.getItem('InvestorReviewd');
+                const { reviewdStatus } = await JSON.parse(res || '{}');
 
-            const data = {
-                personal: {
-                    data: personalInfo || null,
-                    status: personalInfoStatus,
-                },
-                financial: {
-                    data: financialInfo || null,
-                    status: financialInfoStatus,
-                },
-                banking: {
-                    data: bankingInfo || null,
-                    status: bankingInfoStatus,
-                },
-                documents: {
-                    data: documentsInfo || null,
-                    status: documentsStatus,
-                },
-                reviewd: {
-                    status: reviewdStatus,
-                },
-            };
+                const data = {
+                    personal: {
+                        data: personalInfo || null,
+                        status: personalInfoStatus,
+                    },
+                    financial: {
+                        data: financialInfo || null,
+                        status: financialInfoStatus,
+                    },
+                    banking: {
+                        data: bankingInfo || null,
+                        status: bankingInfoStatus,
+                    },
+                    documents: {
+                        data: documentsInfo || null,
+                        status: documentsStatus,
+                    },
+                    reviewd: {
+                        status: reviewdStatus,
+                    },
+                };
 
-            setTotalData(data);
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setLoading(false);
-        }
+                setTotalData(data);
+            } catch (err) {
+                navigate('/server-error');
+            } finally {
+                setLoading(false);
+            }
+        })();
     }, []);
 
     return loading ? (

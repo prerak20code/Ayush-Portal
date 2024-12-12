@@ -1,24 +1,48 @@
 import { useState, useEffect } from 'react';
 import { icons } from '../../assets/icons';
-import { verifyRegex } from '../../utils';
-import { useRegisterInvestorContext, useUserContext } from '../../contexts';
+import { fileRestrictions } from '../../utils';
+import { useUserContext, useRegisterInvestorContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '..';
+import { uploadOnS3Service } from '../../services';
 
 export default function InvestorDocuments() {
-    const { setCurrentStep, setTotalData, setCompletedSteps } =
+    const { setCompletedSteps, setTotalData, totalData, setCurrentStep } =
         useRegisterInvestorContext();
     const { user } = useUserContext();
-    const initialFiles = {
-        organizationImage: null,
-        taxId: null,
-        governmentIdProof: null,
-        bankStatements: null,
-        businessDocuments: null,
-    };
-    const [files, setFiles] = useState(initialFiles);
+
+    const [documents, setDocuments] = useState({
+        organizationImage: {
+            s3Name: null,
+            FileName: null,
+        },
+        taxId: { s3Name: null, FileName: null },
+        governmentIdProof: { s3Name: null, FileName: null },
+        bankStatements: { s3Name: null, FileName: null },
+        businessDocuments: { s3Name: null, FileName: null },
+    });
+
+    const [uploadedDocs, setUploadedDocs] = useState({
+        organizationImage: {
+            s3Name: null,
+            signedUrl: null,
+        },
+        taxId: { s3Name: null, signedUrl: null },
+        governmentIdProof: { s3Name: null, signedUrl: null },
+        bankStatements: { s3Name: null, signedUrl: null },
+        businessDocuments: { s3Name: null, signedUrl: null },
+    });
+
+    useEffect(() => {
+        setCurrentStep(4);
+
+        const savedData = localStorage.getItem(`InvestorDocuments`);
+        if (savedData) {
+            setDocuments(JSON.parse(savedData));
+        }
+    }, []);
+
     const initialErrors = {
-        root: '',
         organizationImage: '',
         taxId: '',
         governmentIdProof: '',
@@ -28,28 +52,9 @@ export default function InvestorDocuments() {
     const [errors, setErrors] = useState(initialErrors);
     const navigate = useNavigate();
     const [disabled, setDisabled] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-    const handleChange = (e) => {
-        const { name, files: selectedFiles } = e.target;
-        setFiles((prev) => ({ ...prev, [name]: selectedFiles[0] }));
-    };
-
-    useEffect(() => {
-        setCurrentStep(3);
-        const savedData = localStorage.getItem('InvestorDocuments');
-        if (savedData) {
-            setFiles(JSON.parse(savedData));
-        }
-    }, []);
 
     function onMouseOver() {
-        if (
-            Object.values(files).some((value) => !value) ||
-            Object.entries(errors).some(
-                ([key, value]) => value && key !== 'root'
-            )
-        ) {
+        if (Object.values(documents).some((value) => !value)) {
             setDisabled(true);
         } else {
             setDisabled(false);
@@ -58,27 +63,118 @@ export default function InvestorDocuments() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         setCompletedSteps((prev) => [...prev, 'documents']);
+        const setData = {
+            bankStatements: uploadedDocs.bankStatements.signedUrl,
+            taxId: uploadedDocs.taxId.signedUrl,
+            businessDocuments: uploadedDocs.businessDocuments.signedUrl,
+            governmentIdProof: uploadedDocs.governmentIdProof.signedUrl,
+            organizationImage: uploadedDocs.organizationImage.signedUrl,
+        };
+        setDocuments(setData);
         setTotalData((prev) => ({
             ...prev,
-            documents: { data: files, status: 'complete' },
+            documents: { data: setData, status: 'complete' },
         }));
         localStorage.setItem(
-            'documentsInfo',
-            JSON.stringify({ ...files, documentsStatus: 'complete' })
+            `InvestorDocuments`,
+            JSON.stringify({ ...setData, documentsStatus: 'complete' })
         );
         navigate(`/become-investor/${user._id}/review`);
     };
 
-    function handleBlur(e) {
-        const { name, value } = e.target;
-        verifyRegex(name, value, setErrors);
-        localStorage.setItem(
-            'documentsInfo',
-            JSON.stringify({ ...files, documentsStatus: 'pending' })
-        );
-    }
+    const handleChange = async (e) => {
+        const { name, files } = e.target;
+        const file = files[0];
+
+        if (file) {
+            setDocuments({
+                ...documents,
+                [name]: file,
+            });
+            // fileRestrictions(file, name, setErrors);
+            await uploadToBackend(file, name); // Automatically upload the file to the backend as soon as it's selected
+        }
+    };
+
+    const uploadToBackend = async (file, docName) => {
+        if (Object.values(errors).some((value) => value)) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('image', file); // Appending the file as expected by the backend
+        formData.append('Documentname', docName);
+        formData.append('userId', user.userId); // Adding the userId as part of the form data
+
+        try {
+            const res = await uploadOnS3Service.uploadDocuments(formData);
+            if (res && res.signedUrl) {
+                console.log(res);
+                // Assuming the backend provides a signed URL for S3 access
+                setUploadedDocs({
+                    ...uploadedDocs,
+                    [docName]: {
+                        s3Name: res.FileName,
+                        signedUrl: res.signedUrl,
+                    },
+                });
+
+                setDocuments({
+                    ...documents,
+                    [docName]: {
+                        s3Name: res.FileName,
+                        FileName: res.document.name,
+                    },
+                });
+                alert('Document uploaded successfully!');
+            } else {
+                alert('Failed to get document URL from server.');
+            }
+        } catch (error) {
+            navigate('/server-error');
+        }
+    };
+
+    const handleViewDocument = (docName) => {
+        const url = uploadedDocs[docName]?.signedUrl;
+        if (url) {
+            window.open(url, '_blank'); // Open the document URL in a new tab
+        } else {
+            alert('Document not found.');
+        }
+    };
+
+    const handleDeleteDocument = async (docName) => {
+        const s3Name = documents[docName].s3Name;
+        // Ensure s3Name is correct and exists
+        if (!s3Name) {
+            alert('Document not found.');
+        } else {
+            try {
+                const res = await uploadOnS3Service.deleteDocument(
+                    s3Name,
+                    docName
+                );
+                if (res) {
+                    setDocuments((prevDocs) => ({
+                        ...prevDocs,
+                        [docName]: { s3Name: null, FileName: null }, // Clear the deleted document
+                    }));
+                    setUploadedDocs((prevUploaded) => ({
+                        ...prevUploaded,
+                        [docName]: { s3Name: null, signedUrl: null }, // Clear the uploaded document's URL
+                    }));
+
+                    alert(`Document ${docName} deleted successfully!`);
+                } else {
+                    alert('Failed to delete document.');
+                }
+            } catch (error) {
+                navigate('/server-error');
+            }
+        }
+    };
 
     const fileFields = [
         {
@@ -146,11 +242,18 @@ export default function InvestorDocuments() {
                     {errors[field.name]}
                 </div>
             )}
-            {field.name === 'dateOfBirth' && !errors.dateOfBirth && (
-                <div className="text-xs">
-                    Age should be atleast 18 years old.
-                </div>
-            )}
+            <div className="w-full flex items-center justify-end gap-4 mt-4">
+                <Button
+                    className="text-[#f9f9f9] rounded-md h-[35px] w-[80px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-red-600 hover:to-red-700"
+                    onClick={() => handleViewDocument(field.name)}
+                    btnText="View"
+                />
+                <Button
+                    className="text-[#f9f9f9] rounded-md h-[35px] w-[80px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-red-600 hover:to-red-700"
+                    onClick={() => handleDeleteDocument(field.name)}
+                    btnText="Delete"
+                />
+            </div>
         </div>
     ));
 
@@ -171,7 +274,7 @@ export default function InvestorDocuments() {
                         compulsory fields
                     </p>
                 )}
-                {/* Form */}
+
                 <form
                     className="flex flex-col items-start justify-center gap-1 w-full"
                     onSubmit={handleSubmit}
@@ -181,39 +284,17 @@ export default function InvestorDocuments() {
                     {/* buttons */}
                     <div className="w-full flex items-center justify-end gap-4 mt-4">
                         <Button
-                            className="text-[#f9f9f9] rounded-md h-[35px] w-[80px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-red-600 hover:to-red-700"
-                            onClick={() => {
-                                setInputs(initialInputs);
-                                setErrors(initialErrors);
-                                setFlag('');
-                            }}
-                            btnText={
-                                <div className="flex items-center justify-center gap-2">
-                                    <p className="text-[#f9f9f9]">Reset</p>
-                                    <div className="size-[15px] fill-[#f9f9f9]">
-                                        {icons.erase}
-                                    </div>
-                                </div>
-                            }
-                        />
-                        <Button
                             className="text-[#f9f9f9] rounded-md h-[35px] w-[80px] bg-gradient-to-r from-[#f68533] to-[#ff8025] hover:from-green-600 hover:to-green-700"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
                             type="submit"
                             btnText={
-                                loading ? (
-                                    <div className="fill-[#f9f9f9] text-[#f9a264] size-[20px]">
-                                        {icons.loading}
+                                <div className="flex items-center justify-center gap-2">
+                                    <p className="text-[#f9f9f9]">Save</p>
+                                    <div className="size-[14px] fill-[#f9f9f9]">
+                                        {icons.next}
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-2">
-                                        <p className="text-[#f9f9f9]">Save</p>
-                                        <div className="size-[14px] fill-[#f9f9f9]">
-                                            {icons.next}
-                                        </div>
-                                    </div>
-                                )
+                                </div>
                             }
                         />
                     </div>

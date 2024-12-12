@@ -34,13 +34,13 @@ export default function StartupOwnerDocuments() {
     });
 
     useEffect(() => {
-        setCurrentStep(5);
-        console.log(totalData.documents);
+        setCurrentStep(4);
+
         const savedData = localStorage.getItem(
             `${user._id}_StartupOwnerDocuments`
         );
         if (savedData) {
-            setUploadedDocs(JSON.parse(savedData));
+            setDocuments(JSON.parse(savedData));
         }
     }, []);
 
@@ -66,13 +66,21 @@ export default function StartupOwnerDocuments() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setCompletedSteps((prev) => [...prev, 'documents']);
+        const setData = {
+            GSTCertificate: uploadedDocs.GSTCertificate.signedUrl,
+            balanceSheet: uploadedDocs.balanceSheet.signedUrl,
+            businessDocuments: uploadedDocs.businessDocuments.signedUrl,
+            governmentIdProof: uploadedDocs.governmentIdProof.signedUrl,
+            startupLogo: uploadedDocs.startupLogo.signedUrl,
+        };
+        setDocuments(setData);
         setTotalData((prev) => ({
             ...prev,
-            documents: { data: uploadedDocs, status: 'complete' },
+            documents: { data: setData, status: 'complete' },
         }));
         localStorage.setItem(
-            `${user.userId}_StartupOwnerDocuments`,
-            JSON.stringify({ ...uploadedDocs, documentsStatus: 'complete' })
+            `${user._id}_StartupOwnerDocuments`,
+            JSON.stringify({ ...setData, documentsStatus: 'complete' })
         );
         navigate(`/application/${user._id}/review`);
     };
@@ -91,7 +99,6 @@ export default function StartupOwnerDocuments() {
         }
     };
 
-    // Handle document upload to the backend
     const uploadToBackend = async (file, docName) => {
         if (Object.values(errors).some((value) => value)) {
             return;
@@ -99,9 +106,9 @@ export default function StartupOwnerDocuments() {
 
         const formData = new FormData();
         formData.append('image', file); // Appending the file as expected by the backend
-        formData.append('Documentname', docName); // Adding document name
+        formData.append('Documentname', docName);
         formData.append('userId', user.userId); // Adding the userId as part of the form data
-        console.log(user.userId);
+
         try {
             const res = await uploadOnS3Service.uploadDocuments(formData);
             if (res && res.signedUrl) {
@@ -143,10 +150,8 @@ export default function StartupOwnerDocuments() {
     const handleDeleteDocument = async (docName) => {
         const s3Name = documents[docName].s3Name;
         // Ensure s3Name is correct and exists
-        console.log('Deleting document:', s3Name);
-
         if (!s3Name) {
-            alert('Document does not exist.');
+            alert('Document not found.');
         } else {
             try {
                 const res = await uploadOnS3Service.deleteDocument(
@@ -154,7 +159,6 @@ export default function StartupOwnerDocuments() {
                     docName
                 );
                 if (res) {
-                    console.log('Delete Response:', res);
                     setDocuments((prevDocs) => ({
                         ...prevDocs,
                         [docName]: { s3Name: null, FileName: null }, // Clear the deleted document

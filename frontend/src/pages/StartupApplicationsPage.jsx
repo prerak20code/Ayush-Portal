@@ -34,7 +34,6 @@ export default function StartupApplicationsPage() {
 
     const appsElements = (
         <div className="mx-4 md:mx-8 lg:mx-16">
-            {' '}
             {/* Adding margins around the table */}
             <table className="table-auto border-collapse w-full bg-white shadow-lg rounded-lg overflow-hidden">
                 <thead className="bg-[#FF7F32] text-white">

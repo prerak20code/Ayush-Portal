@@ -42,15 +42,6 @@ export default function StartupReview() {
             localStorage.getItem(`${user._id}_StartupOwnerDocuments`) || '{}'
         );
 
-        setTotalData((prev) => ({
-            ...prev,
-            personal,
-            financial,
-            organization,
-            banking,
-            documents,
-        }));
-
         setDisplayData({
             personal,
             financial,
@@ -58,7 +49,7 @@ export default function StartupReview() {
             banking,
             documents,
         });
-    }, [user._id]);
+    }, []);
 
     const renderDataSection = (title, data) => (
         <div className="mb-4">
@@ -84,23 +75,21 @@ export default function StartupReview() {
             <h3 className="text-lg font-semibold text-blue-700 mb-2">
                 Uploaded Documents
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-2">
                 {documents && Object.keys(documents).length > 0 ? (
                     Object.entries(documents).map(([key, url]) => (
-                        <div key={key} className="text-center">
-                            <a
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <img
-                                    src={url || '/placeholder-image.jpg'} // Use the actual URL or a placeholder
-                                    alt={key}
-                                    className="w-full h-32 object-cover rounded shadow hover:scale-105 transition-transform"
-                                />
-                            </a>
-                            <p className="text-sm mt-2 text-gray-600">{key}</p>
-                        </div>
+                        <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            key={key}
+                            className="flex flex-col overflow-clip h-[80px] items-center justify-center text-center border-[0.01rem] drop-shadow-md rounded-lg p-2"
+                        >
+                            <div className="size-[24px]">{icons.file}</div>
+                            <p className="text-[12px] w-fit mt-2 text-gray-800">
+                                {key}
+                            </p>
+                        </a>
                     ))
                 ) : (
                     <p className="text-gray-500 italic">
@@ -115,12 +104,26 @@ export default function StartupReview() {
         try {
             e.preventDefault();
             setCompletedSteps((prev) => [...prev, 'reviewd']);
+            setTotalData((prev) => ({
+                ...prev,
+                reviewd: { status: 'complete' },
+            }));
+            console.log('data', totalData);
             const res = await startupService.registerStartup(totalData);
             if (
                 res &&
                 res.message === 'startup has been registered successfully'
             ) {
                 alert(res.message);
+                localStorage.removeItem(`${user._id}_StartupOwnerPersonalInfo`);
+                localStorage.removeItem(
+                    `${user._id}_StartupOwnerFinancialInfo`
+                );
+                localStorage.removeItem(`${user._id}_StartupOwnerBankingInfo`);
+                localStorage.removeItem(
+                    `${user._id}_StartupOwnerOrganizationInfo`
+                );
+                localStorage.removeItem(`${user._id}_StartupOwnerDocuments`);
                 navigate('/');
             }
         } catch (err) {
@@ -155,7 +158,7 @@ export default function StartupReview() {
             {renderDocumentImages(displayData.documents)}
 
             {/* Buttons */}
-            <div className="w-full flex items-center justify-center gap-4 mt-4">
+            <div className="w-full flex items-center justify-center gap-4 mt-10">
                 <Button
                     className="text-[#f9f9f9] rounded-md h-[40px] w-[90px] bg-gradient-to-r from-green-500 to-green-600 hover:from-orange-500 hover:to-orange-600"
                     onClick={handleSubmit}

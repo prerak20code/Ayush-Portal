@@ -50,7 +50,7 @@ export default function Header() {
         {
             url: '/license-generator/verification',
             name: 'Generate License',
-            show: true,
+            show: user?.designation === 'owner',
         },
         { url: 'register', name: 'Register Now', show: !user },
         {
@@ -238,37 +238,41 @@ export default function Header() {
                     {/* Tabs */}
                     <div className="hidden h-full lg:flex items-center justify-end gap-x-8">
                         {tabElements}
-                        <div className="cursor-pointer relative">
-                            <div
-                                onClick={() => {
-                                    setShowRegisterDropdown((prev) => !prev);
-                                    setShowProfileDropdown(false);
-                                    setShowDropdown(false);
-                                }}
-                                className="hover:underline text-[#f9f9f9] font-medium text-md"
-                            >
-                                Register Startup
+                        {user && (
+                            <div className="cursor-pointer relative">
+                                <div
+                                    onClick={() => {
+                                        setShowRegisterDropdown(
+                                            (prev) => !prev
+                                        );
+                                        setShowProfileDropdown(false);
+                                        setShowDropdown(false);
+                                    }}
+                                    className="hover:underline text-[#f9f9f9] font-medium text-md"
+                                >
+                                    Register Startup
+                                </div>
+                                {/* Hamburger Dropdown */}
+                                <AnimatePresence>
+                                    {showRegisterDropdown && (
+                                        <motion.div
+                                            className="absolute top-[42px] -right-3 bg-[#f9f9f9] rounded-xl py-3 flex flex-col items-start justify-start drop-shadow-md"
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="exit"
+                                            variants={dropdownVariants}
+                                        >
+                                            {/* Pointing Tip */}
+                                            <div className="absolute -top-[7px] right-[10px] rounded-tl-sm size-4 bg-[#f9f9f9] rotate-45"></div>
+                                            {/* Dropdown Items */}
+                                            <div className="text-nowrap flex flex-col gap-y-1 px-2">
+                                                {registerTypesElements}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
-                            {/* Hamburger Dropdown */}
-                            <AnimatePresence>
-                                {showRegisterDropdown && (
-                                    <motion.div
-                                        className="absolute top-[42px] -right-3 bg-[#f9f9f9] rounded-xl py-3 flex flex-col items-start justify-start drop-shadow-md"
-                                        initial="hidden"
-                                        animate="visible"
-                                        exit="exit"
-                                        variants={dropdownVariants}
-                                    >
-                                        {/* Pointing Tip */}
-                                        <div className="absolute -top-[7px] right-[10px] rounded-tl-sm size-4 bg-[#f9f9f9] rotate-45"></div>
-                                        {/* Dropdown Items */}
-                                        <div className="text-nowrap flex flex-col gap-y-1 px-2">
-                                            {registerTypesElements}
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                        )}
                     </div>
                     {/* Icons */}
                     <div className="flex items-center justify-end gap-x-6">

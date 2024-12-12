@@ -15,13 +15,8 @@ export default function TrackApplication() {
     const currentURL = pathname.split('/').pop();
     const { appId } = useParams();
 
-    const {
-        currentStep,
-        setCurrentStep,
-        totalData,
-        setTotalData,
-        setExistingApp,
-    } = useRegisterStartupContext();
+    const { currentStep, setCurrentStep, totalData, setTotalData } =
+        useRegisterStartupContext();
 
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
@@ -72,66 +67,77 @@ export default function TrackApplication() {
     }, [currentURL]);
 
     useEffect(() => {
-        try {
-            const { personalInfoStatus, ...personalInfo } = JSON.parse(
-                localStorage.getItem(`${user._id}_StartupOwnerPersonalInfo`) ||
-                    '{}'
-            );
-            console.log(personalInfoStatus);
-            const { organizationInfoStatus, ...organizationInfo } = JSON.parse(
-                localStorage.getItem(
-                    `${user._id}_StartupOwnerOrganizationInfo`
-                ) || '{}'
-            );
+        (async function getData() {
+            try {
+                const { personalInfoStatus, ...personalInfo } =
+                    await JSON.parse(
+                        localStorage.getItem(
+                            `${user._id}_StartupOwnerPersonalInfo`
+                        ) || '{}'
+                    );
 
-            const { financialInfoStatus, ...financialInfo } = JSON.parse(
-                localStorage.getItem(`${user._id}_StartupOwnerFinancialInfo`) ||
-                    '{}'
-            );
-            const { bankingInfoStatus, ...bankingInfo } = JSON.parse(
-                localStorage.getItem(`${user._id}_StartupOwnerBankingInfo`) ||
-                    '{}'
-            );
-            const { documentsStatus, ...StartupOwnerdocuments } = JSON.parse(
-                localStorage.getItem(`${user._id}_StartupOwnerDocuments`) ||
-                    '{}'
-            );
-            const { reviewStatus } = JSON.parse(
-                localStorage.getItem(`${user._id}_StartupOwnerReview`) || '{}'
-            );
+                const { organizationInfoStatus, ...organizationInfo } =
+                    await JSON.parse(
+                        localStorage.getItem(
+                            `${user._id}_StartupOwnerOrganizationInfo`
+                        ) || '{}'
+                    );
 
-            const data = {
-                personal: {
-                    data: personalInfo || null,
-                    status: personalInfoStatus,
-                },
-                organization: {
-                    data: organizationInfo || null,
-                    status: organizationInfoStatus,
-                },
-                financial: {
-                    data: financialInfo || null,
-                    status: financialInfoStatus,
-                },
-                banking: {
-                    data: bankingInfo || null,
-                    status: bankingInfoStatus,
-                },
-                documents: {
-                    data: StartupOwnerdocuments || null,
-                    status: documentsStatus,
-                },
-                reviewd: {
-                    status: reviewStatus,
-                },
-            };
+                const { financialInfoStatus, ...financialInfo } =
+                    await JSON.parse(
+                        localStorage.getItem(
+                            `${user._id}_StartupOwnerFinancialInfo`
+                        ) || '{}'
+                    );
+                const { bankingInfoStatus, ...bankingInfo } = await JSON.parse(
+                    localStorage.getItem(
+                        `${user._id}_StartupOwnerBankingInfo`
+                    ) || '{}'
+                );
+                const { documentsStatus, ...StartupOwnerdocuments } =
+                    await JSON.parse(
+                        localStorage.getItem(
+                            `${user._id}_StartupOwnerDocuments`
+                        ) || '{}'
+                    );
+                const { reviewStatus } = await JSON.parse(
+                    localStorage.getItem(`${user._id}_StartupOwnerReview`) ||
+                        '{}'
+                );
 
-            setTotalData(data);
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setLoading(false);
-        }
+                const data = {
+                    personal: {
+                        data: personalInfo || null,
+                        status: personalInfoStatus,
+                    },
+                    organization: {
+                        data: organizationInfo || null,
+                        status: organizationInfoStatus,
+                    },
+                    financial: {
+                        data: financialInfo || null,
+                        status: financialInfoStatus,
+                    },
+                    banking: {
+                        data: bankingInfo || null,
+                        status: bankingInfoStatus,
+                    },
+                    documents: {
+                        data: StartupOwnerdocuments || null,
+                        status: documentsStatus,
+                    },
+                    reviewd: {
+                        status: reviewStatus,
+                    },
+                };
+
+                setTotalData(data);
+            } catch (err) {
+                navigate('/server-error');
+            } finally {
+                setLoading(false);
+            }
+        })();
     }, [appId]);
 
     const stepElements = steps.map((step, index) => (
@@ -188,12 +194,10 @@ export default function TrackApplication() {
         </div>
     ) : (
         <div className="w-screen min-h-[calc(100vh-110px)] bg-[#fff7f2] flex flex-col items-center">
-            {/* steps */}
             <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md py-4 grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] px-2 md:px-4 lg:px-10 gap-6 w-full transition-all ease-in">
                 {stepElements}
             </div>
 
-            {/* forms */}
             <div className="w-full p-4 flex items-center justify-center">
                 <div className="bg-white max-w-xl w-full drop-shadow-md rounded-md flex items-center justify-center p-4 flex-1">
                     <Outlet />

@@ -4,6 +4,8 @@ import { startupRegistrationApplicationService } from './startupRegisterationApp
 import { DPIITservice } from './DPIITservice';
 import { uploadOnS3Service } from './uploadOnS3.Service';
 import { startupService } from './startup.Service';
+import { investorService } from './investor.Service';
+import { govService } from './gov.Service';
 export {
     ownerService,
     startupRegistrationApplicationService,
@@ -11,4 +13,6 @@ export {
     DPIITservice,
     uploadOnS3Service,
     startupService,
+    investorService,
+    govService,
 };

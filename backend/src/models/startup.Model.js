@@ -36,7 +36,7 @@ const startupSchema = new mongoose.Schema(
             required: true,
         },
         website: {
-            type: Number,
+            type: String,
             required: true,
         },
         valuation: {

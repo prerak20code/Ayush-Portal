@@ -6,13 +6,16 @@ import {
     SERVER_ERROR,
     FORBIDDEN,
 } from '../constants/statusCodes.js';
+import { v4 as uuid } from 'uuid';
 import {
     Startup,
     FinancialInfo,
     BankInfo,
     Dpiit,
     User,
+    StartupOwner,
 } from '../models/index.js';
+import { validateRegex } from '../utils/index.js';
 
 // pending
 const getAllStartups = async (req, res) => {
@@ -213,22 +216,24 @@ const addStartup = async (req, res) => {
 
         // check if user is present in users table
         const user = await User.findById(_id);
-        if (!user.verified) {
+        if (!user?.verified) {
             return res.status(BAD_REQUEST).json({
                 message:
                     'your email is not verified yet, please login or sign up',
             });
         }
 
-        const newUser = await StartupOwner.create({
-            userId: user._id,
-            dateOfBirth,
-            address,
-            nationality,
-            linkedInURL,
-        });
+        if (!user) {
+            await StartupOwner.create({
+                userId: user._id,
+                dateOfBirth,
+                address,
+                nationality,
+                linkedInURL,
+            });
+        }
 
-        const {
+        let {
             startupName,
             description,
             businessType,
@@ -298,7 +303,6 @@ const addStartup = async (req, res) => {
                 IFSC,
                 branchName,
                 swiftCode,
-                balanceStatement,
                 startupId: startup._id,
             });
             if (addedBankInfo) {
@@ -327,7 +331,6 @@ const addStartup = async (req, res) => {
                     fundingReceived,
                     valuation,
                     financialYear,
-                    balanceSheet,
                     startupId: startup._id,
                 });
                 if (addedFinancialInfo) {
@@ -338,6 +341,7 @@ const addStartup = async (req, res) => {
             }
         }
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'error occured while adding the startup.',
             error: err.message,
