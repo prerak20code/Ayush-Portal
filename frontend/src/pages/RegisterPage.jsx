@@ -104,13 +104,6 @@ export default function RegisterPage() {
             placeholder: 'Create a strong password',
             required: true,
         },
-        // {
-        //     type: 'date',
-        //     name: 'dateOfBirth',
-        //     label: 'Date of Birth',
-        //     placeholder: 'select date of birth',
-        //     required: true,
-        // },
     ];
 
     const inputElements = inputFields.map((field) => (

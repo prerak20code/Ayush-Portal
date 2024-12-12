@@ -95,7 +95,6 @@ export default function LoginPage() {
             className="bg-cover bg-no-repeat min-h-[calc(100vh-110px)] flex items-center justify-center"
             style={{
                 backgroundImage: `url('${Login_BackG}')`,
-                
             }}
         >
             <div className="w-full bg-opacity-70 max-w-[450px] text-center bg-[#f9f9f9] drop-shadow-md p-6 rounded-lg">

@@ -149,6 +149,7 @@ import {
     Chatrouter,
     Messagerouter,
     documentRouter,
+    queryRouter,
 } from './routes/index.js';
 
 // API Routes
@@ -161,6 +162,7 @@ app.use('/api/v1/applications', startupRegistrationApplicationRouter);
 app.use('/api/v1/chat', Chatrouter);
 app.use('/api/v1/message', Messagerouter);
 app.use('/api/v1/documents', documentRouter);
+app.use('/api/v1/queries', queryRouter);
 // Initialize HTTP Server
 const server = http.createServer(app);
 

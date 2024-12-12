@@ -8,7 +8,6 @@ import { Investment } from '../models/index.js';
 import { Investor } from '../models/investorPersonal.Model.js';
 import { User } from '../models/index.js';
 import { InvestorBankInfo } from '../models/investorBankingInformation.js';
-<<<<<<< HEAD
 
 const registerInvestor = async (req, res) => {
     try {
@@ -134,125 +133,7 @@ const addInvestorBankInfo = async () => {};
 const deleteInvestorBankInfo = async () => {};
 
 const addInvestorFinancialInfo = async () => {};
-=======
->>>>>>> df5f6bb6930650a899e4d259ef300a611fa4b56f
 
-
-const registerInvestor = async (req,res) => {
-    try {
-        let { investorType,organisationName,
-             dateOfBirth, address,
-              nationality, linkedInURL,
-              revenue,netWorth,businessLicenseNumber,
-              taxId,govtIdtype,
-              govtIdValue,bankName,
-            accountNumber,
-            accountType,
-            ifscCode,
-            branchName,
-            swiftCode, } = req.body;
-
-
-        const { _id } = req.user;
-        dateOfBirth = dateOfBirth.trim();
-        nationality = nationality.trim();
-        revenue= revenue.trim();
-        netWorth= netWorth.trim();
-              taxId=taxId.trim();
-              govtIdtype = govtIdtype.trim();
-
-              govtIdValue=govtIdValue.trim();
-              bankName = bankName.trim();
-            accountNumber = accountNumber.trim();
-
-            accountType = accountType.trim();
-            ifscCode = ifscCode.trim();
-            branchName= branchName.trim();
-            swiftCode=swiftCode.trim();
-
-        if (!investorType || !dateOfBirth || !address || !nationality  || !revenue || !netWorth||
-            !taxId || !govtIdtype ||
-            !govtIdValue || !bankName ||
-         !accountNumber||
-          !accountType||
-          !ifscCode||
-          !branchName||
-          !swiftCode) {
-            return res.status(BAD_REQUEST).json({
-                message: 'Empty input fields!',
-            });
-        }
-
-        const isValid = validateRegex('dateOfBirth', dateOfBirth);
-        if (!isValid) {
-            return res.status(BAD_REQUEST).json({
-                message: 'Invalid DOB entered',
-            });
-        }
-
-        // check if user is present in users table
-        const user = await User.findById(_id);
-        if (!user.verified) {
-            return res.status(BAD_REQUEST).json({
-                message:
-                    'your email is not verified yet, please login or sign up',
-            });
-        }
-        //create new user
-        //password hashing ( auto done using pre hook )
-        const newInvestor = await Investor.create({
-            userId: user._id,
-            dateOfBirth,
-            address,
-            nationality,
-            linkedInURL,
-            investorType,
-            organisationName,
-            revenue,
-            netWorth,
-            taxId,
-            businessLicenseNumber,
-        });
-
-        const addedBankInfo = await InvestorBankInfo.create({
-            bankName,
-            accountNumber,
-            accountType,
-            IFSC,
-            branchName,
-            swiftCode,
-            investorId:user._id
-        });
-        if (addedBankInfo) {
-            return res.status(OK).json(addedBankInfo);
-        }
-        // send mail
-        if (newInvestor) {
-            return res
-                .status(OK)
-                .json({ message: 'personal info saved successfully' });
-        }
-        
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'error occured while applying for stakeholder.',
-            error: err.message,
-        });
-    }
-}
-
-const addInvestorBankInfo = async () => {
-
-}
-
-const deleteInvestorBankInfo = async () => {
-
-}
-
-const addInvestorFinancialInfo = async () => {
-
-}
- 
 // apply to be a investor in a startup
 const applyStartup = async (req, res) => {
     try {
@@ -357,8 +238,4 @@ const getInvesters = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
 export { registerInvestor, applyStartup, getAppliedStartups, getInvesters };
-=======
-export {registerInvestor, applyStartup, getAppliedStartups, getInvesters };
->>>>>>> df5f6bb6930650a899e4d259ef300a611fa4b56f

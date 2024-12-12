@@ -1,25 +1,53 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components';
 import { useState } from 'react';
 import { icons } from '../assets/icons';
 import { EMAIL, NUMBER1, NUMBER2 } from '../constants/contacts';
 import { copyEmail } from '../utils';
-import { useVariantContext } from '../contexts';
+import { useUserContext, useVariantContext } from '../contexts';
 import { motion } from 'framer-motion';
 
 export default function ContactUsPage() {
     const { textVariants } = useVariantContext();
-    const [inputs, setInputs] = useState({ email: '', query: '' });
-
+    const [inputs, setInputs] = useState({ subject: '', query: '' });
+    const { user } = useUserContext();
+    const [loading, setLoading] = useState(false);
     function handleChange(e) {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
     }
+    const navigate = useNavigate();
 
-    function submitQuery(e) {
-        e.preventDefault();
-        setInputs({ query: '', email: '' });
-        alert('Query Submitted Successfully 🤗');
+    async function submitQuery(e) {
+        try {
+            e.preventDefault();
+            setLoading(true);
+
+            const res = await fetch('/api/v1/queries/send', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...inputs,
+                    userEmail: user.email,
+                }),
+            });
+
+            const data = await res.json();
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            setInputs({ query: '', subject: '' });
+            alert('Query Submitted Successfully 🤗');
+        } catch (err) {
+            console.log(
+                'error occured while submitting the query, error:',
+                err.message
+            );
+            // navigate('/server-error');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const contactInfo = [
@@ -41,7 +69,10 @@ export default function ContactUsPage() {
     ];
 
     const contactElements = contactInfo.map((contact) => (
-        <div className="flex items-center justify-start gap-3">
+        <div
+            key={contact.title}
+            className="flex items-center justify-start gap-3"
+        >
             <div className="flex items-center justify-center">
                 <div className="bg-white p-2 rounded-full w-fit drop-shadow-xl">
                     <div className="size-[16px]">{contact.icon}</div>
@@ -180,28 +211,28 @@ export default function ContactUsPage() {
                         <div className="w-full">
                             <div className="bg-white text-[#040606] z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
                                 <label htmlFor="email">
-                                    Email
                                     <span className="text-red-500">*</span>
+                                    Subject
                                 </label>
                             </div>
                             <div className="w-full">
                                 <input
-                                    type="email"
-                                    name="email"
-                                    value={inputs.email}
+                                    type="subject"
+                                    name="subject"
+                                    value={inputs.subject}
                                     onChange={handleChange}
-                                    placeholder="Enter your Email"
+                                    placeholder="Enter your Subject"
                                     className="shadow-md shadow-[#efefef] px-2 py-4 rounded-md indent-2 w-full border-[0.01rem] placeholder:text-[15px] border-[#aeaeae] bg-transparent placeholder:text-[#a0a0a0]"
                                 />
                             </div>
                             <p className="text-sm">
-                                This email will be sent along with the query
+                                This will be sent along as the query subject
                             </p>
                         </div>
 
                         <div className="w-full">
                             <div className="bg-white z-[1] text-[#040606] ml-3 px-2 w-fit relative top-3 font-medium">
-                                <label htmlFor="feedback">
+                                <label htmlFor="query">
                                     Query / Feedback
                                     <span className="text-red-500">*</span>
                                 </label>
@@ -211,7 +242,7 @@ export default function ContactUsPage() {
                                     placeholder="Let us know how are we doing !!"
                                     value={inputs.query}
                                     onChange={handleChange}
-                                    name="feedback"
+                                    name="query"
                                     className="shadow-md shadow-[#efefef] bg-transparent border border-[#aeaeae] w-full indent-2 rounded-md p-2 pt-4 text-black placeholder:text-[15px] placeholder:text-[#a0a0a0] resize-y"
                                     rows="4"
                                     cols="50"
@@ -221,7 +252,8 @@ export default function ContactUsPage() {
                         </div>
 
                         <Button
-                            btnText={'Submit'}
+                            type="submit"
+                            btnText={loading ? 'Submitting' : 'Submit'}
                             className="text-[#f9f9f9] mt-4 rounded-md w-[90%] self-center bg-gradient-to-r from-[#f1924f] to-[#f68533] hover:from-green-600 hover:to-green-700"
                         />
                     </form>

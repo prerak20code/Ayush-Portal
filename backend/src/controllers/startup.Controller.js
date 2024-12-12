@@ -76,121 +76,6 @@ const registerStartupUsingDPIITid = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
-=======
-const addStartup = async (req, res) => {
-    try {
-        const {
-            startupName,
-            description,
-            businessType,
-            industry,
-            address,
-            country,
-            website,
-            valuation,
-            dateOfEstablishment,
-            bankName,
-            accountNumber,
-            accountType,
-            IFSC,
-            branchName,
-            swiftCode,
-            balanceStatement,
-            revenue,
-            profitMargin,
-            fundingReceived,
-           
-            financialYear,
-            balanceSheet,
-        } = req.body;
-        valuation = Number(valuation);
-        const userId = req.user._id;
-
-        if (
-            !startupName ||
-            !description ||
-            !businessType ||
-            !industry ||
-            !address ||
-            !country ||
-            !website ||
-            !valuation ||
-            !dateOfEstablishment ||
-            !userId ||
-            !bankName ||
-            !accountNumber ||
-            !accountType ||
-            !IFSC ||
-            !branchName ||
-            !swiftCode ||
-            !revenue ||
-            !profitMargin ||
-            !fundingReceived ||
-            !financialYear
-        ) {
-            return res.status(BAD_REQUEST).json({
-                message: 'missing fields',
-            });
-        }
-        const startup = await Startup.create({
-            startupName,
-            description,
-            businessType,
-            industry,
-            address,
-            country,
-            website,
-            valuation,
-            dateOfEstablishment,
-            // pdf,
-            owner: userId,
-            
-        });
-
-
-        if (startup) {
-            return res.status(CREATED).json({
-                message: 'startup created successfully',
-                startup,
-            });
-        }
-
-        const addedBankInfo = await BankInfo.create({
-            bankName,
-            accountNumber,
-            accountType,
-            IFSC,
-            branchName,
-            swiftCode,
-            balanceStatement,
-            startupId,
-        });
-        if (addedBankInfo) {
-            return res.status(OK).json(addedBankInfo);
-        }
-        const addedFinancialInfo = await FinancialInfo.create({
-            revenue,
-            profitMargin,
-            fundingReceived,
-            valuation,
-            financialYear,
-            balanceSheet,
-            startupId,
-        });
-        if (addedFinancialInfo) {
-            return res.status(OK).json(addedFinancialInfo);
-        }
-
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'error occured while adding the startup.',
-            error: err.message,
-        });
-    }
-};
-
->>>>>>> df5f6bb6930650a899e4d259ef300a611fa4b56f
 const getStartupById = async (req, res) => {
     try {
         const { startupId } = req.params;
@@ -293,16 +178,11 @@ const deleteStartup = async (req, res) => {
 
         await BankInfo.findByIdAndDelete(startupId);
 
-       
-
         await FinancialInfo.findByIdAndDelete(startupId);
-
 
         return res.status(OK).json({
             message: 'Startup deleted successfully',
         });
-
-        
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'An error occurred while deleting the startup',
@@ -311,7 +191,6 @@ const deleteStartup = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
 const addStartup = async (req, res) => {
     try {
         let { dateOfBirth, address, nationality, linkedInURL } = req.body;
@@ -340,7 +219,7 @@ const addStartup = async (req, res) => {
                     'your email is not verified yet, please login or sign up',
             });
         }
-       
+
         const newUser = await StartupOwner.create({
             userId: user._id,
             dateOfBirth,
@@ -452,11 +331,9 @@ const addStartup = async (req, res) => {
                     startupId: startup._id,
                 });
                 if (addedFinancialInfo) {
-                    return res
-                        .status(OK)
-                        .json({
-                            message: 'startup has been registered successfully',
-                        });
+                    return res.status(OK).json({
+                        message: 'startup has been registered successfully',
+                    });
                 }
             }
         }
@@ -467,32 +344,6 @@ const addStartup = async (req, res) => {
         });
     }
 };
-
-const addBankInfo = async (req, res) => {
-    try {
-        const { startupId } = req.params;
-        const {
-            bankName,
-            accountNumber,
-            accountType,
-            IFSC,
-            branchName,
-            swiftCode,
-            balanceStatement,
-        } = req.body;
-        if (
-            !bankName ||
-            !accountNumber ||
-            !accountType ||
-            !IFSC ||
-            !branchName ||
-            !swiftCode
-        ) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
-=======
->>>>>>> df5f6bb6930650a899e4d259ef300a611fa4b56f
-
 
 export {
     addStartup,

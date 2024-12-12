@@ -63,8 +63,10 @@ const RetailAndWholesaleLicenseSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('RetailAndWholesaleLicense', RetailAndWholesaleLicenseSchema);
-
+export default mongoose.model(
+    'RetailAndWholesaleLicense',
+    RetailAndWholesaleLicenseSchema
+);
 
 //dummy data
 // {

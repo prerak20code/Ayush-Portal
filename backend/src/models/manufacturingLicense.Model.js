@@ -134,9 +134,10 @@ const ManufacturingLicenseSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('ManufacturingLicense', ManufacturingLicenseSchema);
-
-
+export default mongoose.model(
+    'ManufacturingLicense',
+    ManufacturingLicenseSchema
+);
 
 //dummy data
 

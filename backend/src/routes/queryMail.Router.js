@@ -1,8 +1,6 @@
 import express from 'express';
-import { sendQueryEmail } from '../controllers/queryController.js';
+import { sendQueryEmail } from '../utils/index.js';
+import { verifyJWT } from '../middlewares/authMiddleware.js';
+export const queryRouter = express.Router();
 
-const router = express.Router();
-
-router.post('/api/send-query', sendQueryEmail);
-
-export default router;
+queryRouter.route('/send').post(verifyJWT, sendQueryEmail);

@@ -7,7 +7,8 @@ import { Button } from '..';
 import { uploadOnS3Service } from '../../services';
 
 export default function StartupOwnerDocuments() {
-    const { setCompletedSteps, setTotalData, totalData, setCurrentStep } = useRegisterStartupContext();
+    const { setCompletedSteps, setTotalData, totalData, setCurrentStep } =
+        useRegisterStartupContext();
     const { user } = useUserContext();
 
     const [documents, setDocuments] = useState({
@@ -34,7 +35,7 @@ export default function StartupOwnerDocuments() {
 
     useEffect(() => {
         setCurrentStep(5);
-        console.log(totalData.documents)
+        console.log(totalData.documents);
         const savedData = localStorage.getItem(
             `${user._id}_StartupOwnerDocuments`
         );

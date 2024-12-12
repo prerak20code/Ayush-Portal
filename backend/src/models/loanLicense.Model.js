@@ -83,9 +83,6 @@ const LoanLicenseSchema = new mongoose.Schema({
 
 export default mongoose.model('LoanLicense', LoanLicenseSchema);
 
-
-
-
 //dummy data
 
 // {

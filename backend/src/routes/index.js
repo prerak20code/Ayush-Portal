@@ -7,6 +7,8 @@ import { userRouter } from './user.Router.js';
 import { Messagerouter } from './messageRoutes.js';
 import { Chatrouter } from './chatRoutes.js';
 import { documentRouter } from './document.Router.js';
+import { queryRouter } from './queryMail.Router.js';
+
 export {
     investmentRouter,
     govOfficialrouter,
@@ -17,4 +19,5 @@ export {
     Messagerouter,
     Chatrouter,
     documentRouter,
+    queryRouter,
 };

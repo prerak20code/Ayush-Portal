@@ -5,14 +5,9 @@ import { icons } from '../../assets/icons';
 import { Button } from '..';
 
 export default function OrganizationInformation() {
-<<<<<<< HEAD
     const { setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterStartupContext();
     const { user } = useUserContext();
-=======
-    const { setCurrentStep, setTotalData, setCompletedSteps, existingApp } =
-        useRegisterStartupContext();
->>>>>>> df5f6bb6930650a899e4d259ef300a611fa4b56f
 
     const initialInputs = {
         startupName: '',

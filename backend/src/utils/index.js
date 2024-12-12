@@ -3,6 +3,7 @@ import { sendPasswordResetEmail } from './passwordResetEmail.js';
 import { validateRegex } from './regex.js';
 import { getTransporter } from './getTransporter.js';
 import { validatePassword } from './validatePassword.js';
+import { sendQueryEmail } from './queryMail.js';
 import {
     generateAccessToken,
     generateRefreshToken,
@@ -20,4 +21,5 @@ export {
     generateTokens,
     validatePassword,
     fileRestrictions,
+    sendQueryEmail,
 };

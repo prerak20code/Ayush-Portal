@@ -10,10 +10,6 @@ import {
     getStartupById,
     getAllStartups,
     getStartupsByOwnerId,
-    addBankInfo,
-    addFinancialInfo,
-    deleteBankInfo,
-    deleteFinancialInfo,
     registerStartupUsingDPIITid,
 } from '../controllers/startup.Controller.js';
 
@@ -22,11 +18,11 @@ startupRouter.use(verifyJWT); // will be applied to all startup routes
 startupRouter.route('/add').post(addStartup);
 startupRouter.route('/:userId').get(getStartupsByOwnerId);
 
-startupRouter.route('/bank-info').post(addBankInfo).delete(deleteBankInfo);
-startupRouter
-    .route('/financial-info')
-    .post(addFinancialInfo)
-    .delete(deleteFinancialInfo);
+// startupRouter.route('/bank-info').post(addBankInfo).delete(deleteBankInfo);
+// startupRouter
+//     .route('/financial-info')
+//     .post(addFinancialInfo)
+//     .delete(deleteFinancialInfo);
 startupRouter
     .route('/:startupId')
     .get(getStartupById)

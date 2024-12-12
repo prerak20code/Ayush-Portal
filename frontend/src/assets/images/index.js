@@ -42,5 +42,5 @@ export {
     AYUSHSTARTUPLOGO,
     HASHTAG,
     landingPageGif,
-    Login_BackG
+    Login_BackG,
 };

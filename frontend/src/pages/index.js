@@ -15,6 +15,7 @@ import AdminDashboard from './AdminDashboard';
 import DocumentsCheck from './DocumentsCheck';
 import PrivacyPoliciesPage from './PrivacyPoliciesPage';
 import AyushServicesPage from './AYUSHservices';
+import LicenseGeneratorPage from './LicenseGeneratorPage';
 
 export {
     HomePage,
@@ -34,4 +35,5 @@ export {
     PrivacyPoliciesPage,
     AdminDashboard,
     AyushServicesPage,
+    LicenseGeneratorPage,
 };

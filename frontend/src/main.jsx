@@ -26,6 +26,7 @@ import {
     AdminDashboard,
     DocumentsCheck,
     AyushServicesPage,
+    LicenseGeneratorPage,
 } from './pages';
 
 import {
@@ -79,7 +80,10 @@ const router = createBrowserRouter(
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
-
+                <Route
+                    path="license-generator"
+                    element={<LicenseGeneratorPage />}
+                />
                 <Route
                     path="user/verify/:userId/:uniqueString"
                     element={
