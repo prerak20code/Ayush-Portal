@@ -3,6 +3,7 @@ import { Button } from '../components';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserContext } from '../contexts';
 import { userService } from '../services';
+import { Login_BackG } from '../assets/images';
 
 export default function LoginPage() {
     const [role, setRole] = useState('Startup Owner'); // Default role
@@ -93,7 +94,8 @@ export default function LoginPage() {
         <div
             className="bg-cover bg-no-repeat min-h-[calc(100vh-110px)] flex items-center justify-center"
             style={{
-                backgroundImage: `url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/c3/c9/ee/impressive-construction.jpg')`,
+                backgroundImage: `url('${Login_BackG}')`,
+                
             }}
         >
             <div className="w-full bg-opacity-70 max-w-[450px] text-center bg-[#f9f9f9] drop-shadow-md p-6 rounded-lg">

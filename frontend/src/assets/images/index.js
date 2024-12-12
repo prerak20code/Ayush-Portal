@@ -16,6 +16,7 @@ import AYUSHSTARTUPLOGO from './AyushStartupLogo.png';
 import HASHTAG from './hashtag.png';
 import RajBhavan from './RajBhavan.png';
 import landingPageGif from './ayushAnimation.gif';
+import Login_BackG from './Login_BackG.png';
 
 export {
     // first half
@@ -41,4 +42,5 @@ export {
     AYUSHSTARTUPLOGO,
     HASHTAG,
     landingPageGif,
+    Login_BackG
 };

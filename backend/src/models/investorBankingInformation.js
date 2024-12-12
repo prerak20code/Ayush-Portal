@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-
 const investorBankInfoSchema = new mongoose.Schema(
     {
         investorId: {

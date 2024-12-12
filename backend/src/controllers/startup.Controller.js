@@ -76,6 +76,121 @@ const registerStartupUsingDPIITid = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
+=======
+const addStartup = async (req, res) => {
+    try {
+        const {
+            startupName,
+            description,
+            businessType,
+            industry,
+            address,
+            country,
+            website,
+            valuation,
+            dateOfEstablishment,
+            bankName,
+            accountNumber,
+            accountType,
+            IFSC,
+            branchName,
+            swiftCode,
+            balanceStatement,
+            revenue,
+            profitMargin,
+            fundingReceived,
+           
+            financialYear,
+            balanceSheet,
+        } = req.body;
+        valuation = Number(valuation);
+        const userId = req.user._id;
+
+        if (
+            !startupName ||
+            !description ||
+            !businessType ||
+            !industry ||
+            !address ||
+            !country ||
+            !website ||
+            !valuation ||
+            !dateOfEstablishment ||
+            !userId ||
+            !bankName ||
+            !accountNumber ||
+            !accountType ||
+            !IFSC ||
+            !branchName ||
+            !swiftCode ||
+            !revenue ||
+            !profitMargin ||
+            !fundingReceived ||
+            !financialYear
+        ) {
+            return res.status(BAD_REQUEST).json({
+                message: 'missing fields',
+            });
+        }
+        const startup = await Startup.create({
+            startupName,
+            description,
+            businessType,
+            industry,
+            address,
+            country,
+            website,
+            valuation,
+            dateOfEstablishment,
+            // pdf,
+            owner: userId,
+            
+        });
+
+
+        if (startup) {
+            return res.status(CREATED).json({
+                message: 'startup created successfully',
+                startup,
+            });
+        }
+
+        const addedBankInfo = await BankInfo.create({
+            bankName,
+            accountNumber,
+            accountType,
+            IFSC,
+            branchName,
+            swiftCode,
+            balanceStatement,
+            startupId,
+        });
+        if (addedBankInfo) {
+            return res.status(OK).json(addedBankInfo);
+        }
+        const addedFinancialInfo = await FinancialInfo.create({
+            revenue,
+            profitMargin,
+            fundingReceived,
+            valuation,
+            financialYear,
+            balanceSheet,
+            startupId,
+        });
+        if (addedFinancialInfo) {
+            return res.status(OK).json(addedFinancialInfo);
+        }
+
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while adding the startup.',
+            error: err.message,
+        });
+    }
+};
+
+>>>>>>> df5f6bb6930650a899e4d259ef300a611fa4b56f
 const getStartupById = async (req, res) => {
     try {
         const { startupId } = req.params;
@@ -176,9 +291,18 @@ const deleteStartup = async (req, res) => {
         // Delete the startup
         await Startup.findByIdAndDelete(startupId);
 
+        await BankInfo.findByIdAndDelete(startupId);
+
+       
+
+        await FinancialInfo.findByIdAndDelete(startupId);
+
+
         return res.status(OK).json({
             message: 'Startup deleted successfully',
         });
+
+        
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'An error occurred while deleting the startup',
@@ -187,6 +311,7 @@ const deleteStartup = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
 const addStartup = async (req, res) => {
     try {
         let { dateOfBirth, address, nationality, linkedInURL } = req.body;
@@ -365,119 +490,9 @@ const addBankInfo = async (req, res) => {
         ) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
+=======
+>>>>>>> df5f6bb6930650a899e4d259ef300a611fa4b56f
 
-        const addedBankInfo = await BankInfo.create({
-            bankName,
-            accountNumber,
-            accountType,
-            IFSC,
-            branchName,
-            swiftCode,
-            balanceStatement,
-            startupId,
-        });
-        if (addedBankInfo) {
-            return res.status(OK).json(addedBankInfo);
-        }
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: "An error occurred while adding the startup's bank info",
-            error: err.message,
-        });
-    }
-};
-
-const addFinancialInfo = async (req, res) => {
-    try {
-        const { startupId } = req.params;
-        const {
-            revenue,
-            profitMargin,
-            fundingReceived,
-            valuation,
-            financialYear,
-            balanceSheet,
-        } = req.body;
-        if (
-            !revenue ||
-            !profitMargin ||
-            !fundingReceived ||
-            !valuation ||
-            !financialYear
-        ) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
-
-        const addedFinancialInfo = await FinancialInfo.create({
-            revenue,
-            profitMargin,
-            fundingReceived,
-            valuation,
-            financialYear,
-            balanceSheet,
-            startupId,
-        });
-        if (addedFinancialInfo) {
-            return res.status(OK).json(addedFinancialInfo);
-        }
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: "An error occurred while adding the startup's bank info",
-            error: err.message,
-        });
-    }
-};
-
-const deleteBankInfo = async (req, res) => {
-    try {
-        const { startupId } = req.params;
-        const userId = req.user._id;
-        const startup = await Startup.findById(startupId);
-        if (!startup.owner.equals(userId)) {
-            return res.status(BAD_REQUEST).json({
-                message:
-                    'you are not authorized to delete bank info for this startup',
-            });
-        }
-
-        await BankInfo.findByIdAndDelete(startupId);
-
-        return res
-            .status(OK)
-            .json({ message: 'bank info has been deleted successfully' });
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: "An error occurred while deleting the startup's bank info",
-            error: err.message,
-        });
-    }
-};
-
-const deleteFinancialInfo = async (req, res) => {
-    try {
-        const { startupId } = req.params;
-        const userId = req.user._id;
-        const startup = await Startup.findById(startupId);
-        if (!startup.owner.equals(userId)) {
-            return res.status(BAD_REQUEST).json({
-                message:
-                    'you are not authorized to delete financial info for this startup',
-            });
-        }
-
-        await FinancialInfo.findByIdAndDelete(startupId);
-
-        return res
-            .status(OK)
-            .json({ message: 'financial info has been deleted successfully' });
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message:
-                "An error occurred while deleting the startup's financial info",
-            error: err.message,
-        });
-    }
-};
 
 export {
     addStartup,
@@ -486,9 +501,5 @@ export {
     getStartupById,
     getAllStartups,
     getStartupsByOwnerId,
-    addBankInfo,
-    addFinancialInfo,
-    deleteBankInfo,
-    deleteFinancialInfo,
     registerStartupUsingDPIITid,
 };
