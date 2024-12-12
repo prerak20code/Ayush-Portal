@@ -75,8 +75,8 @@ export default mongoose.model(
 //     ayushLicenseRequired: false,
 //     businessAddress: "Shop 123, Market Street, Bangalore, India",
 //     contactDetails: {
-//         email: "info@ayurvedaretailers.com",
-//         phone: "9876543210",
+//         email: "kartik@ayurvedaretailers.com",
+//         phone: "9118018219",
 //     },
 //     documents: {
 //         businessRegistrationCertificate: "uploads/business_registration_certificate.pdf",

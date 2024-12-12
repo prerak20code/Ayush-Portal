@@ -96,5 +96,34 @@ io.on('connection', (socket) => {
     });
 });
 
+//RazorPay
+import paymentRouter from './routes/paymentRouter.js';
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/queries', queryRouter);
+app.use('/api/v1/payments', paymentRouter); // Add Razorpay payment routes
+
+// Razorpay Integration
+app.post('/api/v1/payments/create-order', async (req, res) => {
+    try {
+        const { amount, currency = 'INR' } = req.body;
+
+        if (!amount) {
+            return res.status(400).json({ error: 'Amount is required' });
+        }
+
+        const options = {
+            amount: amount * 100,
+            currency: currency,
+            receipt: `receipt_${Date.now()}`,
+        };
+
+        const order = await razorpay.orders.create(options);
+        res.status(200).json(order);
+    } catch (error) {
+        console.error('Error creating Razorpay order:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 // Export App
 export default httpServer;
