@@ -49,7 +49,9 @@ export default function LicenseGeneratorPage() {
         );
 
         if (!scriptLoaded) {
-            alert('Razorpay SDK failed to load. Check your internet connection.');
+            alert(
+                'Razorpay SDK failed to load. Check your internet connection.'
+            );
             return;
         }
 
@@ -57,7 +59,7 @@ export default function LicenseGeneratorPage() {
             // Call backend API to create an order
             const { data: order } = await axios.post(
                 'http://localhost:4000/api/v1/payments/create-order',
-                { amount: 2  } // Amount in paise (2000 INR)
+                { amount: 2 } // Amount in paise (2000 INR)
             );
 
             // Razorpay payment options
@@ -104,37 +106,125 @@ export default function LicenseGeneratorPage() {
     };
 
     const manufactureFields = [
-        { name: 'manufacturingLicense', label: 'Copy of Manufacturing License', required: true },
-        { name: 'siteLayout', label: 'Site layout of the manufacturing facility', required: true },
-        { name: 'manufacturingFormula', label: 'Manufacturing formula and process', required: true },
-        { name: 'productSpecification', label: 'Finished product specification report', required: true },
-        { name: 'coppProducts', label: 'List of applied and approved products for COPP certification', required: true },
-        { name: 'processValidation', label: 'Process Validation Report for 3 batches', required: true },
-        { name: 'technicalStaffDetails', label: 'Details of technical staff', required: true },
-        { name: 'equipmentList', label: 'List of equipment to be used', required: true },
-        { name: 'waterHVAC', label: 'Water & HVAC system diagrams', required: true },
-        { name: 'proofSafetyEffectiveness', label: 'Proof of Safety & Effectiveness', required: true },
-        { name: 'herbalUndertaking', label: 'Undertaking regarding herbal ingredients', required: true },
-        { name: 'complianceUndertaking', label: 'Compliance Undertaking', required: true },
-        { name: 'kycDetails', label: 'KYC details of the applicant', required: true },
+        {
+            name: 'manufacturingLicense',
+            label: 'Copy of Manufacturing License',
+            required: true,
+        },
+        {
+            name: 'siteLayout',
+            label: 'Site layout of the manufacturing facility',
+            required: true,
+        },
+        {
+            name: 'manufacturingFormula',
+            label: 'Manufacturing formula and process',
+            required: true,
+        },
+        {
+            name: 'productSpecification',
+            label: 'Finished product specification report',
+            required: true,
+        },
+        {
+            name: 'coppProducts',
+            label: 'List of applied and approved products for COPP certification',
+            required: true,
+        },
+        {
+            name: 'processValidation',
+            label: 'Process Validation Report for 3 batches',
+            required: true,
+        },
+        {
+            name: 'technicalStaffDetails',
+            label: 'Details of technical staff',
+            required: true,
+        },
+        {
+            name: 'equipmentList',
+            label: 'List of equipment to be used',
+            required: true,
+        },
+        {
+            name: 'waterHVAC',
+            label: 'Water & HVAC system diagrams',
+            required: true,
+        },
+        {
+            name: 'proofSafetyEffectiveness',
+            label: 'Proof of Safety & Effectiveness',
+            required: true,
+        },
+        {
+            name: 'herbalUndertaking',
+            label: 'Undertaking regarding herbal ingredients',
+            required: true,
+        },
+        {
+            name: 'complianceUndertaking',
+            label: 'Compliance Undertaking',
+            required: true,
+        },
+        {
+            name: 'kycDetails',
+            label: 'KYC details of the applicant',
+            required: true,
+        },
     ];
 
     const loanFields = [
-        { name: 'loanApplication', label: 'Loan Application Form', required: true },
+        {
+            name: 'loanApplication',
+            label: 'Loan Application Form',
+            required: true,
+        },
         { name: 'loanApproval', label: 'Loan Approval Letter', required: true },
-        { name: 'bankStatement', label: 'Bank Statements (last 6 months)', required: true },
-        { name: 'collateralProof', label: 'Collateral Proof Document', required: true },
-        { name: 'financialReports', label: 'Financial Reports (last 3 years)', required: true },
+        {
+            name: 'bankStatement',
+            label: 'Bank Statements (last 6 months)',
+            required: true,
+        },
+        {
+            name: 'collateralProof',
+            label: 'Collateral Proof Document',
+            required: true,
+        },
+        {
+            name: 'financialReports',
+            label: 'Financial Reports (last 3 years)',
+            required: true,
+        },
         { name: 'businessPlan', label: 'Business Plan', required: true },
         ...manufactureFields.slice(6),
     ];
 
     const retailWholesaleFields = [
-        { name: 'retailApplication', label: 'Retail License Application Form', required: true },
-        { name: 'wholesaleApplication', label: 'Wholesale License Application Form', required: true },
-        { name: 'storeDetails', label: 'Details of Store/Outlet', required: true },
-        { name: 'inventoryRecords', label: 'Inventory Records', required: true },
-        { name: 'distributionPlan', label: 'Distribution Plan', required: true },
+        {
+            name: 'retailApplication',
+            label: 'Retail License Application Form',
+            required: true,
+        },
+        {
+            name: 'wholesaleApplication',
+            label: 'Wholesale License Application Form',
+            required: true,
+        },
+        {
+            name: 'storeDetails',
+            label: 'Details of Store/Outlet',
+            required: true,
+        },
+        {
+            name: 'inventoryRecords',
+            label: 'Inventory Records',
+            required: true,
+        },
+        {
+            name: 'distributionPlan',
+            label: 'Distribution Plan',
+            required: true,
+        },
         ...manufactureFields.slice(5),
     ];
 
@@ -142,8 +232,8 @@ export default function LicenseGeneratorPage() {
         licenseType === 'loan'
             ? loanFields
             : licenseType === 'retailWholesale'
-            ? retailWholesaleFields
-            : manufactureFields;
+              ? retailWholesaleFields
+              : manufactureFields;
 
     const fileElements = fileFields.map((field) => (
         <div key={field.name} className="w-full transition-all ease-in">
@@ -181,7 +271,10 @@ export default function LicenseGeneratorPage() {
                 onSubmit={handleSubmit}
             >
                 <div className="w-full mb-4">
-                    <label htmlFor="licenseType" className="text-lg font-medium">
+                    <label
+                        htmlFor="licenseType"
+                        className="text-lg font-medium"
+                    >
                         Select License Type
                     </label>
                     <select
