@@ -23,7 +23,7 @@ export default function StartupReview() {
 
     useEffect(() => {
         setCurrentStep(5);
-        
+
         const personal = JSON.parse(
             localStorage.getItem(`${user._id}_StartupOwnerPersonalInfo`) || '{}'
         );

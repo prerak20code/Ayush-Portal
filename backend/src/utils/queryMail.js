@@ -11,7 +11,7 @@ export const sendQueryEmail = async (req, res) => {
                     'Missing required fields: subject, userEmail, or query.',
             });
         }
-        
+
         const mailOptions = {
             from: process.env.AUTH_EMAIL,
             to: process.env.MINISTRY_OF_AYUSH_EMAIL,

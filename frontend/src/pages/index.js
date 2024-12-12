@@ -37,5 +37,5 @@ export {
     AdminDashboard,
     AyushServicesPage,
     LicenseGeneratorPage,
-    AadhaarVerificationPage 
+    AadhaarVerificationPage,
 };
