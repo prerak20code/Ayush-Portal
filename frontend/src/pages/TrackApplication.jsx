@@ -174,7 +174,7 @@ export default function TrackApplication() {
         </NavLink>
     ));
 
-    return loading  ? (
+    return loading ? (
         <div className="w-full fill-[#f68533] text-white size-[30px]">
             {icons.loading}
         </div>

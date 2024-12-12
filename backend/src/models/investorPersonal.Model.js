@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
 const investorIdSchema = new mongoose.Schema({
-    investorId:{
-        type:mongoose.Schema.Types.ObjectId,
-        required:true,
+    investorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
     },
     idType: {
         type: String,
         required: true, // Ensure the type of government ID is mandatory
         trim: true, // Trim whitespace
         enum: ['passport', 'driver_license', 'national_id', 'other'], // You can adjust the allowed types as needed
-        default:"other"
+        default: 'other',
     },
     idValue: {
         type: String,
@@ -60,5 +60,5 @@ const investorSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export const InvestorId = new mongoose.model("InvestorId", investorIdSchema);
+export const InvestorId = new mongoose.model('InvestorId', investorIdSchema);
 export const Investor = new mongoose.model('Investor', investorSchema);

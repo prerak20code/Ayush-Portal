@@ -5,12 +5,8 @@ import { icons } from '../../assets/icons';
 import { Button } from '..';
 
 export default function OrganizationInformation() {
-    const {
-        setCurrentStep,
-        setTotalData,
-        setCompletedSteps,
-        existingApp,
-    } = useRegisterStartupContext();
+    const { setCurrentStep, setTotalData, setCompletedSteps, existingApp } =
+        useRegisterStartupContext();
 
     const initialInputs = {
         startupName: '',
@@ -23,7 +19,7 @@ export default function OrganizationInformation() {
         country: '',
         description: '',
     };
-    
+
     const initialErrors = {
         root: '',
         startupName: '',
