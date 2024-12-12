@@ -5,7 +5,7 @@ import { useRegisterInvestorContext, useUserContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '..';
 
-export default function InvestorDocuments() {
+export default function DPIITDocs() {
     const { setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterInvestorContext();
     const { user } = useUserContext();

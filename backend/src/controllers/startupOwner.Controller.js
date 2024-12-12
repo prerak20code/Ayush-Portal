@@ -101,7 +101,7 @@ const getOwnerById = async (req, res) => {
         if (!user) {
             return res.status(BAD_REQUEST).json({ message: 'owner not found' });
         }
-        return res.status(OK).json(user);
+        return res.status(OK).json(user[0]);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message:

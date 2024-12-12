@@ -1,67 +1,44 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { icons } from '../../assets/icons';
-import PhoneInput from 'react-phone-input-2';
-import { Button, Popup } from '..';
+import { Button } from '..';
 import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterStartupContext } from '../../contexts';
-import { verifyRegex, formatDate } from '../../utils';
-import {
-    ownerService,
-    startupRegistrationApplicationService,
-} from '../../services';
+import { useRegisterStartupContext, useUserContext } from '../../contexts';
+import { verifyRegex } from '../../utils';
 
 export default function PersonalInformation() {
-    const {
-        setCurrentStep,
-        setTotalData,
-        setCompletedSteps,
-        totalData,
-        existingApp,
-    } = useRegisterStartupContext();
+    const { setCurrentStep, setTotalData, setCompletedSteps } =
+        useRegisterStartupContext();
 
     const initialInputs = {
-        name: totalData.persona?.data?.name || '',
-        email: totalData.personal?.data?.email || '',
-        dateOfBirth: formatDate(totalData.personal?.data?.dateOfBirth) || '',
-        password: totalData.personal?.data?.password || '',
-        phone: totalData.personal?.data?.phone || '',
-        address: totalData.personal?.data?.address || '',
-        nationality: totalData.personal?.data?.nationality || '',
-        linkedInURL: totalData.personal?.data?.linkedInURL || '',
+        dateOfBirth: '',
+        address: '',
+        nationality: '',
+        linkedInURL: '',
     };
 
     const navigate = useNavigate();
+    const { user } = useUserContext();
     const [countryList, setCountryList] = useState([]);
     const [flag, setFlag] = useState('');
     const [inputs, setInputs] = useState(initialInputs);
 
     const initialErrors = {
         root: '',
-        name: '',
-        email: '',
         dateOfBirth: '',
-        password: '',
-        phone: '',
         address: '',
     };
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
-    const [loading, setLoading] = useState(false);
-    const [isFormAutoFilled, setIsFormAutoFilled] = useState(false);
 
-    // Memoizing the check for autofill status to prevent unnecessary rerenders
-    const checkFormAutoFilled = useMemo(() => {
-        return Object.entries(inputs).every(
-            ([key, value]) => value || key === 'linkedInURL'
+    useEffect(() => {
+        setCurrentStep(0);
+        const savedData = localStorage.getItem(
+            `${user._id}_StartupOwnerPersonalInfo`
         );
-    }, [inputs]);
-
-    useEffect(() => {
-        setIsFormAutoFilled(checkFormAutoFilled);
-    }, [checkFormAutoFilled]); // Only trigger when checkFormAutoFilled changes
-
-    useEffect(() => {
+        if (savedData) {
+            setInputs(JSON.parse(savedData));
+        }
         (async function fetchCountryList() {
             try {
                 const res = await fetch(
@@ -79,17 +56,17 @@ export default function PersonalInformation() {
                 countries.sort((a, b) => a.name.localeCompare(b.name));
                 setCountryList(countries);
                 // Set the initial flag if nationality exists
-                if (initialInputs.nationality) {
+                if (inputs.nationality) {
                     const initialCountry = countries.find(
                         (countryObject) =>
-                            countryObject.name === initialInputs.nationality
+                            countryObject.name === inputs.nationality
                     );
 
                     if (initialCountry) {
                         setFlag(initialCountry.flag); // Set the flag URL
                     } else {
                         console.warn(
-                            `Country with name "${initialInputs.nationality}" not found.`
+                            `Country with name "${inputs.nationality}" not found.`
                         );
                     }
                 }
@@ -113,9 +90,11 @@ export default function PersonalInformation() {
 
     function handleBlur(e) {
         const { name, value } = e.target;
-        if (name !== 'password') {
-            verifyRegex(name, value, setErrors);
-        }
+        verifyRegex(name, value, setErrors);
+        localStorage.setItem(
+            `${user._id}_StartupOwnerPersonalInfo`,
+            JSON.stringify({ ...inputs, personalInfoStatus: 'pending' })
+        );
     }
 
     function onMouseOver() {
@@ -134,60 +113,18 @@ export default function PersonalInformation() {
     }
 
     async function handleSubmit(e) {
-        try {
-            e.preventDefault();
-            setLoading(true);
-            setDisabled(true);
-            setErrors(initialErrors);
-
-            const { name, email, phone, password, ...ownerInputs } = inputs;
-
-            if (existingApp) {
-                if (
-                    Object.entries(inputs).some(
-                        ([key, value]) => value !== initialInputs[key]
-                    )
-                ) {
-                    let updates = {};
-                    Object.entries(inputs).map(([key, value]) => {
-                        if (value !== initialInputs[key]) {
-                        }
-                    });
-
-                    const res = await ownerService.update({ ...updates });
-                    if (res && !res.message) {
-                        alert('your details have been updated');
-                    } else {
-                        setErrors((prev) => ({ ...prev, root: res.message }));
-                    }
-                }
-            } else {
-                const res =
-                    await startupRegistrationApplicationService.startApplication();
-                if (res) {
-                    const res2 = await ownerService.register(ownerInputs);
-                    if (res2?.message === 'personal info saved successfully') {
-                        setCurrentStep((prev = prev + 1));
-                        navigate('organization');
-                        setCompletedSteps((prev) => [...prev, 'personal']);
-                        setTotalData((prev) => ({
-                            ...prev,
-                            personal: {
-                                data: { ...inputs },
-                                status: 'complete',
-                            },
-                        }));
-                    }
-                } else {
-                    setErrors((prev) => ({ ...prev, root: res.message }));
-                }
-            }
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setDisabled(false);
-            setLoading(false);
-        }
+        e.preventDefault();
+        setErrors(initialErrors);
+        setCompletedSteps((prev) => [...prev, 'personal']);
+        setTotalData((prev) => ({
+            ...prev,
+            personal: { data: inputs, status: 'complete' },
+        }));
+        localStorage.setItem(
+            `${user._id}_StartupOwnerPersonalInfo`,
+            JSON.stringify({ ...inputs, personalInfoStatus: 'complete' })
+        );
+        navigate(`/application/${user._id}/organization`);
     }
 
     const inputFields = [
@@ -293,7 +230,6 @@ export default function PersonalInformation() {
                                 name="nationality"
                                 id="nationality"
                                 value={inputs.nationality}
-                                disabled={false}
                                 onChange={handleChange}
                                 className={`py-[10px] text-ellipsis transition-all ease-in placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${flag ? 'pl-12 pr-3' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
                             >
@@ -327,7 +263,6 @@ export default function PersonalInformation() {
                                 name="address"
                                 placeholder="Provide your Current address"
                                 value={inputs.address}
-                                readOnly={isFormAutoFilled}
                                 onChange={(e) =>
                                     setInputs((prev) => ({
                                         ...prev,
@@ -372,18 +307,12 @@ export default function PersonalInformation() {
                             onMouseOver={onMouseOver}
                             type="submit"
                             btnText={
-                                loading ? (
-                                    <div className="fill-[#f9f9f9] text-[#f9a264] size-[20px]">
-                                        {icons.loading}
+                                <div className="flex items-center justify-center gap-2">
+                                    <p className="text-[#f9f9f9]">Save</p>
+                                    <div className="size-[14px] fill-[#f9f9f9]">
+                                        {icons.next}
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-2">
-                                        <p className="text-[#f9f9f9]">Save</p>
-                                        <div className="size-[14px] fill-[#f9f9f9]">
-                                            {icons.next}
-                                        </div>
-                                    </div>
-                                )
+                                </div>
                             }
                         />
                     </div>

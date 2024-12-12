@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterStartupContext } from '../../contexts';
+import { useRegisterStartupContext, useUserContext } from '../../contexts';
 import { icons } from '../../assets/icons';
 import { Button } from '..';
+import { verifyRegex } from '../../utils';
 
 export default function BankingInformation() {
     const initialInputs = {
@@ -12,7 +13,6 @@ export default function BankingInformation() {
         IFSC: '',
         branchName: '',
         swiftCode: '',
-        balanceStatement: null, // optional
     };
     const initialErrors = {
         root: '',
@@ -26,35 +26,43 @@ export default function BankingInformation() {
     const [inputs, setInputs] = useState(initialInputs);
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
-    const [loading, setLoading] = useState(false);
-    const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
+    const { setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterStartupContext();
     const navigate = useNavigate();
+    const { user } = useUserContext();
+
+    useEffect(() => {
+        setCurrentStep(3);
+        const savedData = localStorage.getItem(
+            `${user._id}_StartupOwnerBankingInfo`
+        );
+        if (savedData) {
+            setInputs(JSON.parse(savedData));
+        }
+    }, []);
 
     function handleChange(e) {
-        const { name, value, type, files } = e.target;
+        const { name, value } = e.target;
         setInputs((prev) => ({
             ...prev,
-            [name]: type === 'file' ? files[0] : value,
+            [name]: value,
         }));
     }
 
     function handleBlur(e) {
-        let { name, type, value } = e.target;
-        if (type !== 'file') {
-            verifyRegex(name, value, setErrors);
-        } else {
-            // file restrictions
-        }
+        let { name, value } = e.target;
+        verifyRegex(name, value, setErrors);
+        localStorage.setItem(
+            `${user._id}_StartupOwnerBankingInfo`,
+            JSON.stringify({ ...inputs, bankingInfoStatus: 'pending' })
+        );
     }
 
     function onMouseOver() {
         if (
-            Object.entries(inputs).some(
-                ([key, value]) => !value && key !== 'balanceStatement'
-            ) ||
+            Object.values(inputs).some((value) => !value) ||
             Object.entries(errors).some(
-                ([key, value]) => value !== '' && key !== 'root'
+                ([key, value]) => value && key !== 'root'
             )
         ) {
             setDisabled(true);
@@ -64,14 +72,18 @@ export default function BankingInformation() {
     }
 
     function handleSubmit(e) {
-        try {
-            e.preventDefault();
-            setCompletedSteps((prev) => [...prev, 'banking']);
-            // backend request
-            // setTotalData(prev=>({...prev, banking:{data:{...inputs},status:"complete"}}))
-        } catch (err) {
-            navigate('/server-error');
-        }
+        e.preventDefault();
+        setErrors(initialErrors);
+        setCompletedSteps((prev) => [...prev, 'banking']);
+        setTotalData((prev) => ({
+            ...prev,
+            banking: { data: inputs, status: 'complete' },
+        }));
+        localStorage.setItem(
+            `${user._id}_StartupOwnerBankingInfo`,
+            JSON.stringify({ ...inputs, bankingInfoStatus: 'complete' })
+        );
+        navigate(`/application/${user._id}/documents`);
     }
 
     const inputFields = [
@@ -123,14 +135,6 @@ export default function BankingInformation() {
             required: true,
             icon: icons.card,
         },
-        {
-            type: 'file',
-            name: 'balanceStatement',
-            required: false,
-            accept: '.pdf',
-            icon: icons.file,
-            label: 'Upload Balance Statement (Optional)',
-        },
     ];
 
     const inputElements = inputFields.map((field) => (
@@ -147,27 +151,16 @@ export default function BankingInformation() {
                         {field.icon}
                     </div>
                 )}
-                {field.type !== 'file' ? (
-                    <input
-                        type={field.type}
-                        name={field.name}
-                        id={field.name}
-                        value={inputs[field.name]}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        placeholder={field.placeholder}
-                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-green-600 bg-transparent`}
-                    />
-                ) : (
-                    <input
-                        type={field.type}
-                        name={field.name}
-                        id={field.name}
-                        accept={field.accept}
-                        onChange={handleChange}
-                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] bg-transparent`}
-                    />
-                )}
+                <input
+                    type={field.type}
+                    name={field.name}
+                    id={field.name}
+                    value={inputs[field.name]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder={field.placeholder}
+                    className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-green-600 bg-transparent`}
+                />
             </div>
             {errors[field.name] && (
                 <div className="mt-1 text-red-500 text-sm font-medium">
@@ -233,18 +226,12 @@ export default function BankingInformation() {
                             onMouseOver={onMouseOver}
                             type="submit"
                             btnText={
-                                loading ? (
-                                    <div className="fill-[#f9f9f9] text-blue-400 size-[20px]">
-                                        {icons.loading}
+                                <div className="flex items-center justify-center gap-2">
+                                    <p className="text-[#f9f9f9]">Save</p>
+                                    <div className="size-[14px] fill-[#f9f9f9]">
+                                        {icons.next}
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-2">
-                                        <p className="text-[#f9f9f9]">Save</p>
-                                        <div className="size-[14px] fill-[#f9f9f9]">
-                                            {icons.next}
-                                        </div>
-                                    </div>
-                                )
+                                </div>
                             }
                         />
                     </div>

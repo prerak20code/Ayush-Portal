@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const bankInfoSchema = new mongoose.Schema(
+const investorBankInfoSchema = new mongoose.Schema(
     {
-        startupId: {
+        investorId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Startup',
+            ref: 'Investor',
             required: true,
             unique: true,
             index: true,
@@ -16,13 +16,12 @@ const bankInfoSchema = new mongoose.Schema(
         IFSC: { type: String, required: true },
         branchName: { type: String, required: true },
         swiftCode: { type: String, required: true },
-        balanceStatement: { type: String },
     },
     { timestamps: true }
 );
 
 // pre hooks to hash fields before save
-bankInfoSchema.pre('save', async function (next) {
+investorBankInfoSchema.pre('save', async function (next) {
     try {
         if (this.isModified('IFSC')) {
             this.IFSC = bcrypt.hashSync(this.IFSC, 10);
@@ -36,4 +35,7 @@ bankInfoSchema.pre('save', async function (next) {
     }
 });
 
-export const BankInfo = new mongoose.model('BankInfo', bankInfoSchema);
+export const InvestorBankInfo = new mongoose.model(
+    'InvestorBankInfo',
+    investorBankInfoSchema
+);

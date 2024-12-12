@@ -2,24 +2,36 @@ import { Button } from '..';
 import { icons } from '../../assets/icons';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useRegisterStartupContext } from '../../contexts';
+import { useRegisterStartupContext, useUserContext } from '../../contexts';
 
-export default function Review() {
-    const [disabled, setDisabled] = useState(true);
-    const [loading, setLoading] = useState(false);
-    const { currentStep, setCurrentStep, setTotalData, setCompletedSteps } =
+export default function StartupReview() {
+    const { setCurrentStep, setTotalData, setCompletedSteps } =
         useRegisterStartupContext();
     const navigate = useNavigate();
+    const { user } = useUserContext();
 
-    async function handleFinalSubmit() {
+    useEffect(() => {
+        setCurrentStep(5);
+    }, []);
+
+    async function handleSubmit(e) {
         try {
             e.preventDefault();
             setCompletedSteps((prev) => [...prev, 'reviewd']);
+            const res = await startup
         } catch (err) {
             navigate('/server-error');
         }
     }
-    async function handleDelete() {}
+    async function handleAbort() {
+        localStorage.removeItem(`${user._id}_StartupOwnerPersonalInfo`);
+        localStorage.removeItem(`${user._id}_StartupOwnerFinancialInfo`);
+        localStorage.removeItem(`${user._id}_StartupOwnerBankingInfo`);
+        localStorage.removeItem(`${user._id}_StartupOwnerOrganisationInfo`);
+        localStorage.removeItem(`${user._id}_StartupOwnerDocument`);
+        alert('starup registration process are been aborted.');
+        navigate('/');
+    }
 
     return (
         <div className="p-6 w-full bg-blue-50 overflow-x-scroll rounded-lg shadow-md border border-gray-200">
@@ -27,14 +39,14 @@ export default function Review() {
                 Review and Submit the Form
             </h2>
             <div className="text-center">
-                SHOW COMPLETE DATA (fetch from applications collection)
+                // SHOW DATA 
             </div>
-            {/* submit btn */}
+
+            {/* buttons*/}
             <div className="w-full flex items-center justify-center gap-4 mt-4">
                 <Button
                     className="text-[#f9f9f9] rounded-md h-[40px] w-[90px] bg-gradient-to-r from-green-500 to-green-600 hover:from-orange-500 hover:to-orange-600"
-                    disabled={disabled}
-                    onClick={handleFinalSubmit}
+                    onClick={handleSubmit}
                     type="submit"
                     btnText={
                         loading ? (
@@ -48,8 +60,7 @@ export default function Review() {
                 />
                 <Button
                     className="text-[#f9f9f9] rounded-md h-[40px] w-[90px] bg-gradient-to-r from-red-500 to-red-600 hover:from-orange-500 hover:to-orange-600"
-                    disabled={disabled}
-                    onClick={handleDelete}
+                    onClick={handleAbort}
                     type="submit"
                     btnText={
                         loading ? (
@@ -57,7 +68,7 @@ export default function Review() {
                                 {icons.loading}
                             </div>
                         ) : (
-                            <p className="text-[#f9f9f9] text-lg">Cancel</p>
+                            <p className="text-[#f9f9f9] text-lg">Abort</p>
                         )
                     }
                 />

@@ -7,7 +7,6 @@ import {
     useNavigate,
 } from 'react-router-dom';
 import { useRegisterStartupContext, useUserContext } from '../contexts';
-import { startupRegistrationApplicationService } from '../services';
 import { icons } from '../assets/icons';
 
 export default function TrackApplication() {
@@ -73,57 +72,66 @@ export default function TrackApplication() {
     }, [currentURL]);
 
     useEffect(() => {
-        (async function getApp() {
-            try {
-                if (appId !== 'new') {
-                    const res =
-                        await startupRegistrationApplicationService.getApplication(
-                            user._id,
-                            appId
-                        );
-                    if (res && !res?.message) {
-                        setExistingApp(true);
+        try {
+            const { personalInfoStatus, ...personalInfo } = JSON.parse(
+                localStorage.getItem(`${user._id}_StartupOwnerPersonalInfo`) ||
+                    '{}'
+            );
+            console.log(personalInfoStatus);
+            const { organizationInfoStatus, ...organizationInfo } = JSON.parse(
+                localStorage.getItem(
+                    `${user._id}_StartupOwnerOrganizationInfo`
+                ) || '{}'
+            );
 
-                        const data = {
-                            personal: {
-                                data: res.owner || null,
-                                status: res.owner ? 'complete' : 'pending',
-                            },
-                            organization: {
-                                data: res.startup || null,
-                                status: res.startup ? 'complete' : 'pending',
-                            },
-                            financial: {
-                                data: res.startup?.financialInfo || null,
-                                status: res.startup?.financialInfo
-                                    ? 'complete'
-                                    : 'pending',
-                            },
-                            banking: {
-                                data: res.startup?.bankInfo || null,
-                                status: res.startup?.bankInfo
-                                    ? 'complete'
-                                    : 'pending',
-                            },
-                            documents: {
-                                data: res.documents || null,
-                                status: res.documents ? 'complete' : 'pending',
-                            },
-                            reviewd: {
-                                status: res.status,
-                            },
-                        };
-                        setTotalData(data);
-                    } else {
-                        setExistingApp(false);
-                    }
-                }
-            } catch (err) {
-                navigate('/server-error');
-            } finally {
-                setLoading(false);
-            }
-        })();
+            const { financialInfoStatus, ...financialInfo } = JSON.parse(
+                localStorage.getItem(`${user._id}_StartupOwnerFinancialInfo`) ||
+                    '{}'
+            );
+            const { bankingInfoStatus, ...bankingInfo } = JSON.parse(
+                localStorage.getItem(`${user._id}_StartupOwnerBankingInfo`) ||
+                    '{}'
+            );
+            const { documentsStatus, ...StartupOwnerdocuments } = JSON.parse(
+                localStorage.getItem(`${user._id}_StartupOwnerDocuments`) ||
+                    '{}'
+            );
+            const { reviewStatus } = JSON.parse(
+                localStorage.getItem(`${user._id}_StartupOwnerReview`) || '{}'
+            );
+
+            const data = {
+                personal: {
+                    data: personalInfo || null,
+                    status: personalInfoStatus,
+                },
+                organization: {
+                    data: organizationInfo || null,
+                    status: organizationInfoStatus,
+                },
+                financial: {
+                    data: financialInfo || null,
+                    status: financialInfoStatus,
+                },
+                banking: {
+                    data: bankingInfo || null,
+                    status: bankingInfoStatus,
+                },
+                documents: {
+                    data: StartupOwnerdocuments || null,
+                    status: documentsStatus,
+                },
+                reviewd: {
+                    status: reviewStatus,
+                },
+            };
+
+            setTotalData(data);
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setLoading(false);
+        }
     }, [appId]);
 
     const stepElements = steps.map((step, index) => (
@@ -174,7 +182,7 @@ export default function TrackApplication() {
         </NavLink>
     ));
 
-    return loading  ? (
+    return loading ? (
         <div className="w-full fill-[#f68533] text-white size-[30px]">
             {icons.loading}
         </div>

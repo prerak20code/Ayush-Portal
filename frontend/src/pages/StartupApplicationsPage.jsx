@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useUserContext } from '../contexts';
-import { startupRegistrationApplicationService } from '../services';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { icons } from '../assets/icons';
 import { Button } from '../components';
-import { formatDate } from '../utils';
+import { startupRegistrationApplicationService } from '../services';
 
 export default function StartupApplicationsPage() {
     const [applications, setApplications] = useState([]);
@@ -61,7 +60,7 @@ export default function StartupApplicationsPage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {applications.map((app, index) => {
+                    {applications?.map((app, index) => {
                         // Calculate the registration date as 10 days before the expiration date
                         const expirationDate = new Date(app.expireAt);
                         const registrationDate = new Date(expirationDate);
@@ -135,7 +134,9 @@ export default function StartupApplicationsPage() {
             {applications.length > 0 ? (
                 <div>{appsElements}</div>
             ) : (
-                <div className=" w-full text-black">{message}</div>
+                <div className=" w-full text-black">
+                    No ongoing applications
+                </div>
             )}
         </div>
     );

@@ -21,7 +21,7 @@ import PersonalInformation from './RegisterStartup/PersonalInformation';
 import FinancialInformation from './RegisterStartup/FinancialInformation';
 import BankingInformation from './RegisterStartup/BankingInformation';
 import OrganizationInformation from './RegisterStartup/OrganizationInformation';
-import Review from './RegisterStartup/Review';
+import StartupReview from './RegisterStartup/StartupReview';
 import InvestedStartups from './investorConnect/InvestedStartups';
 import TargetedStartups from './investorConnect/TargetedStartups';
 import InvestorBankingInfo from './InvestorRegister/BankingInfo';
@@ -29,7 +29,9 @@ import InvestorFinancialInfo from './InvestorRegister/FinancialInfo';
 import InvestorPersonalInfo from './InvestorRegister/PersonalInfo';
 import InvestorDocuments from './InvestorRegister/InvestorDocuments';
 import InvestorReview from './InvestorRegister/InvestorReview';
-import UploadDocuments from './RegisterStartup/UploadDocuments';
+import StartupOwnerDocuments from './RegisterStartup/StartupOwnerDocuments';
+import DPIITDocs from './DPIIT/DpiitDocs';
+
 export {
     LayoutOne,
     LayoutTwo,
@@ -54,13 +56,14 @@ export {
     PersonalInformation,
     FinancialInformation,
     OrganizationInformation,
-    Review,
+    StartupReview,
     InvestedStartups,
     TargetedStartups,
-    UploadDocuments,
+    StartupOwnerDocuments,
     InvestorBankingInfo,
     InvestorFinancialInfo,
     InvestorPersonalInfo,
     InvestorDocuments,
     InvestorReview,
+    DPIITDocs,
 };

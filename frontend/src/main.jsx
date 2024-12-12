@@ -17,7 +17,6 @@ import {
     RegisterPage,
     LoginPage,
     StartupApplicationsPage,
-    // OwnerConnectPage,
     ServerErrorPage,
     NotFoundPage,
     TrackApplication,
@@ -40,8 +39,8 @@ import {
     BankingInformation,
     PersonalInformation,
     OrganizationInformation,
-    UploadDocuments,
-    Review,
+    StartupOwnerDocuments,
+    StartupReview,
     InvestedStartups,
     TargetedStartups,
     InvestorBankingInfo,
@@ -49,6 +48,7 @@ import {
     InvestorPersonalInfo,
     InvestorDocuments,
     InvestorReview,
+    DPIITDocs,
 } from './components';
 
 import {
@@ -79,7 +79,6 @@ const router = createBrowserRouter(
             <Route path="" element={<LayoutTwo />}>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="login" element={<LoginPage />} />
-                {/* <Route path="/pages/OwnerConnectPage" element = {<OwnerConnectPage/>}/> */}
 
                 <Route
                     path="user/verify/:userId/:uniqueString"
@@ -131,17 +130,17 @@ const router = createBrowserRouter(
                         element={<FinancialInformation />}
                     />
                     <Route path="banking" element={<BankingInformation />} />
-                    <Route path="documents" element={<UploadDocuments />} />
-                    <Route path="review" element={<Review />} />
+                    <Route
+                        path="documents"
+                        element={<StartupOwnerDocuments />}
+                    />
+                    <Route path="review" element={<StartupReview />} />
                 </Route>
                 <Route
                     path="DPIIT/registration/:userId"
                     element={<DPIITregistrationPage />}
                 />
-                <Route
-                    path="register-DPIIT/docs"
-                    element={<UploadDocuments />}
-                />
+                <Route path="register-DPIIT/docs" element={<DPIITDocs />} />
                 <Route
                     path="become-investor/:id"
                     element={

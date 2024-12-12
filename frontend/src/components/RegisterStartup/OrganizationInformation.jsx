@@ -1,16 +1,13 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterStartupContext } from '../../contexts';
+import { useRegisterStartupContext, useUserContext } from '../../contexts';
 import { icons } from '../../assets/icons';
 import { Button } from '..';
 
 export default function OrganizationInformation() {
-    const {
-        setCurrentStep,
-        setTotalData,
-        setCompletedSteps,
-        existingApp,
-    } = useRegisterStartupContext();
+    const { setCurrentStep, setTotalData, setCompletedSteps } =
+        useRegisterStartupContext();
+    const { user } = useUserContext();
 
     const initialInputs = {
         startupName: '',
@@ -23,7 +20,7 @@ export default function OrganizationInformation() {
         country: '',
         description: '',
     };
-    
+
     const initialErrors = {
         root: '',
         startupName: '',
@@ -32,32 +29,26 @@ export default function OrganizationInformation() {
         address: '',
         industry: '',
         website: '',
-        pdf: null,
         businessType: '',
         country: '',
+        description: '',
     };
 
     const [inputs, setInputs] = useState(initialInputs);
     const [errors, setErrors] = useState(initialErrors);
     const [disabled, setDisabled] = useState(true);
-    const [loading, setLoading] = useState(false);
-
     const navigate = useNavigate();
-    const [isFormAutoFilled, setIsFormAutoFilled] = useState(false);
-
-    // Memoizing the check for autofill status to prevent unnecessary rerenders
-    const checkFormAutoFilled = useMemo(() => {
-        return Object.values(inputs).every((value) => value);
-    }, [inputs]);
-
-    useEffect(() => {
-        setIsFormAutoFilled(checkFormAutoFilled);
-    }, [checkFormAutoFilled]); // Only trigger when checkFormAutoFilled changes
-
     const [countryList, setCountryList] = useState([]);
     const [flag, setFlag] = useState('');
 
     useEffect(() => {
+        setCurrentStep(1);
+        const savedData = localStorage.getItem(
+            `${user._id}_StartupOwnerOrganizationInfo`
+        );
+        if (savedData) {
+            setInputs(JSON.parse(savedData));
+        }
         (async function fetchCountryList() {
             try {
                 const res = await fetch(
@@ -74,21 +65,28 @@ export default function OrganizationInformation() {
 
                 countries.sort((a, b) => a.name.localeCompare(b.name));
                 setCountryList(countries);
+                if (inputs.country) {
+                    const initialCountry = countries.find(
+                        (countryObject) => countryObject.name === inputs.country
+                    );
+
+                    if (initialCountry) {
+                        setFlag(initialCountry.flag);
+                    } else {
+                        console.warn(
+                            `Country with name "${inputs.country}" not found.`
+                        );
+                    }
+                }
             } catch (error) {
                 console.error('Error fetching country data:', error);
             }
         })();
     }, []);
 
-    // fetch previous step data
-    useEffect(() => {}, []);
-
     const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
-        setInputs((prevData) => ({
-            ...prevData,
-            [name]: type === 'file' ? files[0] : value,
-        }));
+        const { value, name } = e.target;
+        setInputs((prev) => ({ ...prev, [name]: value }));
         // update flag
         if (name === 'country') {
             const selectedCountry = countryList.find(
@@ -99,15 +97,16 @@ export default function OrganizationInformation() {
     };
 
     function handleBlur(e) {
-        let { name, type, value } = e.target;
-        if (type !== 'file') {
-            verifyRegex(name, value, setErrors);
-        } else {
-            // file restrictions
-        }
+        let { name, value } = e.target;
+        verifyRegex(name, value, setErrors);
+        localStorage.setItem(
+            `${user._id}_StartupOwnerOrganizationInfo`,
+            JSON.stringify({ ...inputs, organizationInfoStatus: 'pending' })
+        );
     }
 
     function onMouseOver() {
+        console.log(inputs);
         if (
             Object.values(inputs).some(
                 (value) => !value // nothing is optional
@@ -123,45 +122,18 @@ export default function OrganizationInformation() {
     }
 
     async function handleSubmit(e) {
-        try {
-            e.preventDefault();
-            setLoading(true);
-            setDisabled(true);
-            setErrors(initialErrors);
-
-            if (existingApp) {
-                // const res = await ownerService.updateData();
-            } else {
-                const res =
-                    await startupRegistrationApplicationService.startApplication();
-                if (res) {
-                    const res2 = await ownerService.register(inputs);
-                    if (
-                        res2?.message ===
-                        'organizational info saved successfully'
-                    ) {
-                        setDisabled(true);
-                        setCurrentStep((prev = prev + 1));
-                        navigate('financial');
-                        setCompletedSteps((prev) => [...prev, 'organization']);
-                        setTotalData((prev) => ({
-                            ...prev,
-                            personal: {
-                                data: { ...inputs },
-                                status: 'complete',
-                            },
-                        }));
-                    }
-                } else {
-                    setErrors((prev) => ({ ...prev, root: res.message }));
-                }
-            }
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setLoading(false);
-            setDisabled(false);
-        }
+        e.preventDefault();
+        setErrors(initialErrors);
+        setCompletedSteps((prev) => [...prev, 'organization']);
+        setTotalData((prev) => ({
+            ...prev,
+            organization: { data: inputs, status: 'complete' },
+        }));
+        localStorage.setItem(
+            `${user._id}_StartupOwnerOrganizationInfo`,
+            JSON.stringify({ ...inputs, organizationInfoStatus: 'complete' })
+        );
+        navigate(`/application/${user._id}/financial`);
     }
 
     const inputFields = [
@@ -211,27 +183,17 @@ export default function OrganizationInformation() {
                         {field.icon}
                     </div>
                 )}
-                {field.type !== 'file' ? (
-                    <input
-                        type={field.type}
-                        name={field.name}
-                        id={field.name}
-                        value={inputs[field.name]}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        placeholder={field.placeholder}
-                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
-                    />
-                ) : (
-                    <input
-                        type={field.type}
-                        name={field.name}
-                        id={field.name}
-                        accept={field.accept}
-                        onChange={handleChange}
-                        className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] bg-transparent`}
-                    />
-                )}
+
+                <input
+                    type={field.type}
+                    name={field.name}
+                    id={field.name}
+                    value={inputs[field.name]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder={field.placeholder}
+                    className={`py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md ${field.icon ? 'pl-3 pr-10' : 'px-3'} w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent`}
+                />
             </div>
             {errors[field.name] && (
                 <div className="mt-1 text-red-500 text-sm font-medium">
@@ -427,6 +389,42 @@ export default function OrganizationInformation() {
                             </div>
                         )}
                     </div>
+                    {/* description */}
+                    <div className="w-full">
+                        <div className="bg-violet-50 z-[1] text-[15px] ml-2 px-1 w-fit relative top-3 font-medium">
+                            <label htmlFor="description">
+                                <span className="text-red-500">* </span>
+                                Description
+                            </label>
+                        </div>
+                        <div className="w-full relative">
+                            <div className="size-[16px] fill-[#323232] absolute top-2 right-3">
+                                {icons.locationPinPoint}
+                            </div>
+                            <textarea
+                                id="description"
+                                name="description"
+                                placeholder="Provide breif description about the startup"
+                                value={inputs.description}
+                                onChange={(e) =>
+                                    setInputs((prev) => ({
+                                        ...prev,
+                                        description: e.target.value,
+                                    }))
+                                }
+                                className="shadow-md shadow-[#f8f0eb] py-[10px] text-ellipsis placeholder:text-[0.9rem] placeholder:text-[#a6a6a6] rounded-md px-3 w-full border-[0.01rem] border-[#858585] outline-violet-600 bg-transparent"
+                            />
+                        </div>
+                        {errors.description ? (
+                            <div className="mt-1 text-red-500 text-sm font-medium">
+                                {errors.description}
+                            </div>
+                        ) : (
+                            <div className="text-xs">
+                                Only 256 characters are allowed.
+                            </div>
+                        )}
+                    </div>
                     {/* buttons */}
                     <div className="w-full flex items-center justify-end gap-4 mt-4">
                         <Button
@@ -450,18 +448,12 @@ export default function OrganizationInformation() {
                             onMouseOver={onMouseOver}
                             type="submit"
                             btnText={
-                                loading ? (
-                                    <div className="fill-[#f9f9f9] text-blue-400 size-[20px]">
-                                        {icons.loading}
+                                <div className="flex items-center justify-center gap-2">
+                                    <p className="text-[#f9f9f9]">Save</p>
+                                    <div className="size-[14px] fill-[#f9f9f9]">
+                                        {icons.next}
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-2">
-                                        <p className="text-[#f9f9f9]">Save</p>
-                                        <div className="size-[14px] fill-[#f9f9f9]">
-                                            {icons.next}
-                                        </div>
-                                    </div>
-                                )
+                                </div>
                             }
                         />
                     </div>
