@@ -31,6 +31,7 @@ export default function App() {
                     }
 
                     setUser({ ...res, ...data });
+                    console.log('final', { ...res, ...data });
                 } else {
                     setUser(null);
                 }

@@ -148,6 +148,7 @@ import {
     userRouter,
     Chatrouter,
     Messagerouter,
+    documentRouter,
 } from './routes/index.js';
 
 // API Routes
@@ -159,7 +160,7 @@ app.use('/api/v1/gov-officials', govOfficialrouter);
 app.use('/api/v1/applications', startupRegistrationApplicationRouter);
 app.use('/api/v1/chat', Chatrouter);
 app.use('/api/v1/message', Messagerouter);
-
+app.use('/api/v1/documents', documentRouter);
 // Initialize HTTP Server
 const server = http.createServer(app);
 

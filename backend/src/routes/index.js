@@ -6,7 +6,7 @@ import { startupRegistrationApplicationRouter } from './startupRegistrationAppli
 import { userRouter } from './user.Router.js';
 import { Messagerouter } from './messageRoutes.js';
 import { Chatrouter } from './chatRoutes.js';
-// import documentrouter from './documentroutes.js';
+import { documentRouter } from './document.Router.js';
 export {
     investmentRouter,
     govOfficialrouter,
@@ -16,5 +16,5 @@ export {
     startupRegistrationApplicationRouter,
     Messagerouter,
     Chatrouter,
-    // documentrouter,
+    documentRouter,
 };

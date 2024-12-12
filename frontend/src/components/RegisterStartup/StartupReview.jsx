@@ -1,24 +1,56 @@
 import { Button } from '..';
 import { icons } from '../../assets/icons';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRegisterStartupContext, useUserContext } from '../../contexts';
+import { startupService } from '../../services';
 
 export default function StartupReview() {
-    const { setCurrentStep, setTotalData, setCompletedSteps } =
+    const { setCurrentStep, setCompletedSteps, setTotalData, totalData } =
         useRegisterStartupContext();
     const navigate = useNavigate();
     const { user } = useUserContext();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setCurrentStep(5);
+        const personal = localStorage.getItem(
+            `${user._id}_StartupOwnerPersonalInfo`
+        );
+        const financial = localStorage.getItem(
+            `${user._id}_StartupOwnerFinancialInfo`
+        );
+        const organization = localStorage.getItem(
+            `${user._id}_StartupOwnerOrganizationInfo`
+        );
+        const banking = localStorage.getItem(
+            `${user._id}_StartupOwnerBankingInfo`
+        );
+        const documents = localStorage.getItem(
+            `${user._id}_StartupOwnerDocuments`
+        );
+        setTotalData((prev) => ({
+            ...prev,
+            personal,
+            financial,
+            organization,
+            banking,
+            documents,
+        }));
     }, []);
 
     async function handleSubmit(e) {
         try {
             e.preventDefault();
             setCompletedSteps((prev) => [...prev, 'reviewd']);
-            const res = await startup
+            const res = await startupService.registerStartup(totalData);
+            if (
+                res &&
+                res.message === 'startup has been registered successfully'
+            ) {
+                alert(res.message);
+                navigate('/');
+            }
         } catch (err) {
             navigate('/server-error');
         }
@@ -38,9 +70,7 @@ export default function StartupReview() {
             <h2 className="text-xl font-bold text-green-600 mb-6 text-center">
                 Review and Submit the Form
             </h2>
-            <div className="text-center">
-                // SHOW DATA 
-            </div>
+            <div className="text-center">// SHOW DATA</div>
 
             {/* buttons*/}
             <div className="w-full flex items-center justify-center gap-4 mt-4">

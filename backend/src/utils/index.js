@@ -8,6 +8,7 @@ import {
     generateRefreshToken,
     generateTokens,
 } from './generateTokens.js';
+import fileRestrictions from '../../../frontend/src/utils/fileRestrictions.js';
 
 export {
     sendVerificationEmail,
@@ -18,4 +19,5 @@ export {
     generateRefreshToken,
     generateTokens,
     validatePassword,
+    fileRestrictions,
 };

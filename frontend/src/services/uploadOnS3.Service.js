@@ -1,7 +1,7 @@
 class UploadOnS3 {
     async uploadDocuments(formData) {
         try {
-            const res = await fetch('/api/documents/upload', {
+            const res = await fetch('/api/v1/documents/upload', {
                 method: 'POST',
                 credentials: 'include',
                 body: formData,
@@ -20,7 +20,7 @@ class UploadOnS3 {
 
     async deleteDocument(s3Name, docName) {
         try {
-            const res = await fetch('/api/documents/delete', {
+            const res = await fetch('/api/v1/documents/delete', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

@@ -1,70 +1,142 @@
-// import { Docmetadata } from '../models/Documentmodel.js'; // Ensure the path and file extension are correct
-// import { uploadFile } from '../utils/s3utils.js'; // Ensure the path and file extension are correct
-// import { User } from '../models/user.Model.js';
-// import { deleteFile } from '../utils/s3utils.js';
-// import mongoose from 'mongoose';
-// import sharp from 'sharp';
-// import crypto from 'crypto';
-// import express from 'express';
-// const uploadDocument = async (req, res) => {
-//     const { userId, caption, Documentname } = req.body;
-//     // console.log(req.file);
-//     if (!req.file) {
-//         return res.status(400).json({ message: 'No file uploaded' });
-//     }
-//     console.log(userId, Documentname);
-//     const fileBuffer = await sharp(req.file.buffer)
-//         .resize({ width: 800, height: 800, fit: 'contain' })
-//         .toBuffer();
-//     const user = await User.findById(userId);
-//     if (!user) {
-//         return res.status(404).json({ message: 'User not found' });
-//     }
+import { Docmetadata } from '../models/Documentmodel.js'; // Ensure the path and file extension are correct
+import { uploadFile } from '../utils/s3utils.js'; // Ensure the path and file extension are correct
+import { User } from '../models/user.Model.js';
+import { deleteFile } from '../utils/s3utils.js';
+import { getObjectSignedUrl } from '../utils/s3utils.js';
+import {
+    BAD_REQUEST,
+    CREATED,
+    NOT_FOUND,
+    OK,
+    SERVER_ERROR,
+} from '../constants/statusCodes.js';
 
-//     // console.log(user);
-//     const FileName = userId.toString();
-//     await uploadFile(fileBuffer, FileName, req.file.mimetype);
+const uploadDocument = async (req, res) => {
+    const { userId, Documentname } = req.body;
 
-//     const document = new Docmetadata({ name: Documentname, id: userId });
-//     // console.log(document)
-//     await document.save();
+    // Check if a file is uploaded
+    if (!req.file) {
+        return res.status(BAD_REQUEST).json({ message: 'No file uploaded' });
+    }
 
-//     res.status(201).json(document);
-// };
+    // Validate the file type (ensure it's a PDF)
+    if (req.file.mimetype !== 'application/pdf') {
+        return res
+            .status(BAD_REQUEST)
+            .json({ message: 'Only PDF files are allowed' });
+    }
 
-// const deleteFileController = async (req, res) => {
-//     const { fileName } = req.body;
+    // Find the user in the database
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(NOT_FOUND).json({ message: 'User not found' });
+    }
 
-//     if (!fileName) {
-//         return res.status(400).json({ message: 'File name is required' });
-//     }
+    // Generate a unique filename for the PDF
+    const FileName = `${userId.toString()}.pdf`;
 
-//     try {
-//         // Check if the file belongs to the authenticated user
-//         const document = await Docmetadata.findOne({
-//             id: req.userId,
-//             name: fileName,
-//         });
+    try {
+        // Upload the file to S3 or desired storage location
+        const doc = await uploadFile(
+            req.file.buffer,
+            FileName,
+            req.file.mimetype
+        );
 
-//         if (!document) {
-//             return res.status(404).json({
-//                 message: 'File not found or not authorized to delete',
-//             });
-//         }
+        const signedUrl = await getObjectSignedUrl(FileName);
 
-//         // Delete file from S3
-//         await deleteFile(fileName);
+        // Save document metadata in the database
+        const document = new Docmetadata({
+            name: Documentname,
+            id: userId,
+            fileName: FileName,
+            createdDate: new Date(),
+        });
 
-//         // Remove file metadata from the database
-//         await Docmetadata.deleteOne({ id: req.userId, name: fileName });
+        await document.save();
 
-//         res.status(200).json({
-//             message: `File ${fileName} deleted successfully`,
-//         });
-//     } catch (error) {
-//         console.error('Error in deleteFileController:', error);
-//         res.status(500).json({ message: 'Internal Server Error' });
-//     }
-// };
+        return res.status(CREATED).json({
+            message: 'Document uploaded successfully',
+            document,
+            signedUrl,
+            FileName,
+        });
+    } catch (error) {
+        return res.status(SERVER_ERROR).json({
+            message: 'Failed to upload document',
+            error: error.message,
+        });
+    }
+};
 
-// export { uploadDocument, deleteFileController };
+const deleteFileController = async (req, res) => {
+    const { s3Name, fileName } = req.body;
+
+    if (!fileName) {
+        return res
+            .status(BAD_REQUEST)
+            .json({ message: 'File name is required' });
+    }
+
+    try {
+        // Check if the file belongs to the authenticated user
+        const document = await Docmetadata.findOne({
+            id: req.user._id,
+        });
+
+        if (!document) {
+            return res.status(NOT_FOUND).json({
+                message: 'File not found or not authorized to delete',
+            });
+        }
+
+        // Delete file from S3
+        console.log('Attempting to delete file from S3:', s3Name);
+        try {
+            await deleteFile(s3Name);
+            console.log('File deleted successfully from S3:', s3Name);
+        } catch (error) {
+            console.error('Error deleting file from S3:', error);
+            return res
+                .status(SERVER_ERROR)
+                .json({ message: 'Failed to delete file from S3' });
+        }
+
+        // Remove file metadata from the database
+        await Docmetadata.deleteOne({ id: req.user.id, name: fileName });
+        console.log('File metadata removed successfully from database');
+
+        return res.status(OK).json({
+            message: `File ${fileName} deleted successfully`,
+        });
+    } catch (error) {
+        return res
+            .status(SERVER_ERROR)
+            .json({ message: 'Internal Server Error' });
+    }
+};
+
+const getfileController = async (req, res) => {
+    const { fileName } = req.params; // Assuming fileName is passed as a URL parameter
+
+    if (!fileName) {
+        return res
+            .status(BAD_REQUEST)
+            .json({ message: 'File name is required' });
+    }
+
+    try {
+        // Generate signed URL to access the object from S3
+        const signedUrl = await getObjectSignedUrl(fileName);
+
+        return res.status(OK).json({
+            message: 'Signed URL generated successfully',
+            signedUrl,
+        });
+    } catch (error) {
+        return res.status(SERVER_ERROR).json({
+            message: 'Error generating signed URL',
+        });
+    }
+};
+export { uploadDocument, deleteFileController, getfileController };

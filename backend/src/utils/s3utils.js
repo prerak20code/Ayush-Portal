@@ -26,7 +26,7 @@ export async function uploadFile(fileBuffer, fileName, mimetype) {
         Key: fileName,
         ContentType: mimetype,
     };
-    console.log('file uploaded with the name ', fileName);
+    console.log('file uploading with the name ', fileName);
     try {
         const data = await s3Client.send(new PutObjectCommand(uploadParams));
         console.log(`File uploaded successfully: ${fileName}`);

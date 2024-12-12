@@ -6,7 +6,13 @@ import {
     SERVER_ERROR,
     FORBIDDEN,
 } from '../constants/statusCodes.js';
-import { Startup, FinancialInfo, BankInfo, Dpiit } from '../models/index.js';
+import {
+    Startup,
+    FinancialInfo,
+    BankInfo,
+    Dpiit,
+    User,
+} from '../models/index.js';
 
 // pending
 const getAllStartups = async (req, res) => {
@@ -65,66 +71,6 @@ const registerStartupUsingDPIITid = async (req, res) => {
         return res.status(SERVER_ERROR).json({
             message:
                 'Error occurred while registering the startup using DPIIT.',
-            error: err.message,
-        });
-    }
-};
-
-const addStartup = async (req, res) => {
-    try {
-        const {
-            startupName,
-            description,
-            businessType,
-            industry,
-            address,
-            country,
-            website,
-            valuation,
-            dateOfEstablishment,
-            // pdf,
-        } = req.body;
-        valuation = Number(valuation);
-        const userId = req.user._id;
-
-        if (
-            !startupName ||
-            !description ||
-            !businessType ||
-            !industry ||
-            !address ||
-            !country ||
-            !website ||
-            !valuation ||
-            !dateOfEstablishment ||
-            !userId
-        ) {
-            return res.status(BAD_REQUEST).json({
-                message: 'missing fields',
-            });
-        }
-        const startup = await Startup.create({
-            startupName,
-            description,
-            businessType,
-            industry,
-            address,
-            country,
-            website,
-            valuation,
-            dateOfEstablishment,
-            // pdf,
-            owner: userId,
-        });
-        if (startup) {
-            return res.status(CREATED).json({
-                message: 'startup created successfully',
-                startup,
-            });
-        }
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'error occured while adding the startup.',
             error: err.message,
         });
     }
@@ -236,6 +182,162 @@ const deleteStartup = async (req, res) => {
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'An error occurred while deleting the startup',
+            error: err.message,
+        });
+    }
+};
+
+const addStartup = async (req, res) => {
+    try {
+        let { dateOfBirth, address, nationality, linkedInURL } = req.body;
+        const { _id } = req.user;
+        dateOfBirth = dateOfBirth.trim();
+        nationality = nationality.trim();
+
+        if (!dateOfBirth || !address || !nationality) {
+            return res.status(BAD_REQUEST).json({
+                message: 'Empty input fields!',
+            });
+        }
+
+        const isValid = validateRegex('dateOfBirth', dateOfBirth);
+        if (!isValid) {
+            return res.status(BAD_REQUEST).json({
+                message: 'Invalid DOB entered',
+            });
+        }
+
+        // check if user is present in users table
+        const user = await User.findById(_id);
+        if (!user.verified) {
+            return res.status(BAD_REQUEST).json({
+                message:
+                    'your email is not verified yet, please login or sign up',
+            });
+        }
+       
+        const newUser = await StartupOwner.create({
+            userId: user._id,
+            dateOfBirth,
+            address,
+            nationality,
+            linkedInURL,
+        });
+
+        const {
+            startupName,
+            description,
+            businessType,
+            industry,
+            country,
+            website,
+            valuation,
+            dateOfEstablishment,
+        } = req.body;
+        address = req.body.address;
+
+        valuation = Number(valuation);
+
+        if (
+            !startupName ||
+            !description ||
+            !businessType ||
+            !industry ||
+            !address ||
+            !country ||
+            !website ||
+            !valuation ||
+            !dateOfEstablishment
+        ) {
+            return res.status(BAD_REQUEST).json({
+                message: 'missing fields',
+            });
+        }
+        const startup = await Startup.create({
+            startupName,
+            description,
+            businessType,
+            industry,
+            address,
+            country,
+            website,
+            valuation,
+            dateOfEstablishment,
+            owner: _id,
+            startupId: uuid(),
+        });
+        if (startup) {
+            const {
+                bankName,
+                accountNumber,
+                accountType,
+                IFSC,
+                branchName,
+                swiftCode,
+            } = req.body;
+            if (
+                !bankName ||
+                !accountNumber ||
+                !accountType ||
+                !IFSC ||
+                !branchName ||
+                !swiftCode
+            ) {
+                return res
+                    .status(BAD_REQUEST)
+                    .json({ message: 'missing fields' });
+            }
+            const addedBankInfo = await BankInfo.create({
+                bankName,
+                accountNumber,
+                accountType,
+                IFSC,
+                branchName,
+                swiftCode,
+                balanceStatement,
+                startupId: startup._id,
+            });
+            if (addedBankInfo) {
+                const {
+                    revenue,
+                    profitMargin,
+                    fundingReceived,
+                    valuation,
+                    financialYear,
+                } = req.body;
+                if (
+                    !revenue ||
+                    !profitMargin ||
+                    !fundingReceived ||
+                    !valuation ||
+                    !financialYear
+                ) {
+                    return res
+                        .status(BAD_REQUEST)
+                        .json({ message: 'missing fields' });
+                }
+
+                const addedFinancialInfo = await FinancialInfo.create({
+                    revenue,
+                    profitMargin,
+                    fundingReceived,
+                    valuation,
+                    financialYear,
+                    balanceSheet,
+                    startupId: startup._id,
+                });
+                if (addedFinancialInfo) {
+                    return res
+                        .status(OK)
+                        .json({
+                            message: 'startup has been registered successfully',
+                        });
+                }
+            }
+        }
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: 'error occured while adding the startup.',
             error: err.message,
         });
     }
