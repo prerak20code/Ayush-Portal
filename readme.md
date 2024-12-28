@@ -65,7 +65,7 @@ Before you begin, ensure you have the following software installed:
 - *Use Command Prompt not powershell*
 
 ``` 
-    npm i && cd frontend && npm i && cd .. && cd backend && npm i && cd .. && cd video-chat-v1 && npm i && cd ..
+    npm i && cd frontend && npm i && cd .. && cd backend && npm i && cd .. && cd video-chat-v1 && npm 
 ```
 
 ### Step 4: Run the Server now 
