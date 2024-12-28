@@ -65,13 +65,13 @@ Before you begin, ensure you have the following software installed:
 - *Use Command Prompt not powershell*
 
 ``` 
-    npm i && cd frontend && npm i && cd .. && cd backend && npm i && cd ..
+    npm i && cd frontend && npm i && cd .. && cd backend && npm i && cd .. && cd video-chat-v1 && npm i && cd ..0
 ```
 
 ### Step 4: Run the Server now 
 - *Use all commands in root directory*
 
-#### To run both Frontend & Backend
+#### To run all Frontend & Backend & videocall
 ```
     npm run dev 
 ```
@@ -85,3 +85,9 @@ Before you begin, ensure you have the following software installed:
 ```
     npm run backend
 ```
+
+#### To run video call
+```
+    npm run videochat
+```
+
