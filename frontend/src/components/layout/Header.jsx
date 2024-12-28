@@ -107,12 +107,12 @@ export default function Header() {
         {
             path: `/applications/${user?._id}`,
             name: 'Track your Applications',
-            show: user.designation !== 'official',
+            show: user && user.designation !== 'official',
         },
         {
             path: `/invested-startups/${user?._id}`,
             name: 'Invested Startups',
-            show: user.designation !== 'official',
+            show: user && user.designation !== 'official',
         },
         {
             onClick: handleRequestResetPassword,
