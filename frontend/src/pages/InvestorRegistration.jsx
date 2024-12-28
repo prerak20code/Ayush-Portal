@@ -161,17 +161,10 @@ export default function RegisterInvestorPage() {
         </div>
     ) : (
         <div className="w-screen min-h-[calc(100vh-110px)] bg-[#fff7f2] flex flex-col items-center">
-            {/* steps */}
-            <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md p-4 w-full flex flex-col items-center justify-start gap-8">
-                <h1 className="text-center font-semibold text-2xl drop-shadow-md">
-                    {steps[currentStep].name}
-                </h1>
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 w-full transition-all ease-in">
-                    {stepElements}
-                </div>
+            <div className="bg-[#ffd7bb] overflow-x-scroll drop-shadow-md py-4 grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] px-2 md:px-4 lg:px-10 gap-6 w-full transition-all ease-in">
+                {stepElements}
             </div>
 
-            {/* forms */}
             <div className="w-full p-4 flex items-center justify-center">
                 <div className="bg-white max-w-xl w-full drop-shadow-md rounded-md flex items-center justify-center p-4 flex-1">
                     <Outlet />

@@ -264,6 +264,15 @@ export default function Header() {
                         <div className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]">
                             {icons.search}
                         </div>
+                        {user && user.designation === 'owner' && (
+                            <a
+                                href={'http://localhost:3030'}
+                                target="_blank"
+                                className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
+                            >
+                                {icons.video}
+                            </a>
+                        )}
                         {user && (
                             <div
                                 className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"

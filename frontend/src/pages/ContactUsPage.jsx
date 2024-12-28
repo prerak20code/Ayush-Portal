@@ -12,6 +12,7 @@ export default function ContactUsPage() {
     const [inputs, setInputs] = useState({ subject: '', query: '' });
     const { user } = useUserContext();
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     function handleChange(e) {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
@@ -20,19 +21,22 @@ export default function ContactUsPage() {
     async function submitQuery(e) {
         try {
             e.preventDefault();
+            if (!user) {
+                return navigate('/login');
+            }
+
             setLoading(true);
 
             const res = await fetch('/api/v1/queries/send', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...inputs,
-                    userEmail: user.email,
-                }),
+                body: JSON.stringify(inputs),
             });
 
             const data = await res.json();
+            console.log(data);
+
             if (res.status === 500) {
                 throw new Error(data);
             } else {
@@ -210,7 +214,7 @@ export default function ContactUsPage() {
                     >
                         <div className="w-full">
                             <div className="bg-white text-[#040606] z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
-                                <label htmlFor="email">
+                                <label htmlFor="subject">
                                     <span className="text-red-500">*</span>
                                     Subject
                                 </label>
@@ -219,6 +223,7 @@ export default function ContactUsPage() {
                                 <input
                                     type="subject"
                                     name="subject"
+                                    id="subject"
                                     value={inputs.subject}
                                     onChange={handleChange}
                                     placeholder="Enter your Subject"
@@ -243,6 +248,7 @@ export default function ContactUsPage() {
                                     value={inputs.query}
                                     onChange={handleChange}
                                     name="query"
+                                    id="query"
                                     className="shadow-md shadow-[#efefef] bg-transparent border border-[#aeaeae] w-full indent-2 rounded-md p-2 pt-4 text-black placeholder:text-[15px] placeholder:text-[#a0a0a0] resize-y"
                                     rows="4"
                                     cols="50"
@@ -253,8 +259,16 @@ export default function ContactUsPage() {
 
                         <Button
                             type="submit"
-                            btnText={loading ? 'Submitting' : 'Submit'}
-                            className="text-[#f9f9f9] mt-4 rounded-md w-[90%] self-center bg-gradient-to-r from-[#f1924f] to-[#f68533] hover:from-green-600 hover:to-green-700"
+                            btnText={
+                                loading ? (
+                                    <div className="size-[20px] dark:text-[#ffae75] fill-[#ffdabf] group-hover:dark:text-green-500">
+                                        {icons.loading}
+                                    </div>
+                                ) : (
+                                    'Submit'
+                                )
+                            }
+                            className="text-[#f9f9f9] mt-4 rounded-md w-[90%] self-center bg-gradient-to-r from-[#f1924f] to-[#f68533] group hover:from-green-600 hover:to-green-700"
                         />
                     </form>
                 </motion.div>

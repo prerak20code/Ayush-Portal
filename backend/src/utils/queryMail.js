@@ -3,15 +3,18 @@ import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/statusCodes.js';
 
 export const sendQueryEmail = async (req, res) => {
     try {
-        const { subject, userEmail, query } = req.body;
+        const { subject, query } = req.body;
+        const userEmail = req.user.email;
 
         if (!subject || !userEmail || !query) {
             return res.status(BAD_REQUEST).json({
-                message:
-                    'Missing required fields: subject, userEmail, or query.',
+                message: 'Missing fields',
             });
         }
-
+        console.log(
+            process.env.AUTH_EMAIL,
+            process.env.MINISTRY_OF_AYUSH_EMAIL
+        );
         const mailOptions = {
             from: process.env.AUTH_EMAIL,
             to: process.env.MINISTRY_OF_AYUSH_EMAIL,
