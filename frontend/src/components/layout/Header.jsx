@@ -55,7 +55,12 @@ export default function Header() {
         {
             url: `/become-investor/${user?._id}`,
             name: 'Become an Investor',
-            show: user,
+            show: user && user.designation !== 'official',
+        },
+        {
+            url: `/admin-dashboard`,
+            name: 'Admin Dashboard',
+            show: user?.designation === 'official',
         },
         { url: 'login', name: 'Login', show: !user },
         { url: 'faqs', name: 'FAQs', show: true },
@@ -98,43 +103,48 @@ export default function Header() {
     );
 
     const profileItems = [
-        { path: '/profile', name: 'My Profile' },
+        { path: '/profile', name: 'My Profile', show: true },
         {
             path: `/applications/${user?._id}`,
             name: 'Track your Applications',
+            show: user.designation !== 'official',
         },
         {
             path: `/invested-startups/${user?._id}`,
             name: 'Invested Startups',
+            show: user.designation !== 'official',
         },
         {
             onClick: handleRequestResetPassword,
             name: 'Reset Password',
+            show: true,
         },
     ];
 
-    const profileElements = profileItems.map((item) =>
-        item.path ? (
-            <NavLink
-                key={item.name}
-                className={({ isActive }) =>
-                    `hover:bg-[#f68533] hover:text-[#ffffff] px-2 py-[5px] text-[#040606] font-medium text-md rounded-md ${
-                        isActive && 'bg-[#f68533] text-white'
-                    }`
-                }
-                to={item.path}
-            >
-                {item.name}
-            </NavLink>
-        ) : (
-            <div
-                key={item.name}
-                onClick={item.onClick}
-                className="cursor-pointer hover:bg-[#f68533] hover:text-[#ffffff] px-2 py-[5px] text-[#040606] font-medium text-md rounded-md"
-            >
-                {item.name}
-            </div>
-        )
+    const profileElements = profileItems.map(
+        (item) =>
+            item.show &&
+            (item.path ? (
+                <NavLink
+                    key={item.name}
+                    className={({ isActive }) =>
+                        `hover:bg-[#f68533] hover:text-[#ffffff] px-2 py-[5px] text-[#040606] font-medium text-md rounded-md ${
+                            isActive && 'bg-[#f68533] text-white'
+                        }`
+                    }
+                    to={item.path}
+                >
+                    {item.name}
+                </NavLink>
+            ) : (
+                <div
+                    key={item.name}
+                    onClick={item.onClick}
+                    className="cursor-pointer hover:bg-[#f68533] hover:text-[#ffffff] px-2 py-[5px] text-[#040606] font-medium text-md rounded-md"
+                >
+                    {item.name}
+                </div>
+            ))
     );
 
     async function handleLogout() {
@@ -223,7 +233,7 @@ export default function Header() {
                     {/* Tabs */}
                     <div className="hidden h-full lg:flex items-center justify-end gap-x-8">
                         {tabElements}
-                        {user && (
+                        {user && user.designation !== 'official' && (
                             <div className="cursor-pointer relative">
                                 <div
                                     onClick={() => {
@@ -264,7 +274,7 @@ export default function Header() {
                         <div className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]">
                             {icons.search}
                         </div>
-                        {user && user.designation === 'owner' && (
+                        {user && user.designation !== 'general' && (
                             <a
                                 href={'http://localhost:3030'}
                                 target="_blank"

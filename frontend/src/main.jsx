@@ -82,7 +82,7 @@ const router = createBrowserRouter(
                 <Route path="readmore2" element={<ReadMore2 />} />
                 <Route path="readmore3" element={<ReadMore3 />} />
                 <Route
-                    path="AdminDashboard"
+                    path="admin-dashboard"
                     element={
                         <Redirect path="/login">
                             <AdminDashboard />

@@ -94,7 +94,7 @@ export default function DocumentsCheck() {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <header className="bg-gradient-to-r from-indigo-600 to-blue-500 py-8 shadow-lg">
+            <header className="bg-gradient-to-r from-[#f68533] to-purple-600 py-8 shadow-lg">
                 <div className="container mx-auto px-6 flex items-center justify-center md:justify-start">
                     {entityInfo?.logo && (
                         <img
@@ -111,12 +111,12 @@ export default function DocumentsCheck() {
 
             <main className="container mx-auto px-6 py-10">
                 {loading ? (
-                    <div className="text-center text-blue-600 font-semibold text-xl animate-pulse">
+                    <div className="text-center text-orange-500 font-semibold text-xl animate-pulse">
                         Loading {isStartup ? 'startup' : 'investor'} details...
                     </div>
                 ) : entityInfo ? (
                     <div className="bg-white text-gray-800 shadow-xl rounded-lg p-8">
-                        <h3 className="text-3xl font-extrabold text-blue-700 mb-6 text-center uppercase tracking-wide">
+                        <h3 className="text-3xl font-bold text-orange-500 mb-6 text-center uppercase tracking-wide">
                             General Information
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
@@ -137,7 +137,7 @@ export default function DocumentsCheck() {
                                     <h3 className="text-lg font-semibold text-blue-600 mb-2">
                                         {title}
                                     </h3>
-                                    <p className="text-blue-800 font-medium">
+                                    <p className="text-black font-medium">
                                         {value || 'Unknown'}
                                     </p>
                                 </div>
@@ -145,7 +145,7 @@ export default function DocumentsCheck() {
                         </div>
 
                         <div className="bg-white rounded-lg shadow-lg p-8">
-                            <h3 className="text-3xl font-extrabold text-blue-700 mb-6 text-center uppercase tracking-wide">
+                            <h3 className="text-3xl font-bold text-orange-500 mb-6 text-center uppercase tracking-wide">
                                 Uploaded Documents
                             </h3>
                             {documents.length > 0 ? (
@@ -187,7 +187,7 @@ export default function DocumentsCheck() {
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="text-center text-lg font-semibold text-blue-800">
+                                <p className="text-center text-lg font-bold text-orange-500">
                                     No documents available.
                                 </p>
                             )}
@@ -197,7 +197,7 @@ export default function DocumentsCheck() {
                             <div className="mt-6 text-center">
                                 <button
                                     onClick={handleFinalCheck}
-                                    className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-800 transition duration-300"
+                                    className="bg-[#f68533] text-white p-3 rounded-lg hover:bg-[#df6f1f] transition duration-300"
                                 >
                                     Final Check
                                 </button>

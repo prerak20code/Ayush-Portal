@@ -6,7 +6,6 @@ export default function AdminDashboard() {
     const [startups, setStartups] = useState([]);
     const [investors, setInvestors] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const [filteredStartups, setFilteredStartups] = useState([]);
     const [filteredInvestors, setFilteredInvestors] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +22,7 @@ export default function AdminDashboard() {
         'Siddha',
         'Homoeopathy',
     ];
-    const statuses = ['All', 'Pending', 'Approved', 'Rejected']; // Removed 'All'
+    const statuses = ['All', 'Pending', 'Approved', 'Rejected'];
 
     useEffect(() => {
         const fetchData = async () => {
@@ -291,7 +290,6 @@ export default function AdminDashboard() {
                 );
             }
 
-            // Always sort by registration date (desc) after filtering
             return filteredData.sort(
                 (a, b) =>
                     new Date(b.registeredDate) - new Date(a.registeredDate)
@@ -332,7 +330,7 @@ export default function AdminDashboard() {
         <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
             <table className="w-full text-left border-collapse">
                 <thead>
-                    <tr className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                    <tr className="bg-gradient-to-r from-orange-500 to-purple-600 text-white">
                         <th className="px-6 py-4 border-b">S.ID</th>
                         <th className="px-6 py-4 border-b">Name</th>
                         <th className="px-6 py-4 border-b">Sector</th>
@@ -360,7 +358,7 @@ export default function AdminDashboard() {
                                 <td className="px-6 py-4 border">
                                     <Link
                                         to={`/document-check/${activeTab}/${item.id}`}
-                                        className="text-blue-600 hover:underline"
+                                        className="text-blue-700 hover:underline"
                                     >
                                         {item.name}
                                     </Link>
@@ -404,9 +402,9 @@ export default function AdminDashboard() {
     return (
         <div>
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200">
-                <header className="bg-blue-700 text-white py-6 shadow-md">
+                <header className="bg-[#fb9247] text-white py-6 shadow-md">
                     <div className="container mx-auto px-4 flex flex-col lg:flex-row justify-between items-center gap-4">
-                        <h1 className="text-3xl font-bold tracking-wide">
+                        <h1 className="text-3xl font-semibold tracking-wide">
                             Admin Dashboard
                         </h1>
                         <div className="flex gap-4">
@@ -439,9 +437,9 @@ export default function AdminDashboard() {
                         <div className="flex gap-4 ">
                             <button
                                 onClick={() => setActiveTab('startups')}
-                                className={`px-6 py-2 text-sm rounded-lg transition-transform ${
+                                className={`px-6 py-2 text-sm font-medium rounded-lg transition-transform ${
                                     activeTab === 'startups'
-                                        ? 'bg-blue-600 text-white shadow-md'
+                                        ? 'bg-[#f68533] text-white shadow-md'
                                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                 }`}
                             >
@@ -449,9 +447,9 @@ export default function AdminDashboard() {
                             </button>
                             <button
                                 onClick={() => setActiveTab('investors')}
-                                className={`px-6 py-2 text-sm rounded-lg transition-transform ${
+                                className={`px-6 py-2 text-sm font-medium rounded-lg transition-transform ${
                                     activeTab === 'investors'
-                                        ? 'bg-blue-600 text-white shadow-md'
+                                        ? 'bg-[#f68533] text-white shadow-md'
                                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                 }`}
                             >
@@ -477,7 +475,7 @@ export default function AdminDashboard() {
                     </h2>
 
                     {loading ? (
-                        <div className="text-center text-blue-600 font-medium">
+                        <div className="text-center text-[#f68533] font-medium">
                             Loading...
                         </div>
                     ) : activeTab === 'startups' ? (

@@ -6,7 +6,8 @@
   "scripts": {
     "frontend": "cd frontend && npm run dev",
     "backend": "cd backend && npm run dev",
-    "dev": "concurrently \"npm run frontend\" \"npm run backend\""
+    "videochat":"cd video-chat-v1 && npm run dev",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\" \"npm run videochat\""
   },
   "keywords": [],
   "author": "",

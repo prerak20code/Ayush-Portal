@@ -1,4 +1,3 @@
-
 export default function ReadMore1() {
     return (
         <div className="px-[5%] py-10">

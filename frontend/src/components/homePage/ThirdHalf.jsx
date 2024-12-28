@@ -19,14 +19,16 @@ export default function ThirdHalf() {
         },
         {
             icon: CARDICON2,
-            heading: 'Supportive Network',path: 'readmore2',
+            heading: 'Supportive Network',
+            path: 'readmore2',
             description:
                 'join a thriving community of entrepreneurs, fostering valuable partnerships to accelerate your startup’s success.',
             className: 'bg-gradient-to-r from-[#ffa8a8] to-[#a1a9f3]',
         },
         {
             icon: CARDICON3,
-            heading: 'Incubation Centers',path: 'readmore3',
+            heading: 'Incubation Centers',
+            path: 'readmore3',
             description:
                 'Access expert guidance and resources to nurture your AYUSH startup at every stage.',
             className: 'bg-gradient-to-r from-[#fff8b7] to-[#ffa25e]',
