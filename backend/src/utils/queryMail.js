@@ -11,18 +11,14 @@ export const sendQueryEmail = async (req, res) => {
                 message: 'Missing fields',
             });
         }
-        console.log(
-            process.env.AUTH_EMAIL,
-            process.env.MINISTRY_OF_AYUSH_EMAIL
-        );
+       
         const mailOptions = {
             from: process.env.AUTH_EMAIL,
             to: process.env.MINISTRY_OF_AYUSH_EMAIL,
             subject: `Query: ${subject}`,
             html: `
-                <p><strong>Issue:</strong> ${subject}</p>
-                <p><strong>Details:</strong></p>
-                <p>${query}</p>
+                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>Issue:</strong> ${query}</p>
                 <p>Sent by: ${userEmail}</p>
             `,
         };
