@@ -17,6 +17,7 @@ import HASHTAG from './hashtag.png';
 import RajBhavan from './RajBhavan.png';
 import landingPageGif from './ayushAnimation.gif';
 import Login_BackG from './Login_BackG.png';
+import CHATBX from './CHATBX.png';
 
 export {
     // first half
@@ -43,4 +44,5 @@ export {
     HASHTAG,
     landingPageGif,
     Login_BackG,
+    CHATBX,
 };

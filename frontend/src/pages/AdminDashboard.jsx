@@ -11,7 +11,7 @@ export default function AdminDashboard() {
     const [filteredInvestors, setFilteredInvestors] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sectorFilter, setSectorFilter] = useState('All');
-    const [statusFilter, setStatusFilter] = useState('Pending'); // Default to 'Pending'
+    const [statusFilter, setStatusFilter] = useState('All'); // Default to 'All'
     const [sortOrder, setSortOrder] = useState('desc');
     const [activeTab, setActiveTab] = useState('startups');
 
@@ -23,7 +23,7 @@ export default function AdminDashboard() {
         'Siddha',
         'Homoeopathy',
     ];
-    const statuses = ['Pending', 'All', 'Approved', 'Rejected']; // Removed 'All'
+    const statuses = ['All', 'Pending', 'Approved', 'Rejected']; // Removed 'All'
 
     useEffect(() => {
         const fetchData = async () => {
@@ -403,7 +403,6 @@ export default function AdminDashboard() {
 
     return (
         <div>
-            <Header />
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200">
                 <header className="bg-blue-700 text-white py-6 shadow-md">
                     <div className="container mx-auto px-4 flex flex-col lg:flex-row justify-between items-center gap-4">
@@ -488,7 +487,6 @@ export default function AdminDashboard() {
                     )}
                 </main>
             </div>
-            <Footer />
         </div>
     );
 }

@@ -94,7 +94,6 @@ export default function DocumentsCheck() {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <Header />
             <header className="bg-gradient-to-r from-indigo-600 to-blue-500 py-8 shadow-lg">
                 <div className="container mx-auto px-6 flex items-center justify-center md:justify-start">
                     {entityInfo?.logo && (

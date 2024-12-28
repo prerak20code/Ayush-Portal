@@ -37,7 +37,7 @@ export default function Card({ card }) {
                     </div>
                 }
                 className="bg-gradient-to-r from-[#f9f9f9] to-[#e1e1e1] hover:to-[#cbcbcb]"
-                onClick={() => navigate('/')}
+                onClick={() => navigate(card.path)}
             />
         </motion.div>
     );

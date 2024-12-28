@@ -28,6 +28,10 @@ import {
     AyushServicesPage,
     AadhaarVerificationPage,
     LicenseGeneratorPage,
+    ChatBot,
+    ReadMore1,
+    ReadMore2,
+    ReadMore3,
 } from './pages';
 
 import {
@@ -61,8 +65,6 @@ import {
     RegisterInvestorContextProvider,
 } from './contexts';
 
-// import OwnerConnectPage from './pages/OwnerConnectPage.jsx';
-
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
@@ -75,6 +77,17 @@ const router = createBrowserRouter(
                 <Route
                     path="privacy-policies"
                     element={<PrivacyPoliciesPage />}
+                />
+                <Route path="readmore1" element={<ReadMore1 />} />
+                <Route path="readmore2" element={<ReadMore2 />} />
+                <Route path="readmore3" element={<ReadMore3 />} />
+                <Route
+                    path="AdminDashboard"
+                    element={
+                        <Redirect path="/login">
+                            <AdminDashboard />
+                        </Redirect>
+                    }
                 />
             </Route>
 
@@ -108,6 +121,7 @@ const router = createBrowserRouter(
             </Route>
 
             <Route path="" element={<LayoutThree />}>
+                <Route path="chatbot" element={<ChatBot />} />
                 <Route
                     path="invested-startups/:userId"
                     element={<InvestedStartups />}
@@ -173,14 +187,6 @@ const router = createBrowserRouter(
                     element={<TargetedStartups />}
                 />
             </Route>
-            <Route
-                path="AdminDashboard"
-                element={
-                    <Redirect path="/login">
-                        <AdminDashboard />
-                    </Redirect>
-                }
-            />
             <Route
                 path="document-check/startups/:id"
                 element={

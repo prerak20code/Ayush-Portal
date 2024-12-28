@@ -6,7 +6,6 @@ import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ServerErrorPage from './ServerErrorPage';
 import NotFoundPage from './NotFoundPage';
-// import OwnerConnectPage from './OwnerConnectPage';
 import TrackApplication from './TrackApplication';
 import StartupApplicationsPage from './StartupApplicationsPage';
 import DPIITregistrationPage from './DPIITregistrationPage';
@@ -17,6 +16,10 @@ import PrivacyPoliciesPage from './PrivacyPoliciesPage';
 import AyushServicesPage from './AYUSHservices';
 import LicenseGeneratorPage from './LicenseGeneratorPage';
 import AadhaarVerificationPage from './AdhaarVerificationPage';
+import ChatBot from './ChatBot';
+import ReadMore1 from './Readmore1';
+import ReadMore2 from './Readmore2';
+import ReadMore3 from './Readmore3';
 
 export {
     HomePage,
@@ -29,7 +32,6 @@ export {
     NotFoundPage,
     TrackApplication,
     StartupApplicationsPage,
-    // OwnerConnectPage,
     DPIITregistrationPage,
     RegisterInvestorPage,
     DocumentsCheck,
@@ -38,4 +40,8 @@ export {
     AyushServicesPage,
     LicenseGeneratorPage,
     AadhaarVerificationPage,
+    ChatBot,
+    ReadMore1,
+    ReadMore2,
+    ReadMore3,
 };
