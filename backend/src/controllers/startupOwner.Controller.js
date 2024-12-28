@@ -95,13 +95,14 @@ const updateOwnerDetails = async (req, res) => {
 
 const getOwnerById = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { ownerId } = req.params;
 
-        const user = await StartupOwner.find({ userId: id });
+        const user = await StartupOwner.findOne({ userId: ownerId });
         if (!user) {
             return res.status(BAD_REQUEST).json({ message: 'owner not found' });
         }
-        return res.status(OK).json(user[0]);
+
+        return res.status(OK).json(user);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message:

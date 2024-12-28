@@ -10,7 +10,6 @@ const startupSchema = new mongoose.Schema(
         startupName: {
             type: String,
             required: true,
-            unique: true,
         },
         description: {
             type: String,
@@ -24,9 +23,6 @@ const startupSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        // pdf: {
-        //     type: String,
-        // },
         address: {
             type: String,
             required: true,

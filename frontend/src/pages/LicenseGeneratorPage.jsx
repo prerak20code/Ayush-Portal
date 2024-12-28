@@ -302,7 +302,8 @@ export default function LicenseGeneratorPage() {
                         btnText={
                             <div className="flex items-center justify-center gap-2">
                                 <p className="text-[#f9f9f9] text-nowrap">
-                                    Pay {import.meta.env.VITE_LICENSE_COST} and continue
+                                    Pay {import.meta.env.VITE_LICENSE_COST} and
+                                    continue
                                 </p>
                             </div>
                         }

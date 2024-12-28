@@ -12,7 +12,6 @@ import {
     useProfileDropdownContext,
     useUserContext,
     useVariantContext,
-    // usePopupContext,
 } from '../../contexts';
 import { userService } from '../../services';
 
@@ -157,7 +156,7 @@ export default function Header() {
             setShowProfileDropdown(false);
             setLoading(true);
             const res = await userService.requestResetPassword(user.email);
-            if (res?.message === 'password reset email sent') {
+            if (res && res.message === 'password reset email sent') {
                 setResetMessage();
             } else {
                 setResetMessage(res?.message);

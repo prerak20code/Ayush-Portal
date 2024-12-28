@@ -216,25 +216,28 @@ const addStartup = async (req, res) => {
 
         // check if user is present in users table
         const user = await User.findById(_id);
-        if (!user?.verified) {
+        if (user && !user.verified) {
             return res.status(BAD_REQUEST).json({
                 message:
                     'your email is not verified yet, please login or sign up',
             });
         }
 
-        if (!user) {
-            await StartupOwner.create({
-                userId: user._id,
-                dateOfBirth,
-                address,
-                nationality,
-                linkedInURL,
-            });
+        if (user) {
+            // check if owner record already exist
+            const owner = await StartupOwner.findOne({ userId: _id });
+            if (!owner) {
+                await StartupOwner.create({
+                    userId: _id,
+                    dateOfBirth,
+                    address,
+                    nationality,
+                    linkedInURL,
+                });
+                user.designation = 'owner';
+                await user.save();
+            }
         }
-
-        user.designation = 'owner';
-        await user.save();
 
         let {
             startupName,

@@ -36,6 +36,7 @@ export default function App() {
                             break;
                         }
                     }
+
                     const { _id, ...reqData } = data;
                     setUser({ ...res, ...reqData });
                 } else {

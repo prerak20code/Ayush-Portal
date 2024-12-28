@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { userService } from '../../services';
 import { Button, Popup } from '..';
 import { icons } from '../../assets/icons';
-// import { usePopupContext } from '../../contexts';
 import { verifyRegex } from '../../utils';
 
 export default function ResetPassword() {

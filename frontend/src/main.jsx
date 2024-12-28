@@ -153,11 +153,9 @@ const router = createBrowserRouter(
                 <Route
                     path="become-investor/:id"
                     element={
-                        <RegisterInvestorContextProvider>
-                            <Redirect path="/">
-                                <RegisterInvestorPage />
-                            </Redirect>
-                        </RegisterInvestorContextProvider>
+                        <Redirect path="/">
+                            <RegisterInvestorPage />
+                        </Redirect>
                     }
                 >
                     <Route index element={<InvestorPersonalInfo />} />
@@ -200,11 +198,13 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        <ProfileDropdownContextProvider>
-            <VariantContextProvider>
-                <RouterProvider router={router} />
-            </VariantContextProvider>
-        </ProfileDropdownContextProvider>
+        <RegisterInvestorContextProvider>
+            <ProfileDropdownContextProvider>
+                <VariantContextProvider>
+                    <RouterProvider router={router} />
+                </VariantContextProvider>
+            </ProfileDropdownContextProvider>
+        </RegisterInvestorContextProvider>
     </UserContextProvider>
     // </StrictMode>
 );
