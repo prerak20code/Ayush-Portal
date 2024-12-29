@@ -20,5 +20,4 @@ This app is build using NodeJS, Socket.io, and Peerjs(WebRTC)
 
 ### ToDo
 
-- [ ] - Recreate the Front-end with React.
-
+- [ ]   - Recreate the Front-end with React.
