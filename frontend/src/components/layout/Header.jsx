@@ -283,6 +283,12 @@ export default function Header() {
                                 {icons.video}
                             </a>
                         )}
+                        <div
+                            className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
+                            onClick={() => navigate('/chatbot')}
+                        >
+                            {icons.support}
+                        </div>
                         {user && (
                             <div
                                 className="size-[20px] hover:scale-125 cursor-pointer transition-all ease-in fill-[#f9f9f9]"
