@@ -3,6 +3,7 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "author": "Kode Crafts",
     "description": "This is the Frontend for AYUSH-Registration Portal",
     "scripts": {
         "dev": "npm run format && vite",
