@@ -8,6 +8,7 @@ import { Messagerouter } from './messageRoutes.js';
 import { Chatrouter } from './chatRoutes.js';
 import { documentRouter } from './document.Router.js';
 import { queryRouter } from './queryMail.Router.js';
+import { paymentRouter } from './paymentRouter.js';
 
 export {
     investmentRouter,
@@ -19,5 +20,6 @@ export {
     Messagerouter,
     Chatrouter,
     documentRouter,
+    paymentRouter,
     queryRouter,
 };

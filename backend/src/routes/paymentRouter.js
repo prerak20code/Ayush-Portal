@@ -1,7 +1,8 @@
 import express from 'express';
 import Razorpay from 'razorpay';
+import { BAD_REQUEST, OK, SERVER_ERROR } from '../constants/statusCodes.js';
 
-const router = express.Router();
+export const paymentRouter = express.Router();
 
 // Configure Razorpay instance
 const razorpay = new Razorpay({
@@ -10,13 +11,15 @@ const razorpay = new Razorpay({
 });
 
 // Create Razorpay Order
-router.post('/create-order', async (req, res) => {
+paymentRouter.post('/create-order', async (req, res) => {
     try {
         const { amount, currency = 'INR' } = req.body;
 
         // Validate input
         if (!amount) {
-            return res.status(400).json({ error: 'Amount is required' });
+            return res
+                .status(BAD_REQUEST)
+                .json({ error: 'Amount is required' });
         }
 
         // Create order
@@ -27,15 +30,17 @@ router.post('/create-order', async (req, res) => {
         };
 
         const order = await razorpay.orders.create(options);
-        res.status(200).json(order);
+        return res.status(OK).json(order);
     } catch (error) {
         console.error('Error creating Razorpay order:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res
+            .status(SERVER_ERROR)
+            .json({ error: 'Internal Server Error' });
     }
 });
 
 // Payment Verification (Optional but Recommended)
-router.post('/verify-payment', async (req, res) => {
+paymentRouter.post('/verify-payment', async (req, res) => {
     const crypto = await import('crypto');
 
     try {
@@ -51,20 +56,20 @@ router.post('/verify-payment', async (req, res) => {
 
         // Compare signatures to verify payment
         if (expectedSignature === razorpay_signature) {
-            res.status(200).json({
+            res.status(OK).json({
                 success: true,
                 message: 'Payment verified successfully!',
             });
         } else {
-            res.status(400).json({
+            return res.status(BAD_REQUEST).json({
                 success: false,
                 message: 'Invalid payment signature',
             });
         }
     } catch (error) {
         console.error('Error verifying Razorpay payment:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res
+            .status(SERVER_ERROR)
+            .json({ error: 'Internal Server Error' });
     }
 });
-
-export default router;

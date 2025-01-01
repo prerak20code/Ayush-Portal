@@ -8,7 +8,7 @@
     "scripts": {
         "dev": "npm run format && vite",
         "format": "prettier --write .",
-        "build": "vite build",
+        "build": "npm run format && vite build",
         "lint": "eslint .",
         "preview": "vite preview"
     },
