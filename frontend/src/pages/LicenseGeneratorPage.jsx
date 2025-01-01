@@ -1,13 +1,14 @@
-import { icons } from '../assets/icons';
 import { useState } from 'react';
 import { Button } from '../components';
 import axios from 'axios';
+import { useUserContext } from '../contexts';
 
 export default function LicenseGeneratorPage() {
     const [inputs, setInputs] = useState({});
     const [licenseType, setLicenseType] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [errors, setErrors] = useState({});
+    const { user } = useUserContext();
 
     const handleChange = (event) => {
         const { name, files } = event.target;
@@ -64,7 +65,7 @@ export default function LicenseGeneratorPage() {
 
             // Razorpay payment options
             const options = {
-                key: import.meta.env.RAZORPAY_KEY_ID, 
+                key: import.meta.env.c,
                 amount: order.amount,
                 currency: order.currency,
                 name: 'License Payment',
@@ -88,9 +89,9 @@ export default function LicenseGeneratorPage() {
                     }
                 },
                 prefill: {
-                    name: 'John Doe',
-                    email: 'johndoe@example.com',
-                    contact: '9876543210',
+                    name: user.name,
+                    email: user.email,
+                    contact: user.phone,
                 },
                 theme: {
                     color: '#f68533',
