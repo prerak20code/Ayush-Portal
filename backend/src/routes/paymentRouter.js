@@ -25,7 +25,7 @@ paymentRouter.post('/create-order', async (req, res) => {
         // Create order
         const options = {
             amount: amount * 100, // Convert to the smallest unit (paise for INR)
-            currency: currency,
+            currency,
             receipt: `receipt_${Date.now()}`,
         };
 

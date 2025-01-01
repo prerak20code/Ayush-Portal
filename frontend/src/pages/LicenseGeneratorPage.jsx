@@ -60,7 +60,7 @@ export default function LicenseGeneratorPage() {
             // Call backend API to create an order
             const { data: order } = await axios.post(
                 '/api/v1/payments/create-order',
-                { amount: 2 } // Amount in paise (2000 INR)
+                { amount: 1 } // Amount in paise (2000 INR)
             );
 
             // Razorpay payment options
