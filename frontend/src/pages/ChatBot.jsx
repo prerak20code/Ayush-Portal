@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CHATBX } from '../assets/images/index.js';
 
 export default function ChatBot() {
