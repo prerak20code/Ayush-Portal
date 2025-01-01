@@ -2,12 +2,14 @@ import { icons } from '../assets/icons';
 import { useState } from 'react';
 import { Button } from '../components';
 import axios from 'axios';
+import { useUserContext } from '../contexts';
 
 export default function LicenseGeneratorPage() {
     const [inputs, setInputs] = useState({});
     const [licenseType, setLicenseType] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [errors, setErrors] = useState({});
+    const {user} = useUserContext();
 
     const handleChange = (event) => {
         const { name, files } = event.target;
@@ -58,13 +60,13 @@ export default function LicenseGeneratorPage() {
         try {
             // Call backend API to create an order
             const { data: order } = await axios.post(
-                'http://localhost:4000/api/v1/payments/create-order',
+                '/api/v1/payments/create-order',
                 { amount: 2 } // Amount in paise (2000 INR)
             );
 
             // Razorpay payment options
             const options = {
-                key: 'rzp_live_fHs6A3kVflK9Ul', // Replace with your Razorpay key ID
+                key: import.meta.env.RAZORPAY_KEY_ID, 
                 amount: order.amount,
                 currency: order.currency,
                 name: 'License Payment',
@@ -73,7 +75,7 @@ export default function LicenseGeneratorPage() {
                 handler: async function (response) {
                     // On successful payment, verify payment on the backend
                     const verifyResponse = await axios.post(
-                        'http://localhost:4000/api/v1/payments/verify-payment',
+                        '/api/v1/payments/verify-payment',
                         {
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
@@ -88,9 +90,9 @@ export default function LicenseGeneratorPage() {
                     }
                 },
                 prefill: {
-                    name: 'John Doe', // Add user-specific details
-                    email: 'johndoe@example.com',
-                    contact: '9876543210',
+                    name: user.name,
+                    email: user.email,
+                    contact: user,
                 },
                 theme: {
                     color: '#f68533',

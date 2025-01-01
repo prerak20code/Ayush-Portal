@@ -6,8 +6,8 @@ export const paymentRouter = express.Router();
 
 // Configure Razorpay instance
 const razorpay = new Razorpay({
-    key_id: 'rzp_live_fHs6A3kVflK9Ul',
-    key_secret: 'V88RLkx9DIVqMs2MmMpxgmAB',
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 // Create Razorpay Order
