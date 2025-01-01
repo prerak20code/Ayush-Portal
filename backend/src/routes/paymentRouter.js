@@ -4,18 +4,15 @@ import { BAD_REQUEST, OK, SERVER_ERROR } from '../constants/statusCodes.js';
 
 export const paymentRouter = express.Router();
 
-// Configure Razorpay instance
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Create Razorpay Order
 paymentRouter.post('/create-order', async (req, res) => {
     try {
         const { amount, currency = 'INR' } = req.body;
 
-        // Validate input
         if (!amount) {
             return res
                 .status(BAD_REQUEST)
@@ -33,19 +30,26 @@ paymentRouter.post('/create-order', async (req, res) => {
         return res.status(OK).json(order);
     } catch (error) {
         console.error('Error creating Razorpay order:', error);
-        return res
-            .status(SERVER_ERROR)
-            .json({ error: 'Internal Server Error' });
+        return res.status(SERVER_ERROR).json({
+            message: 'something went wrong while creating an payment order',
+            err: error.message,
+        });
     }
 });
 
-// Payment Verification (Optional but Recommended)
 paymentRouter.post('/verify-payment', async (req, res) => {
     const crypto = await import('crypto');
 
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
             req.body;
+
+        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+            return res.status(BAD_REQUEST).json({
+                success: false,
+                message: 'missing fields',
+            });
+        }
 
         // Create a signature using the order ID and payment ID
         const body = razorpay_order_id + '|' + razorpay_payment_id;
