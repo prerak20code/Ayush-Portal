@@ -30,7 +30,7 @@ import InvestorPersonalInfo from './InvestorRegister/PersonalInfo';
 import InvestorDocuments from './InvestorRegister/InvestorDocuments';
 import InvestorReview from './InvestorRegister/InvestorReview';
 import StartupOwnerDocuments from './RegisterStartup/StartupOwnerDocuments';
-import DPIITDocs from './DPIIT/DpiitDocs';
+import DPIITDocs from './DPIIT/DPIITDocs';
 
 export {
     LayoutOne,
