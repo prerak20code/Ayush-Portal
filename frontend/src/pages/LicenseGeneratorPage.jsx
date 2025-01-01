@@ -60,7 +60,7 @@ export default function LicenseGeneratorPage() {
             // Call backend API to create an order
             const { data: order } = await axios.post(
                 '/api/v1/payments/create-order',
-                { amount: 1 } // Amount in paise (2000 INR)
+                { amount: 1 } // Amount (2000 INR)
             );
 
             // Razorpay payment options
@@ -72,19 +72,33 @@ export default function LicenseGeneratorPage() {
                 description: 'Payment for License Generator',
                 order_id: order.id,
                 handler: async function (response) {
-                    // On successful payment, verify payment on the backend
-                    const verifyResponse = await axios.post(
-                        '/api/v1/payments/verify-payment',
-                        {
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                        }
-                    );
+                    console.log('Payment response:', response);
+                    try {
+                        const verifyResponse = await axios.post(
+                            '/api/v1/payments/verify-payment',
+                            {
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id:
+                                    response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                            }
+                        );
+                        console.log('Verify response:', verifyResponse.data);
 
-                    if (verifyResponse.data.success) {
-                        alert('Payment successful! All documents submitted.');
-                    } else {
+                        if (verifyResponse.data.success) {
+                            alert(
+                                'Payment successful! All documents submitted.'
+                            );
+                        } else {
+                            alert(
+                                'Payment verification failed. Please try again.'
+                            );
+                        }
+                    } catch (verifyError) {
+                        console.error(
+                            'Error during verification:',
+                            verifyError
+                        );
                         alert('Payment verification failed. Please try again.');
                     }
                 },
