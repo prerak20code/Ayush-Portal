@@ -34,7 +34,6 @@ import {
     startupOwnerRouter,
     startupRegistrationApplicationRouter,
     userRouter,
-    Messagerouter,
     documentRouter,
     queryRouter,
     paymentRouter,
@@ -46,7 +45,6 @@ app.use('/api/v1/startups', startupRouter);
 app.use('/api/v1/investments', investmentRouter);
 app.use('/api/v1/gov-officials', govOfficialrouter);
 app.use('/api/v1/applications', startupRegistrationApplicationRouter);
-app.use('/api/v1/message', Messagerouter);
 app.use('/api/v1/documents', documentRouter);
 app.use('/api/v1/queries', queryRouter);
 app.use('/api/v1/payments', paymentRouter);

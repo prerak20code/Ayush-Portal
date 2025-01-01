@@ -1,4 +1,3 @@
-// middlewares/uploadMiddleware.js
 import multer from 'multer';
 
 const storage = multer.memoryStorage(); // Use memory storage for direct S3 upload

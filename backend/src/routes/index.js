@@ -4,7 +4,6 @@ import { startupRouter } from './startup.Router.js';
 import { startupOwnerRouter } from './startupOwner.Router.js';
 import { startupRegistrationApplicationRouter } from './startupRegistrationApplication.Router.js';
 import { userRouter } from './user.Router.js';
-import { Messagerouter } from './messageRoutes.js';
 import { documentRouter } from './document.Router.js';
 import { queryRouter } from './queryMail.Router.js';
 import { paymentRouter } from './paymentRouter.js';
@@ -16,7 +15,6 @@ export {
     userRouter,
     startupRouter,
     startupRegistrationApplicationRouter,
-    Messagerouter,
     documentRouter,
     paymentRouter,
     queryRouter,
