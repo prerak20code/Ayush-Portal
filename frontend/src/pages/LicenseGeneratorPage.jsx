@@ -2,14 +2,12 @@ import { icons } from '../assets/icons';
 import { useState } from 'react';
 import { Button } from '../components';
 import axios from 'axios';
-import { useUserContext } from '../contexts';
 
 export default function LicenseGeneratorPage() {
     const [inputs, setInputs] = useState({});
     const [licenseType, setLicenseType] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [errors, setErrors] = useState({});
-    const {user} = useUserContext();
 
     const handleChange = (event) => {
         const { name, files } = event.target;
@@ -90,9 +88,9 @@ export default function LicenseGeneratorPage() {
                     }
                 },
                 prefill: {
-                    name: user.name,
-                    email: user.email,
-                    contact: user,
+                    name: 'John Doe',
+                    email: 'johndoe@example.com',
+                    contact: '9876543210',
                 },
                 theme: {
                     color: '#f68533',
