@@ -65,7 +65,7 @@ export default function LicenseGeneratorPage() {
 
             // Razorpay payment options
             const options = {
-                key: import.meta.env.c,
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
                 amount: order.amount,
                 currency: order.currency,
                 name: 'License Payment',
