@@ -68,7 +68,7 @@ import {
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
-            <Route path="" element={<LayoutOne />}>
+            <Route path="">
                 <Route path="" element={<HomePage />} />
                 <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="contact-us" element={<ContactUsPage />} />
@@ -81,14 +81,7 @@ const router = createBrowserRouter(
                 <Route path="readmore1" element={<ReadMore1 />} />
                 <Route path="readmore2" element={<ReadMore2 />} />
                 <Route path="readmore3" element={<ReadMore3 />} />
-                <Route
-                    path="admin-dashboard"
-                    element={
-                        <Redirect path="/login">
-                            <AdminDashboard />
-                        </Redirect>
-                    }
-                />
+                <Route path="admin-dashboard" element={<AdminDashboard />} />
             </Route>
 
             <Route path="" element={<LayoutTwo />}>
@@ -189,11 +182,7 @@ const router = createBrowserRouter(
             </Route>
             <Route
                 path="document-check/startups/:id"
-                element={
-                    <Redirect path="/login">
-                        <DocumentsCheck />
-                    </Redirect>
-                }
+                element={<DocumentsCheck />}
             />
             <Route path="/server-error" element={<ServerErrorPage />} />
             <Route path="*" element={<NotFoundPage />} />

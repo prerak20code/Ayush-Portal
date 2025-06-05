@@ -281,6 +281,7 @@ const deleteAccount = async (req, res) => {
 const getCurrentUser = async (req, res) => {
     try {
         const user = req.user;
+        console.log(user);
         res.status(OK).json(user);
     } catch (err) {
         res.status(SERVER_ERROR).json({

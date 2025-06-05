@@ -18,7 +18,7 @@ export default function App() {
         (async function checkLogin() {
             try {
                 setLoading(true);
-                const res = await userService.getCurrentUser();
+                const res = null;
 
                 let data = {};
                 if (res && !res.message) {

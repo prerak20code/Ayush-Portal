@@ -19,9 +19,8 @@ userRouter.route('/login').post(login);
 userRouter.route('/verify-email/:userId/:uniqueString').get(verifyEmail);
 
 userRouter.use(verifyJWT);
-
+userRouter.route('/').get(getCurrentUser).delete(deleteAccount);
 userRouter.route('/logout').patch(logout);
 userRouter.route('/role').patch(updateRole);
 userRouter.route('/request-reset-password').post(requestResetPassword);
 userRouter.route('/reset-password').post(resetPassword);
-userRouter.route('/').get(getCurrentUser).delete(deleteAccount);
